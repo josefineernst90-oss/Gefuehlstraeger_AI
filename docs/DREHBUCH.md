@@ -230,6 +230,13 @@ data-knopf am Ereignis: es läuft nicht von selbst, sondern erscheint als Knopf,
 die Träger sammeln sich auf dem Wasser. Danach .satz data-id="mehr", nach dem letzten .satz data-id="alle".
 <p class="glied"> im Block (bei data-szene="zwei"): in beiden Bahnen liegt von Anfang an derselbe Steg, verbunden, mit dem Namen aus .satz data-id="name".
 
+data-uebergang="zurueck" (mit data-szene="zwei"): der Tag läuft zurück. Der Schritt beginnt mit den zwei Bahnen, so wie der Schritt davor sie verlässt
+(nur wenn man direkt von dort kommt und er auch die Bühne „zwei“ hat). Eins nach dem anderen: die Gedanken gehen · die Blicklinie zieht sich zurück ·
+die Zeitlinien laufen rückwärts, das Zeichen wandert nach rechts hinaus · was aufgestiegen war, verlässt den Bauch · je Träger, der letzte zuerst:
+sein Verbindungsstück löst sich (mit dem letzten verschwindet der Name des Stegs), dann steigt er als Ladung zum Männchen zurück · die Zeit steht ·
+oben wechselt der Name der Bahn · unten geht das Männchen nach links hinaus, von rechts kommt das neue, dann erscheint sein Name.
+Erst danach kommen der Text des Schritts, die Lesepause und der Ablauf.
+
 data-uebergang="inseln" (mit data-szene="zwei"): aus den zwei Bahnen werden zwei Menschen nebeneinander, einer nach dem anderen Zug:
 alles, was zum Tag gehört, tritt zurück (Zeitlinien, Zeichen, Gedanken, Wasser) · der obere Mensch rückt nach links ·
 seine Träger legen sich einer nach dem anderen unter ihn, die Verbindungsstücke werden wieder zu Bügeln ·

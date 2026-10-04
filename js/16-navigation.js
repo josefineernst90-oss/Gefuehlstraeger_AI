@@ -8,9 +8,9 @@ function go(i,force){
   if(started)finish(SLIDES[cur]);started=true;
   cur=i;const s=SLIDES[i];layout();say('');SEL=null;enterStep(s,prev);cv.setAttribute('aria-label',T('buehne-'+s.scene));
   renderText();
-  // der neue Text blendet ein, danach Lesepause. Beim Klappen wartet der Text, bis die Linie steht, beim Übergang aus dem Ring, bis die Zeitlinie steht.
+  // der neue Text blendet ein, danach Lesepause. Beim Klappen wartet der Text, bis die Linie steht, beim Übergang aus dem Ring, bis die Zeitlinie steht, beim Zurücklaufen des Tages, bis die Bahnen leer sind.
   const tx=$('text');tx.style.transition='none';tx.classList.add('warte');void tx.offsetWidth;tx.style.transition='';
-  const nachher=s.klappen||!!(S.sr&&S.sr.ue);   // der Text kommt erst nach dem Übergang
+  const nachher=s.klappen||!!(S.sr&&S.sr.ue)||!!(S.zw&&S.zw.ue);   // der Text kommt erst nach dem Übergang
   if(reduce||!nachher)tx.classList.remove('warte');
   S.lese=nachher?0:lesezeit();
   const inChap=SLIDES.filter(x=>x.chap===s.chap),n=inChap.indexOf(s)+1;

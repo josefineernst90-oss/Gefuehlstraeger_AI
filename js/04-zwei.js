@@ -1,7 +1,43 @@
 /* ---------- Zwei Menschen, derselbe Tag ----------
    Zwei Bahnen übereinander. Der Ablauf ist ein Plan aus Zügen, die nacheinander laufen: {dur, start, run(k)}. */
 const BAHNEN=['passiv','aktiv'],RZ=7;
-function zweiStart(s){stOf(s).bsp={};S.zw=zweiBau(s)}
+function zweiStart(s,prev){stOf(s).bsp={};const i=SLIDES.indexOf(s),v=SLIDES[i-1];
+  S.zw=s.zurueck&&!reduce&&prev===i-1&&v&&v.scene==='zwei'?zweiZurueck(s,v):zweiBau(s)}
+/* Übergang „zurück“ (data-uebergang="zurueck"), nur direkt aus dem Schritt davor: der Tag läuft zurück. Die Bahnen stehen, wie der Schritt davor endet.
+   Eins nach dem anderen: die Gedanken gehen · die Blicklinie zieht sich zurück · die Zeitlinien laufen rückwärts, das Zeichen wandert nach rechts hinaus ·
+   was aufgestiegen war, verlässt den Bauch · je Träger, der letzte zuerst: sein Verbindungsstück löst sich (mit dem letzten verschwindet der Name des Stegs),
+   dann steigt er als Ladung zum Männchen zurück · die Zeit steht · oben wechselt der Name der Bahn · unten geht das Männchen nach links hinaus,
+   von rechts kommt das neue, dann erscheint sein Name. Danach beginnt der Schritt wie sonst: Text, Lesepause, Ablauf. */
+function zweiZurueck(s,v){const Z=zweiBau(v);Z.plan.forEach(p=>{if(p.ende)return;if(p.start)p.start();if(p.run)p.run(1)});
+  Z.plan=[];Z.i=0;Z.t=0;Z.fertig=false;Z.geht=false;Z.bx=0;
+  const U=Z.ue={von:v,alt:BAHNEN.map((b,i)=>v.bahnen[i]||T(b)),aAlt:[1,1],aNeu:[0,0],rueck:0},Ls=BAHNEN.map(b=>Z.B[b]),unten=Z.B.aktiv;
+  Ls.forEach(L=>{L.sch=0;L.els.forEach(e=>{e.d=0;e.v=0})});
+  const add=(dur,run,start)=>Z.plan.push({dur,run,start});
+  add(0.25);
+  add(0.35,k=>Ls.forEach(L=>{if(L.ged){L.ged.a=1-k;if(k>=1)L.ged=null}}));
+  if(Z.blick>0.01)add(0.3,k=>Z.blick=1-k);
+  add(0.3,null,()=>{U.rueck=1;Z.geht=true});
+  for(let n=Math.max(...Ls.map(L=>L.treffer));n>0;n--)add(0.22,null,()=>Ls.forEach(L=>{if(L.treffer>=n)L.treffer--}));
+  for(let j=Math.max(...Ls.map(L=>L.els.length))-1;j>=0;j--){
+    const mit=Ls.filter(L=>L.links.some(l=>l.b===j));
+    if(mit.length){add(0.35,k=>mit.forEach(L=>L.links.forEach(l=>{if(l.b===j)l.k=1-k})));
+      add(0.05,null,()=>mit.forEach(L=>{L.links=L.links.filter(l=>l.b!==j)}));
+      const leer=mit.filter(L=>!L.links.some(l=>l.b<j));if(leer.length)add(0.3,k=>leer.forEach(L=>L.name=1-k))}
+    add(0.5,k=>Ls.forEach(L=>{if(L.els[j]&&L.fall){L.els[j].a=1-ease(k/0.45);L.fall.k=1-k}}),
+      ()=>Ls.forEach(L=>{const e=L.els[j];if(e)L.fall={j,k:1,sign:(e.charges[0]||{s:-1}).s}}));
+    add(0.15,null,()=>Ls.forEach(L=>{L.fall=null;if(L.els.length>j){L.els.length=j;L.alle.length=j}}))}
+  add(0.4,null,()=>{U.rueck=0;Z.geht=false});
+  BAHNEN.forEach((b,i)=>{if(U.alt[i]===(s.bahnen[i]||T(b))){U.aAlt[i]=0;U.aNeu[i]=1}});
+  if(U.aAlt[0]){add(0.25,k=>U.aAlt[0]=1-k);add(0.35,k=>U.aNeu[0]=k);add(0.25)}
+  if(U.aAlt[1]){const weit=()=>cx+40;
+    add(0.9,k=>{unten.dx=-weit()*k;U.aAlt[1]=1-ease(k/0.4)},()=>{unten.laeuft=true});
+    add(0.15,null,()=>{unten.dx=W-cx+40});
+    add(0.9,k=>unten.dx=(W-cx+40)*(1-k));
+    add(0.1,null,()=>{unten.laeuft=false;unten.dx=0});
+    add(0.35,k=>U.aNeu[1]=k)}
+  add(0.3);
+  add(0,null,()=>{const N=zweiBau(s);N.weg=N.w0=Z.weg;S.zw=N;$('text').classList.remove('warte');S.lese=lesezeit();syncNav()});
+  return Z}
 // data-stand: der Schritt beginnt so, wie der genannte endet. Dessen Plan läuft dafür einmal im Stillen bis zum Ende durch.
 function zweiBau(s){const ev=s.ereignisse,vor=SLIDES.find(x=>x.id===s.stand&&x!==s);
   const el=(e,a)=>({id:e.id,label:e.label,charges:zeichen(e.lad),d:0,v:0,a});
@@ -122,6 +158,8 @@ function zweiTakt(s,dt,liest){const Z=S.zw;Z.bx*=Math.pow(0.003,dt);BAHNEN.forEa
       L.links.forEach(l=>{if(l.k>=1&&E[l.a]&&E[l.b]){if(l.a===i)a+=60*(E[l.b].d-e.d);if(l.b===i)a+=60*(E[l.a].d-e.d)}});return a});
     E.forEach((e,i)=>{e.v+=acc[i]*dt;e.d+=e.v*dt})});
   if(liest)return;
+  // der Tag läuft zurück: die Zeitlinien laufen rückwärts, was auf ihnen steht, wandert nach rechts hinaus
+  if(Z.ue&&Z.ue.rueck){const d=110*dt;Z.weg-=d;Z.gl.forEach(q=>q.x+=d)}
   for(let g=0;Z.i<Z.plan.length&&g<400;g++){const p=Z.plan[Z.i];if(!p.on){p.on=true;if(p.start)p.start()}
     Z.t+=dt;dt=0;const k=reduce||!p.dur?1:Math.min(1,Z.t/p.dur);if(p.run)p.run(k);if(k<1)break;Z.i++;Z.t=0}}
 // Kanal: derselbe Satz, drei Wege. Jeder Tipp beginnt wieder vor dem Satz.
@@ -185,8 +223,10 @@ function drawZwei(){const s=SLIDES[cur],Z=S.zw;if(!Z)return;const h=H/2,I=Z.ins,
     // jede Insel liegt so tief, wie ihr Mensch gerade geladen ist
     const tief=I?I.kD*L.treffer*4:0;L.sink=reduce?tief:L.sink+(tief-L.sink)*0.07;
     const iy=yI+L.sink+(I&&!reduce?Math.sin(time*1.1+bi*2.4)*1.6*I.kD:0);L.ix=ix;L.iy=iy;L.n=n;
-    const fx=lerp(cx+(Z.nur&&Z.nur!==b?0:Z.bx),ix,kb)+(reduce?0:Math.sin(time*46)*1.7*L.sch),fy=lerp(yT-2.3*RZ,iy-RI-2.3*RZ,kb);L.mx=fx;L.my=fy;
-    if(aT>0.01){ctx.globalAlpha=aT;label(name.toUpperCase(),12,y0+18,10,C.ink,'left',2);
+    const fx=lerp(cx+(Z.nur&&Z.nur!==b?0:Z.bx),ix,kb)+(L.dx||0)+(reduce?0:Math.sin(time*46)*1.7*L.sch),fy=lerp(yT-2.3*RZ,iy-RI-2.3*RZ,kb);L.mx=fx;L.my=fy;
+    if(aT>0.01){ctx.globalAlpha=aT;
+      if(Z.ue){ctx.globalAlpha=Z.ue.aAlt[bi];label(Z.ue.alt[bi].toUpperCase(),12,y0+18,10,C.ink,'left',2);ctx.globalAlpha=Z.ue.aNeu[bi];label(name.toUpperCase(),12,y0+18,10,C.ink,'left',2);ctx.globalAlpha=aT}
+      else label(name.toUpperCase(),12,y0+18,10,C.ink,'left',2);
       // die Zeitlinie läuft unter den Füßen durch
       ctx.strokeStyle=C.muted;ctx.lineWidth=1.5;ctx.setLineDash([6,8]);ctx.lineDashOffset=Z.weg;ctx.beginPath();ctx.moveTo(0,yT);ctx.lineTo(W,yT);ctx.stroke();ctx.setLineDash([]);
       Z.gl.forEach(q=>{if(q.nur&&q.nur!==b)return;ctx.globalAlpha=aT;zeichenMalen(q,yT,q===letzt,Z.geht,L.deckel)});ctx.globalAlpha=aT;
@@ -204,7 +244,7 @@ function drawZwei(){const s=SLIDES[cur],Z=S.zw;if(!Z)return;const h=H/2,I=Z.ins,
     // eine Ladung, die gerade in ihm entsteht
     if(L.hell>0.01){ctx.globalAlpha=0.6*L.hell;ctx.fillStyle=L.hellS<0?C.minus:C.plus;ctx.fill();ctx.globalAlpha=1}
     ctx.strokeStyle=C.ink;ctx.lineWidth=1.5;ctx.stroke();
-    figur(fx,fy,RZ,1,Z.geht&&!reduce?Math.sin(time*8):0);
+    figur(fx,fy,RZ,1,(Z.geht||L.laeuft)&&!reduce?Math.sin(time*8):0);
     // nebenbei: das Handy in der Hand, der Blick geht dorthin
     if(L.handy>0.01){const hx=fx-RZ*1.8-2,hy=fy+RZ*0.2-6;ctx.globalAlpha=L.handy*aT;ctx.fillStyle=C.paper;ctx.strokeStyle=C.ink;ctx.lineWidth=1.3;
       rund(hx-3.5,hy-6.5,7,13,1.5);ctx.fill();ctx.stroke();
@@ -248,7 +288,7 @@ function drawZwei(){const s=SLIDES[cur],Z=S.zw;if(!Z)return;const h=H/2,I=Z.ins,
     // die Ladung eines Trägers steigt zu seinem Männchen auf
     if(L.auf&&L.pos[L.auf.i]){const q=L.pos[L.auf.i],k=L.auf.k;chargeDot(lerp(q.x,fx,k*k),lerp(q.y,fy,ease(k)),L.auf.sign,1.1)}
     // der Name des Stegs, unter dem Wasser
-    const nm=satzVon(s,'name');
+    const nm=satzVon(Z.ue?Z.ue.von:s,'name');
     if(nm&&L.name*aT>0.01){ctx.globalAlpha=L.name*aT;ctx.font='italic 15px '+C.serif;const w=ctx.measureText(nm).width;
       label(T('steg').toUpperCase(),cx-w/2-4,yR+42,9,C.muted,'right',1.4);ctx.globalAlpha=L.name*aT;
       ctx.font='italic 15px '+C.serif;ctx.fillStyle=C.ink;ctx.textAlign='left';ctx.fillText(nm,cx-w/2+4,yR+42);ctx.globalAlpha=1}});

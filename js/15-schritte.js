@@ -80,7 +80,7 @@ function enterStep(s,prev){
     S.zs={T:reduce?9:0,said:false,els:ids.length>1?ids.map(id=>{const c=carrier(id);return {id,label:c.label,charges:c.charges.map(ch=>({s:ch.s,big:ch.big}))}})
       :(n?n.glieder:[]).map(g=>({id:g.id,label:g.label,charges:zeichen(g.lad)}))}}
   else S.zs=null;
-  if(s.scene==='zwei')zweiStart(s);else S.zw=null;
+  if(s.scene==='zwei')zweiStart(s,prev);else S.zw=null;
   if(s.scene==='arbeit')arbeitStart(s);else S.ar=null;
   if(s.scene==='grob')grobStart(s);else S.gb=null;
   if(s.scene==='strom')stromStart(s,prev);else S.sr=null;
