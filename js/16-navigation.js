@@ -10,11 +10,13 @@ function go(i,force){
   renderText();
   // der neue Text blendet ein, danach Lesepause. Beim Klappen wartet der Text, bis die Linie steht, beim Übergang aus dem Ring, bis die Zeitlinie steht, beim Zurücklaufen des Tages, bis die Bahnen leer sind.
   const tx=$('text');tx.style.transition='none';tx.classList.add('warte');void tx.offsetWidth;tx.style.transition='';
-  const nachher=s.klappen||!!(S.sr&&S.sr.ue)||!!(S.zw&&S.zw.ue);   // der Text kommt erst nach dem Übergang
+  const nachher=s.klappen||!!(S.sr&&S.sr.ue)||!!(S.zw&&S.zw.ue&&s.scene==='zwei')||!!(S.fk&&S.fk.ue);   // der Text kommt erst nach dem Übergang
   if(reduce||!nachher)tx.classList.remove('warte');
   S.lese=nachher?0:lesezeit();
   const inChap=SLIDES.filter(x=>x.chap===s.chap),n=inChap.indexOf(s)+1;
   $('chap').textContent=s.chap==null?T('theorie'):KAPITEL[s.chap]+' · '+n+'/'+inChap.length;
+  // bricht die Kopfzeile um, wird sie enger gesetzt: so bleibt die Bühne von Schritt zu Schritt gleich hoch
+  const kopf=document.querySelector('.top');kopf.classList.remove('eng');if($('chap').offsetHeight>$('brand').offsetHeight*1.5)kopf.classList.add('eng');
   renderRow();renderChapters();syncNav();try{scrollTo(0,0)}catch(e){}
 }
 function renderText(){
@@ -59,6 +61,7 @@ function renderRow(){
   if(s.scene==='schloss')s.schluessel.forEach((q,i)=>{btn(s.id+'-schluessel'+i,'„'+q.text+'“',()=>schlossTipp(s,i),()=>!S.sk||!S.sk.fertig||S.sk.drin===i,'still').dataset.nodemo='1'});
   if(s.scene==='sicht'&&!s.reihe&&!s.aussen)btn('act-'+s.id,s.knopf||'',()=>sichtTipp(s),()=>!S.si||!S.si.fertig||!!S.si.laeuft||(s.rueck?S.si.gehoben:S.si.drift>0),'act').dataset.nodemo='1';
   if(s.scene==='drehen')btn('act-'+s.id,s.knopf||'drehen',()=>drehenTipp(s),()=>!S.dr||!S.dr.fertig||!!S.dr.laeuft,'act').dataset.nodemo='1';
+  if(s.scene==='fokus')s.momente.filter(id=>MOM[id].knopf).forEach(id=>btn(s.id+'-'+id,MOM[id].knopf,()=>fokusTipp(s,id),()=>!S.fk||!S.fk.fertig||!!S.fk.laeuft||!!(st.fk||{})[id]));
   if(s.scene==='strom')btn('act-'+s.id,s.knopf||'',()=>stromAn(s),()=>!S.sr||S.sr.an||!!S.sr.ue,'act').dataset.nodemo='1';
   if(s.scene==='grob')s.nimmt.forEach(e=>{btn(s.id+'-nimmt-'+e.id,'„'+e.knopf+'“',()=>grobNimmt(s,e),()=>!S.gb||!S.gb.fertig||!!S.gb.laeuft).dataset.nodemo='1'});
   if(s.scene==='grob')s.eingriffe.forEach(e=>{btn(s.id+'-eing-'+e.id,e.knopf,()=>grobEingriff(s,e),()=>!S.gb||!S.gb.fertig||!!S.gb.laeuft).dataset.nodemo='1'});

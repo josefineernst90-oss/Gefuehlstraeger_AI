@@ -84,6 +84,7 @@ function enterStep(s,prev){
   if(s.scene==='arbeit')arbeitStart(s);else S.ar=null;
   if(s.scene==='grob')grobStart(s);else S.gb=null;
   if(s.scene==='strom')stromStart(s,prev);else S.sr=null;
+  if(s.scene==='fokus')fokusStart(s,prev);else S.fk=null;
   if(s.scene==='film')filmStart(s);else S.fi=null;
   if(s.scene==='spitze')spitzeStart(s);else S.sp=null;
   if(s.scene==='schloss')schlossStart(s);else S.sk=null;
@@ -127,6 +128,7 @@ function done(s){const st=stOf(s),eg=EIGEN[s.id];
   if(s.zumSteg)return !!S.zs&&S.zs.said;
   if(s.scene==='arbeit')return !!S.ar&&S.ar.fertig;
   if(s.scene==='strom')return !!st.gerichtet;
+  if(s.scene==='fokus')return !!S.fk&&S.fk.fertig&&s.momente.filter(id=>MOM[id].knopf).every(id=>(st.fk||{})[id]);
   if(s.scene==='film')return !!S.fi&&S.fi.fertig;
   if(s.scene==='spitze')return !!S.sp&&S.sp.fertig;
   if(s.scene==='schloss')return !!st.offen;

@@ -105,7 +105,7 @@ function zweiBau(s){const ev=s.ereignisse,vor=SLIDES.find(x=>x.id===s.stand&&x!=
       return}
     if(e.geht||e.innen){zweiInnen(Z,e,add);
       // data-satz: der Satz zu diesem Ereignis, mit Lesezeit, bevor das nächste kommt
-      if(e.satz&&ev.slice(n+1).some(x=>!x.knopf)){add(0,null,()=>say(e.satz));add(3.2);add(0,null,()=>say(''))}
+      if(e.satz&&ev.slice(n+1).some(x=>!x.knopf)){Z.plan.push({dur:0,start:()=>say(e.satz),ende:true});add(3.2);Z.plan.push({dur:0,start:()=>say(''),ende:true})}
       return}
     // erst der eine, dann der andere. Denken beide dasselbe, läuft es in beiden Bahnen zugleich.
     const gleich=mit.length===2&&e.ged.passiv.text===e.ged.aktiv.text;

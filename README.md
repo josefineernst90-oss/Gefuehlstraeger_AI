@@ -1,6 +1,6 @@
 # Gefühlsträger interaktiv
 
-Das Buch „Gefühlsträger“ als interaktive Seite. Stand: Version 65.
+Das Buch „Gefühlsträger“ als interaktive Seite. Stand: Version 66.
 
 ## Ansehen und bearbeiten
 
@@ -14,7 +14,7 @@ Das Buch „Gefühlsträger“ als interaktive Seite. Stand: Version 65.
 | `docs/DREHBUCH.md` | Was jedes Attribut im Drehbuch bedeutet, Bühne für Bühne |
 | `css/seite.css` | Layout und Farben (hell und dunkel) |
 | `js/01-grundlage.js` | Drehbuch einlesen, Zustand, Ladungen, Momente |
-| `js/02` bis `js/14` | je eine Bühne (`bindung`, `steg`, `zwei`, `arbeit`, `film`, `spitze`, `schloss`, `drehen`, `sicht`, `strom`, `grob`, Zeitlinie) |
+| `js/02` bis `js/14b` | je eine Bühne (`bindung`, `steg`, `zwei`, `arbeit`, `film`, `spitze`, `schloss`, `drehen`, `sicht`, `strom`, `grob`, Zeitlinie, `fokus`) |
 | `js/15-schritte.js` | Schritt betreten, verlassen, erledigt |
 | `js/16-navigation.js` | Weiter, Zurück, Knöpfe, Kapitelpunkte |
 | `js/17-buehne-und-start.js` | Takt, gemeinsame Zeichenhelfer, Speicher-Bühne, Start |

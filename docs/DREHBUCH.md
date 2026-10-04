@@ -316,6 +316,22 @@ Eins nach dem anderen: Hüllen und Fäden treten zurück, es bleiben du und .sat
 der Satz wird flach und zu einem Stück Zeitlinie unter deinen Füßen · die Zeitlinie wächst über die ganze Breite · du gehst mit ihr an deinen Platz ·
 Zähler und Zeichen erscheinen. Erst danach kommen der Text des Schritts, die Lesepause und der Hinweis. Der Knopf ist so lange gesperrt.
 
+BÜHNE „FOKUS“ (data-szene="fokus" am <section>): du stehst auf der Zeitlinie, darunter groß dein Stimmungsspeicher mit Pegel, wie beim Türrahmen im Kapitel Bindung.
+Ein Moment öffnet sich unter deinen Füßen. Die Bühne hat ihren eigenen Stand, er ergibt sich aus dem Schritt in data-stand:
+bei einem Schritt der Bühne „zwei“ liegen die Träger seiner unteren Bahn im Speicher · bei einem Schritt der Bühne „fokus“ sein Stand und alles, was seine Momente bewirken.
+  data-kommt="Abendessen"    nach der Lesepause läuft die Zeit, dieses Zeichen kommt von rechts und bleibt neben dir stehen (ein Punkt auf der Zeitlinie mit Beschriftung)
+  data-geht                  nach der Lesepause läuft die Zeit, das Zeichen des Schritts davor wandert nach links hinaus
+  data-uebergang="speicher"  der Schritt beginnt mit den zwei Bahnen des Schritts davor (nur wenn man direkt von dort kommt). Eins nach dem anderen: die Gedanken gehen ·
+                             die obere Bahn tritt zurück · der Name der unteren Bahn geht · die untere Bahn rückt nach oben, ihre Zeitlinie wird deine ·
+                             der Speicher wächst aus deinem Bauch · die Träger sinken einer nach dem anderen vom Wasser in den Speicher · das Wasser geht · der Pegel erscheint.
+                             Erst danach kommen der Text des Schritts und die Lesepause.
+<p class="traeger" data-id data-name data-ladung>: ein Träger, der von früher im Speicher liegt. Er erscheint dort nach der Lesepause.
+<div class="moment"> wie auf der Speicher-Bühne (data-id, data-ladung, data-tempo, data-adresse mit data-name, Zeilen mit data-wer, <p class="fall">).
+Ohne data-knopf läuft der Moment von selbst, mit data-knopf nach dem Tipp (jeder Knopf einmal). Ablauf: die Platten öffnen sich unter deinen Füßen · Zeile für Zeile,
+die Ladung daneben wird mit jeder Zeile deutlicher (bei einer einzigen Zeile bleibt sie klein) · eine Zeile mit data-ruft: erst schickt der gerufene Träger sein Echo hoch ·
+die Platten schließen sich um die Ladung · sie fällt in den Speicher: ohne data-adresse lose, mit data-adresse an ihren Träger (gibt es ihn noch nicht, erscheint er) ·
+dann steht der Satz aus <p class="fall"> unter der Bühne. Sind alle Knöpfe getippt, kommt nach einer Lesezeit .satz data-id="alle".
+
 BÜHNE „FILM“ (data-szene="film" am <section>): links oben du, darunter dein gerahmter Satz (.satz data-id="satz"). Ablauf, eins nach dem anderen:
 rechts oben erscheint ein Bild im Rahmen, der Film · deine Blicklinie geht hin · unter dem Rahmen erscheint der Satz im Film (.satz data-id="film") ·
 im Film bekommt eine Figur von der anderen ein Minus · neben dir erscheint die erste .blase · die Figur im Film lacht, ihr Minus wird zum Plus ·

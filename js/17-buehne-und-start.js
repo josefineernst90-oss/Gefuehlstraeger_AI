@@ -5,7 +5,7 @@ function resize(){
   layout();if(started)fit();
 }
 // steht das Männchen auf der Zeitlinie, braucht es darüber Platz
-function layout(){const mann=started&&SLIDES[cur].mann;
+function layout(){const mann=started&&(SLIDES[cur].mann||SLIDES[cur].scene==='fokus');
   cx=W/2;yL=Math.max(mann?68:54,H*0.22);M=Math.min(40,W*0.1);R0=Math.max(30,Math.min(W*0.25,(H-yL-40-52)/2));cy0=yL+40+R0;R=R0;cy=cy0}
 function pos(e){const rc=cv.getBoundingClientRect();ptr.x=e.clientX-rc.left;ptr.y=e.clientY-rc.top}
 cv.addEventListener('pointermove',pos);cv.addEventListener('pointerdown',pos);
@@ -97,6 +97,7 @@ function step(dt){
   if(s.scene==='zwei'&&S.zw)zweiTakt(s,dt,liest);
   if(s.scene==='arbeit'&&S.ar){S.ar.sch*=Math.pow(0.1,dt);if(!liest)ablauf(S.ar,dt)}
   if(s.scene==='strom'&&S.sr)stromTakt(s,dt,liest);
+  if(s.scene==='fokus'&&S.fk)fokusTakt(s,dt,liest);
   if(s.scene==='film'&&S.fi){S.fi.sch*=Math.pow(0.05,dt);if(!liest)ablauf(S.fi,dt)}
   if(s.scene==='spitze'&&S.sp&&!liest)ablauf(S.sp,dt);
   if(s.scene==='schloss'&&S.sk){S.sk.sch*=Math.pow(0.03,dt);if(!liest)ablauf(S.sk,dt)}
@@ -582,7 +583,7 @@ function loop(now){
   const dt=Math.min(0.05,(now-last)/1000);last=now;step(dt);
   ctx.clearRect(0,0,W,H);
   const sc=SLIDES[cur].scene;
-  if(sc==='dreieck')drawDreieck();else if(sc==='linie')drawLinie();else if(sc==='bindung')drawBindung();else if(sc==='steg')drawSteg();else if(sc==='zwei')drawZwei();else if(sc==='arbeit')drawArbeit();else if(sc==='grob')drawGrob();else if(sc==='strom')drawStrom();else if(sc==='film')drawFilm();else if(sc==='spitze')drawSpitze();else if(sc==='schloss')drawSchloss();else if(sc==='drehen')drawDrehen();else if(sc==='sicht')drawSicht();else{drawSpeicher();if(SLIDES[cur].figur)drawFigur();if(SLIDES[cur].hinaus&&S.aus)drawHinaus();if(SLIDES[cur].ein&&S.ein)drawEin();if(SLIDES[cur].zumSteg&&S.zs)drawZumSteg()}
+  if(sc==='dreieck')drawDreieck();else if(sc==='linie')drawLinie();else if(sc==='bindung')drawBindung();else if(sc==='steg')drawSteg();else if(sc==='zwei')drawZwei();else if(sc==='arbeit')drawArbeit();else if(sc==='grob')drawGrob();else if(sc==='strom')drawStrom();else if(sc==='fokus')drawFokus();else if(sc==='film')drawFilm();else if(sc==='spitze')drawSpitze();else if(sc==='schloss')drawSchloss();else if(sc==='drehen')drawDrehen();else if(sc==='sicht')drawSicht();else{drawSpeicher();if(SLIDES[cur].figur)drawFigur();if(SLIDES[cur].hinaus&&S.aus)drawHinaus();if(SLIDES[cur].ein&&S.ein)drawEin();if(SLIDES[cur].zumSteg&&S.zs)drawZumSteg()}
   requestAnimationFrame(loop);
 }
 new ResizeObserver(resize).observe(stage);

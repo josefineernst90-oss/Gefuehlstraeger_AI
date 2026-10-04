@@ -1,6 +1,6 @@
 # Stand
 
-Version 65, 4. Oktober 2026. 59 aktive Schritte, 10 ausgeschaltet.
+Version 66, 4. Oktober 2026. 61 aktive Schritte, 10 ausgeschaltet.
 
 ## Schritte nach dem Kapitel Bindung
 
@@ -18,7 +18,12 @@ Version 65, 4. Oktober 2026. 59 aktive Schritte, 10 ausgeschaltet.
 
 **Positiv Indexieren**: `x0` Brücke: aus dem Ring wird die Zeitlinie, dann die Bühne der gelben Autos mit den Zeichen des Tages, Knopf „achte auf das, was guttut“ · `x2` Aufräumen in zwei Bahnen, der Name „Scheißtag“ fliegt in die Tonne, danach im selben Bild der Papierkram (Bürde, Bestandsaufnahme) · `x1` ausgeschaltet (umdrehbarer Träger)
 
+**Aufmerksamkeit & Focus** (auf der Seite nach Positiv Indexieren): `a1` Abendessen, die Avocado nebenbei oder mit hochgedrehter Auflösung, davor der Übergang aus den zwei Bahnen in den Speicher · `a2` Referenzabgleich mit Pommes
+
 ## Offen
+
+- Neu in Version 66: das Kapitel Aufmerksamkeit & Focus (`a1`, `a2`), neue Bühne `fokus`. Urteil steht aus. Weggelassen, mit der Autorin abgestimmt: der Wald und die Routine mit dem Akkord. Zu prüfen: der Übergang aus dem Aufräum-Schritt (etwa 7,5 Sekunden), sieben Träger im Speicher auf dem Handy, die Texte oben.
+- Geplante Brücke zum Überschuss: die Auflösung bleibt hochgedreht, die Zeitlinie läuft weiter, jedes Zeichen geht so weit auf wie die Avocado, es kommt mehr an, als sich einsortieren lässt.
 
 - Neu in Version 64: Übergang von Stegbildung 4/4 zu Potentialausgleich 1/3 (der Tag läuft zurück, „passiv“ wird „du“, der Kollege kommt). Urteil steht aus.
 - Neu in Version 65: Papierkram im Aufräum-Schritt. Urteil steht aus (auf dem Handy wandern Türrahmen und Kollege dabei links aus dem Bild).
@@ -28,6 +33,6 @@ Version 65, 4. Oktober 2026. 59 aktive Schritte, 10 ausgeschaltet.
 - Die erste Seite erklärt das Dreieck nicht mehr im Text (Metaphorik steht nur noch auf der Bühne und im Knopf).
 - Urteil zu den Knöpfen in `sf2` und zu `x2` steht noch aus. Zu prüfen in `x2`: Namen der Bahnen, Text oben, ob „Pflicht“ oben einzeln bleibt oder am Scheißtag andockt.
 - Vorgeschlagen: Mitdenken, Sport als weitere Beispiele in `x2`; Wald und Avocado als Beispiele für Aufmerksamkeit & Focus.
-- Noch nicht auf der Seite: Aufmerksamkeit & Focus, Überschuss, Namensgebung, Potential, der Rest von Positiv Indexieren.
+- Noch nicht auf der Seite: Überschuss, Namensgebung, Potential.
 - In niedrigen Fenstern (unter etwa 700 px Höhe) scrollt die Seite, die Kapitelpunkte liegen dann unterhalb des sichtbaren Bereichs.
 - Alte Textstellen in den Schritten `kb` und `k5`. Schriften kommen noch von Google Fonts.
