@@ -1,6 +1,6 @@
 # Stand
 
-Version 64, 4. Oktober 2026. 59 aktive Schritte, 10 ausgeschaltet.
+Version 65, 4. Oktober 2026. 59 aktive Schritte, 10 ausgeschaltet.
 
 ## Schritte nach dem Kapitel Bindung
 
@@ -16,17 +16,18 @@ Version 64, 4. Oktober 2026. 59 aktive Schritte, 10 ausgeschaltet.
 
 **Speicher füllen**: `sf1` Rückblick: alles kam von außen · `sf2` Heimweg zweimal, dazu Knöpfe Dusche, Lied, Fenster · `sf3` zurück im Ring der Bindung: was stört, zieht seine Fäden von selbst und wird fest, was guttut, verblasst, wenn man es nicht antippt
 
-**Positiv Indexieren**: `x0` Brücke: aus dem Ring wird die Zeitlinie, dann die Bühne der gelben Autos mit den Zeichen des Tages, Knopf „achte auf das, was guttut“ · `x2` Aufräumen in zwei Bahnen, der Name „Scheißtag“ fliegt in die Tonne · `x1` ausgeschaltet (umdrehbarer Träger)
+**Positiv Indexieren**: `x0` Brücke: aus dem Ring wird die Zeitlinie, dann die Bühne der gelben Autos mit den Zeichen des Tages, Knopf „achte auf das, was guttut“ · `x2` Aufräumen in zwei Bahnen, der Name „Scheißtag“ fliegt in die Tonne, danach im selben Bild der Papierkram (Bürde, Bestandsaufnahme) · `x1` ausgeschaltet (umdrehbarer Träger)
 
 ## Offen
 
 - Neu in Version 64: Übergang von Stegbildung 4/4 zu Potentialausgleich 1/3 (der Tag läuft zurück, „passiv“ wird „du“, der Kollege kommt). Urteil steht aus.
-- Als Nächstes nach Positiv Indexieren, laut Autorin: Aufmerksamkeit & Focus oder Namensgebung.
+- Neu in Version 65: Papierkram im Aufräum-Schritt. Urteil steht aus (auf dem Handy wandern Türrahmen und Kollege dabei links aus dem Bild).
+- Reihenfolge nach Positiv Indexieren, von der Autorin festgelegt: Aufmerksamkeit & Focus, dann Überschuss, dann Namensgebung. Kapazität steht bisher nirgends auf der Seite; das Kapitel Überschuss führt sie im Buch selbst ein („Verarbeiten braucht Zeit und Aufmerksamkeit. Beides ist begrenzt.“).
 - Neu in Version 63: die Bewegung ist immer an (kein Schalter mehr), neuer Text auf der ersten Seite (kurz und ausführlich, von der Autorin), in `sf3` der erste Satz oben gestrichen, in `x0` der Übergang aus dem Ring. Urteil zum Übergang steht aus.
 - Aus Version 62, Urteil steht aus: `sf3` und `x0`. Zu prüfen in `sf3`: Dauer bis zum Antippen (etwa 20 Sekunden), links was stört und rechts was guttut. Zu prüfen in `x0`: Text oben, Knopf und Zähler, ob Türrahmen und Kollege mit vorbeiziehen sollen, der Satz zum Aufräumen als Übergang zu `x2`.
 - Die erste Seite erklärt das Dreieck nicht mehr im Text (Metaphorik steht nur noch auf der Bühne und im Knopf).
 - Urteil zu den Knöpfen in `sf2` und zu `x2` steht noch aus. Zu prüfen in `x2`: Namen der Bahnen, Text oben, ob „Pflicht“ oben einzeln bleibt oder am Scheißtag andockt.
-- Vorgeschlagen: Steuererklärung, Mitdenken, Sport als Knöpfe in `x2`; Wald und Avocado als Beispiele für Aufmerksamkeit & Focus.
+- Vorgeschlagen: Mitdenken, Sport als weitere Beispiele in `x2`; Wald und Avocado als Beispiele für Aufmerksamkeit & Focus.
 - Noch nicht auf der Seite: Aufmerksamkeit & Focus, Überschuss, Namensgebung, Potential, der Rest von Positiv Indexieren.
 - In niedrigen Fenstern (unter etwa 700 px Höhe) scrollt die Seite, die Kapitelpunkte liegen dann unterhalb des sichtbaren Bereichs.
 - Alte Textstellen in den Schritten `kb` und `k5`. Schriften kommen noch von Google Fonts.

@@ -103,7 +103,10 @@ function zweiBau(s){const ev=s.ereignisse,vor=SLIDES.find(x=>x.id===s.stand&&x!=
         add(0.4,k=>L.ged.a=k,()=>{L.ged={text:e.ged[b].text,a:0}});
         add(1.6)});
       return}
-    if(e.geht||e.innen){zweiInnen(Z,e,add);return}
+    if(e.geht||e.innen){zweiInnen(Z,e,add);
+      // data-satz: der Satz zu diesem Ereignis, mit Lesezeit, bevor das nächste kommt
+      if(e.satz&&ev.slice(n+1).some(x=>!x.knopf)){add(0,null,()=>say(e.satz));add(3.2);add(0,null,()=>say(''))}
+      return}
     // erst der eine, dann der andere. Denken beide dasselbe, läuft es in beiden Bahnen zugleich.
     const gleich=mit.length===2&&e.ged.passiv.text===e.ged.aktiv.text;
     (gleich?[mit]:mit.map(b=>[b])).forEach(gr=>{
@@ -213,7 +216,9 @@ function drawZwei(){const s=SLIDES[cur],Z=S.zw;if(!Z)return;const h=H/2,I=Z.ins,
   const aT=I?1-ease(I.k0):1;                                                  // was zum Tag gehört
   const RI=Math.max(72,Math.min(104,W*0.226)),DI=Math.max(RI+8,Math.min(W*0.25,190)),yI=Math.max(0,(h-178)/2)+76+RI;   // die Inseln: auf der Höhe der oberen Bahn
   if(aT>0.01){ctx.globalAlpha=aT;ctx.strokeStyle=C.line;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,h);ctx.lineTo(W,h);ctx.stroke();ctx.globalAlpha=1}
-  BAHNEN.forEach((b,bi)=>{const L=Z.B[b],z0=I||!L.alle.length?1:stegZoom(L.alle),R=stegReihe(L.alle,z0),n=L.els.length+L.mehr,name=s.bahnen[bi]||T(b);
+  BAHNEN.forEach((b,bi)=>{const L=Z.B[b],zf=I||!L.alle.length?1:stegZoom(L.alle),z0=I?1:Math.max(zf,0.85),R=stegReihe(L.alle,z0),n=L.els.length+L.mehr,name=s.bahnen[bi]||T(b);
+    // kleiner als 0,85 wird die Reihe nicht. Passt sie dann nicht in die Breite, rückt sie nach links: das Älteste wandert aus dem Bild, wie auf der Zeitlinie.
+    L.ueber=0;if(!I&&zf<z0){const m=L.alle.length-1,ganz=R[m]+(L.alle[m].tot+18)/2-R[0]+(L.alle[0].tot+18)/2;L.ueber=Math.max(0,(ganz-(W/z0-12))/2);for(let i=0;i<=m;i++)R[i]-=L.ueber}
     // kommt ein Träger dazu, rückt die Reihe weich zur Seite (und wird, wenn nötig, als Ganzes kleiner)
     const z=L.zs=reduce||L.zs===undefined?z0:L.zs+(z0-L.zs)*0.16;
     const y0=bi*h+Math.max(0,(h-178)/2),yT=y0+60,yR=yT+62,ix=cx+(bi?1:-1)*DI;
@@ -276,6 +281,8 @@ function drawZwei(){const s=SLIDES[cur],Z=S.zw;if(!Z)return;const h=H/2,I=Z.ins,
     ctx.lineCap='butt';
     L.els.forEach((e,i)=>{if(e){gliedMass(e);gliedMalen(e,P[i].x,P[i].y,R[i]===undefined?0:1-ke(i),e.a)}});
     ctx.restore();
+    // am linken Rand läuft die Reihe weich aus dem Bild
+    if(L.ueber>0){ctx.fillStyle=C.bg;for(let i=0;i<10;i++){ctx.globalAlpha=1-i/10;ctx.fillRect(i*4,yR-24,4,56)}ctx.globalAlpha=1}
     L.pos=L.els.map((e,i)=>({x:cx+(P[i].x-cx)*z,y:P[i].y,w:I?0:(e?e.tot:0)*z}));
     // die Ladung fällt vom Männchen an ihren Platz
     if(L.fall){const k=L.fall.k,tx=cx+(R[L.fall.j]-cx)*z;chargeDot(lerp(fx,tx,ease(k)),lerp(fy,yR,k*k),L.fall.sign,1.1)}

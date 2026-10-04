@@ -226,6 +226,9 @@ Am Gedanken (<p data-bahn>): data-verpufft = die Ladung sinkt ins Wasser und ver
 data-name und data-ladung = Träger und Vorzeichen dieser Bahn (sonst die des Ereignisses) · data-sortiert = vor der Ladung lösen sich die Verbindungsstücke
 des Stegs, eins nach dem anderen, dann fliegt sein Name (.satz data-id="name") in die Tonne.
 data-art am Ereignis kennt dafür auch: tonne (eine Tonne mit Deckel) und wort (nur die Beschriftung über einem Punkt auf der Zeitlinie).
+data-satz am Ereignis (mit data-geht oder data-innen): der Satz zu diesem Ereignis. Er steht unter der Bühne, sobald es zu Ende ist, mit Lesezeit,
+und geht, bevor das nächste Ereignis von selbst kommt. Nach dem letzten Ereignis steht wie immer .satz data-id="an".
+Die Reihe auf dem Wasser wird nie kleiner als 0,85. Passt sie dann nicht in die Breite, rückt sie nach links, und das Älteste läuft am linken Rand aus dem Bild.
 data-knopf am Ereignis: es läuft nicht von selbst, sondern erscheint als Knopf, sobald der Schritt fertig ist. Jeder Tipp spielt es einmal,
 die Träger sammeln sich auf dem Wasser. Danach .satz data-id="mehr", nach dem letzten .satz data-id="alle".
 <p class="glied"> im Block (bei data-szene="zwei"): in beiden Bahnen liegt von Anfang an derselbe Steg, verbunden, mit dem Namen aus .satz data-id="name".
