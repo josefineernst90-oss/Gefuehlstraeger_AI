@@ -1,0 +1,1230 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Gefühlsträger interaktiv</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gelasio:ital,wght@0,400;0,500;1,400&family=Jost:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/seite.css">
+</head>
+<body>
+<div class="app">
+  <header class="top"><span class="brand" id="brand"></span><span id="chap"></span></header>
+  <p class="ruhe" id="ruhe" hidden><span id="ruhe-text"></span> <button id="motion"></button></p>
+  <div class="textwrap">
+    <div class="text" id="text" aria-live="polite" tabindex="0"></div>
+    <button id="mode" aria-pressed="false"></button>
+  </div>
+  <div class="stage" id="stage"><canvas id="c" role="img" aria-label="Bühne"></canvas></div>
+  <p class="cap" id="cap" aria-live="polite"></p>
+  <div class="row" id="row"></div>
+  <nav class="nav" aria-label="Schritte">
+    <button id="back"></button>
+    <button id="auto"></button>
+    <button id="next"></button>
+  </nav>
+  <ol class="chapters" id="chapters" aria-label="Kapitel der Theorie"></ol>
+</div>
+
+<!-- DREHBUCH
+     Hier steht alles Sprachliche und die Reihenfolge der Schritte. Das Programm in js/ spielt es nur ab.
+     Jeder Schritt ist ein <section>-Block. Was die Attribute bedeuten, steht in docs/DREHBUCH.md. -->
+<div id="drehbuch" hidden>
+
+  <!-- Kapitel der Theorie, in der Reihenfolge des Buchs. Die Kapitelleiste unten zeigt nur die Kapitel, die es auf der Seite schon gibt,
+       und zwar in der Reihenfolge der Seite (die weicht vom Buch ab). Davor steht ein Punkt für den Anfang. -->
+  <ol id="kapitel">
+    <li>Ladung</li><li>Ladungsträger</li><li>Bindung</li><li>Stegbildung</li><li>Potentialausgleich</li>
+    <li>Speicher füllen</li><li>Aufmerksamkeit &amp; Focus</li><li>Überschuss</li><li>Generalisierung</li><li>Indexierung</li>
+    <li>Namensgebung</li><li>Potential</li><li>Perspektiven</li><li>Positiv Indexieren</li>
+  </ol>
+
+  <!-- Beschriftungen der Bühne und der Bedienung -->
+  <div id="woerter">
+    <p data-id="marke">Gefühlsträger</p>
+    <p data-id="theorie">Theorie</p>
+    <p data-id="weiter">Weiter</p>
+    <p data-id="zurueck">Zurück</p>
+    <p data-id="zuschauen">Zuschauen</p>
+    <p data-id="nochmal">Nochmal ansehen</p>
+    <p data-id="zuruecksetzen">Zurücksetzen</p>
+    <p data-id="kommtnoch">Kommt noch</p>
+    <p data-id="anfang">Anfang</p>
+    <p data-id="ausfuehrlich">Ausführlich · ohne Vorkenntnisse</p>
+    <p data-id="kurz">Kurz · Buch gelesen</p>
+    <p data-id="denken">Denken</p>
+    <p data-id="logik">Logik</p>
+    <p data-id="gefuehl">Gefühl</p>
+    <p data-id="sinn">Sinn</p>
+    <p data-id="metaphorik">Metaphorik</p>
+    <p data-id="taktversatz">Taktversatz</p>
+    <p data-id="zeit">Zeit</p>
+    <p data-id="speicher">Stimmungsspeicher</p>
+    <p data-id="festgehalten">Festgehalten</p>
+    <p data-id="positiv">überwiegend positiv</p>
+    <p data-id="negativ">überwiegend negativ</p>
+    <p data-id="gemischt">gemischte Gefühle</p>
+    <p data-id="du">du</p>
+    <p data-id="ladungstraeger">Ladungsträger</p>
+    <p data-id="fest">fest</p>
+    <p data-id="zwischenspeicher">Zwischenspeicher</p>
+    <p data-id="tag">Tag</p>
+    <p data-id="tuerrahmen">Türrahmen</p>
+    <p data-id="kollege">Kollege</p>
+    <p data-id="film">Film</p>
+    <p data-id="steg">Steg</p>
+    <p data-id="neu">neu</p>
+    <p data-id="passiv">passiv</p>
+    <p data-id="aktiv">aktiv</p>
+    <!-- wenn das Gerät „weniger Bewegung“ meldet -->
+    <p data-id="ruhe-still">Dein Gerät bittet um weniger Bewegung. Deshalb stehen die Bilder hier still.</p>
+    <p data-id="ruhe-bewegt">Die Bewegung ist eingeschaltet.</p>
+    <p data-id="bewegung-an">Bewegung einschalten</p>
+    <p data-id="bewegung-aus">Wieder ausschalten</p>
+    <!-- was das Männchen neben dem Foto sagt -->
+    <p data-id="geht-positiv">überwiegend gut</p>
+    <p data-id="geht-negativ">überwiegend schlecht</p>
+    <p data-id="geht-gemischt">gemischt</p>
+    <!-- Beschreibung der Bühne für Vorleseprogramme -->
+    <p data-id="buehne-dreieck">Bühne: die Karte als Dreieck, Denken links, Gefühl rechts, Metaphorik oben</p>
+    <p data-id="buehne-speicher">Bühne: Zeitlinie mit Momenten, darunter der Stimmungsspeicher</p>
+    <p data-id="buehne-linie">Bühne: eine Linie mit den Stationen Denken, Metaphorik und Gefühl, darunter ein Männchen, das von Station zu Station läuft</p>
+    <p data-id="buehne-steg">Bühne: Ladungsträger als Schwimmelemente, mit Verbindungsstücken zu einem Steg auf dem Wasser verbunden</p>
+    <p data-id="buehne-zwei">Bühne: zwei Männchen auf zwei Zeitlinien übereinander, oben passiv, unten aktiv, darunter jeweils ihre Ladungsträger auf dem Wasser</p>
+    <p data-id="buehne-arbeit">Bühne: du als kleine Insel in der Mitte, um dich die Inseln der Arbeit, darunter dein Steg auf dem Wasser, der mit der Zeit wächst</p>
+    <p data-id="buehne-grob">Bühne: dein Stimmungsspeicher als Kreis mit Pegel, darin wenige grobe Ladungsträger, darüber du</p>
+    <p data-id="buehne-strom">Bühne: du stehst an der Zeitlinie, Autos oder Menschen ziehen vorbei, oben zwei Zähler</p>
+    <p data-id="buehne-film">Bühne: links du, rechts ein Film im Rahmen, darunter dein Satz</p>
+    <p data-id="buehne-sicht">Bühne: von oben auf das Wasser, links deine Insel, in der Mitte die Insel des Kollegen, dahinter verdeckt die Insel des Chefs</p>
+    <p data-id="buehne-drehen">Bühne: oben links du, in der Mitte eine Aufgabe, darunter hängt ihr Ladungsträger, der sich umdrehen lässt, darunter ein Gedanke</p>
+    <p data-id="aufgabe">Aufgabe</p>
+    <p data-id="buehne-schloss">Bühne: links oben du mit einem Schlüsselbund, rechts oben dein Satz als Schloss, darunter vier Schlüssel mit je einer Deutung</p>
+    <p data-id="buehne-spitze">Bühne: die Karte als Dreieck, du stehst oben an der Spitze bei der Metaphorik, neben dir ein gelbes Auto und ein Film, unten links ein Gedanke, unten rechts ein Minus</p>
+    <p data-id="buehne-bindung">Bühne: in der Mitte du als Strichmännchen, im Ring darum die Ladungsträger als Hüllen, dazwischen die Fäden</p>
+  </div>
+
+
+  <!-- ================================ KARTE ================================ -->
+
+  <section id="titel" data-anker="karte" data-szene="dreieck" data-weiter="Los geht’s">
+    <div class="kurz">
+      <h1>GEFÜHLSTRÄGER</h1>
+      <p class="sub">Was uns bindet, was uns hält.</p>
+      <p>Bevor wir losgehen, werfen wir einen Blick auf die Karte, die uns die ganze Strecke begleitet.</p>
+      <!-- Verdichtung, nicht wörtlich aus dem Buch -->
+      <p>Links das Denken, rechts das Gefühl. Dazwischen eine Lücke, die Zeit braucht. Oben die Metaphorik, die zwischen beiden übersetzt.</p>
+    </div>
+    <div class="lang">
+      <h1>GEFÜHLSTRÄGER</h1>
+      <p class="sub">Was uns bindet, was uns hält.</p>
+      <p>Wir spüren eine Dynamik und können oft auch Momente benennen. Was uns fehlt, ist nicht mehr Gefühl. Das ist reichlich da. Sondern die Distanz, mit der wir es uns von außen ansehen könnten.</p>
+      <p>Zu viel Fühlen belegt die Kapazität, die wir bräuchten, um das Gefühlte zu strukturieren. Zu viel Denken dagegen nimmt uns das Bild selbst. Was uns hier weiterhilft, ist kein drittes Gefühl und kein weiterer Gedanke. Es ist eine neue Perspektive.</p>
+      <p>Stell dir ein einfaches Dreieck vor. In der linken unteren Ecke unser Denken und dessen Logik. In der rechten Ecke das Gefühl und der Sinn. Nicht als Gegner, sondern als zwei Seiten derselben Steigung.</p>
+      <p>Zwischen beiden unteren Ecken klafft eine Lücke. Was zwischen Denken und Gefühl passiert, braucht Zeit, sich auf- und abzubauen. Nichts verschwindet auf Kommando.</p>
+      <p>Und oben, an der Spitze, wo beide Linien sich treffen, die Metaphorik. Sie ist die Übersetzung, die es braucht, damit das eine dem anderen überhaupt verständlich wird.</p>
+      <p>Dies begleitet uns durch die ganze Strecke. Fangen wir unten an, bei dem einfachsten Baustein, den es gibt. Der Ladung.</p>
+    </div>
+    <p class="hinweis">Tippe auf die Ecken und die Lücke.</p>
+    <!-- die vier Teile der Karte: Knopf und Satz dazu -->
+    <p class="teil" data-id="denken" data-knopf="Denken">Die Logik, nach der wir denken, mit der wir mappen, strukturieren, prozessieren, ordnen und festschreiben.</p>
+    <p class="teil" data-id="luecke" data-knopf="Lücke">Was zwischen Denken und Gefühl passiert, braucht Zeit, sich auf- und abzubauen. Nichts verschwindet auf Kommando.</p>
+    <p class="teil" data-id="gefuehl" data-knopf="Gefühl">Der Sinn, der einfach wahrnimmt.</p>
+    <p class="teil" data-id="metaphorik" data-knopf="Metaphorik">Sie ist die Übersetzung, die es braucht, damit das eine dem anderen überhaupt verständlich wird.</p>
+  </section>
+
+
+  <!-- ================================ ERÖFFNUNG ================================ -->
+
+  <!-- ENTWURF: ein Gang über die Linie, hin und zurück. Rechts trifft ihn etwas, links bleibt er im Denken hängen,
+       der Weg zurück zum Gefühl führt über eine Geschichte. Beispiel: der Satz des Kollegen (Indexierung,
+       Orientierungsarbeit) und der Film (Perspektiven).
+       Arbeitsnotiz: Metaphorik steht für die Geschichte selbst, nicht für einzelne Metaphern. -->
+  <section id="e1" data-anker="linie" data-szene="linie" data-uebergang="klappen" data-dauer="4" data-ort="gefuehl" data-trifft="−" data-nochmal>
+    <div class="kurz">
+      <!-- erster Absatz zusammengezogen aus Indexierung und Orientierungsarbeit; der Satz des Kollegen und der letzte Absatz sind von der Autorin -->
+      <p>Ein einzelner Satz vom Kollegen, beiläufig hingeworfen. Du gehst nach Hause, fühlst dich schwer, ohne genau zu wissen, warum.</p>
+      <p>„Das war so nicht richtig. Hättest du mal gefragt.“</p>
+      <p>Nach so einem Satz fühlen wir uns etwas unangenehm.</p>
+    </div>
+    <p class="kommt">ein Satz</p>
+    <p class="blase" data-wer="fühlen">unangenehm</p>
+    <!-- Seitentext, nicht aus dem Buch -->
+    <p class="satz" data-id="an">Der Satz trifft dich im Gefühl.</p>
+  </section>
+
+  <section id="e2" data-szene="linie" data-ort="denken" data-gruebeln data-nochmal>
+    <div class="kurz">
+      <!-- „Du grübelst.“ ist Seitentext; der zweite Satz aus Sackgassen -->
+      <p>Du grübelst. Dieselbe Vermutung, immer wieder gegen sich selbst geprüft.</p>
+    </div>
+    <p class="blase" data-wer="denken">„Arbeit nervt mich“</p>
+    <p class="blase" data-wer="denken">„die Kollegen sind blöd“</p>
+    <!-- abgeleitet aus „die eigene Kompetenz“, nicht wörtlich -->
+    <p class="blase" data-wer="denken">„kann ich das überhaupt?“</p>
+    <p class="satz" data-id="an">Zu viel Denken nimmt uns das Bild selbst.</p>
+  </section>
+
+  <section id="e3" data-szene="linie" data-ort="metaphorik" data-geschichte data-nochmal>
+    <div class="kurz">
+      <!-- Seitentext nach der Formulierung der Autorin, nicht aus dem Buch. Im Rahmen läuft ein kleines Männchen, das genauso grübelt. -->
+      <p>Abends ein Film. Du erkennst deine Situation darin wieder und kannst darüber lachen.</p>
+    </div>
+    <!-- Seitentext -->
+    <p class="blase" data-wer="Geschichte">„das bin ja ich“</p>
+    <p class="satz" data-id="an">Du schaust zu, und irgendwas in dir bleibt hängen.</p>
+  </section>
+
+  <section id="e4" data-szene="linie" data-ort="gefuehl" data-wird="+" data-nochmal>
+    <div class="kurz">
+      <!-- Formulierung der Autorin -->
+      <p>Du fühlst dich leichter und hörst auf zu grübeln.</p>
+    </div>
+    <p class="blase" data-wer="fühlen">leichter</p>
+    <!-- Seitentext, nicht aus dem Buch -->
+    <p class="satz" data-id="an">Gut. Aufgelöst.</p>
+  </section>
+
+
+  <!-- ================================ LADUNG ================================ -->
+
+  <!-- Das Dreieck klappt jetzt schon in der Eröffnung zur Linie (Schritt e1). Hier beginnt die Zeitlinie ohne Übergang.
+       Wieder einschalten: data-uebergang="dreieck" data-dauer="7" am <section> ergänzen.
+       Arbeitsnotiz, wird nicht angezeigt: Das aufgestellte Dreieck symbolisiert das Sinnieren. -->
+  <!-- Übergang von der beschrifteten Linie zur Zeitlinie: die Platten ziehen sich um die Ladung zusammen,
+       der ganze Gang wird ein Moment unter vielen. Ladung und Körper trennen sich: die Ladung steht als |+| auf der Linie,
+       das Männchen wird zum Stimmungsspeicher. Hinein fällt sie erst im nächsten Schritt. -->
+  <section id="lz" data-kapitel="Ladung" data-anker="ladung" data-start="leer" data-uebergang="linie" data-dauer="5" data-auto="gang" data-nochmal>
+    <div class="kurz">
+      <!-- Formulierung der Autorin -->
+      <p>Wir trennen uns für einen Moment von dem Gefühl und schauen uns an, was da passiert. Beginnen wir mit dem einfachsten Baustein: der Ladung.</p>
+    </div>
+    <!-- ein Moment ohne Zeilen: nur seine Ladung. Er bleibt stehen, der nächste Schritt öffnet ihn wieder. -->
+    <div class="moment" data-id="gang" data-ladung="+" data-bleibt>
+      <p class="zu">Ein Moment, mit seiner eigenen Ladung.</p>
+    </div>
+  </section>
+
+  <!-- Dieselbe Situation noch einmal, jetzt in der Zeit. Jedes Gefühl ist ein eigener Moment, und jede Ladung fällt
+       in den Stimmungsspeicher, sobald ihr Moment sich schließt: erst das Minus, dann das Plus.
+       Der stehende Moment |+| öffnet sich für den ersten, der zweite schließt sich daneben an. -->
+  <section id="lw" data-kapitel="Ladung" data-auto="wieder film">
+    <div class="kurz">
+      <!-- die ersten beiden Sätze sind Seitentext (der erste nach der Formulierung der Autorin), der dritte ist angelehnt an das Kapitel Ladung -->
+      <p>Neue Perspektive, gleiche Situation. Die Linie ist jetzt die Zeit. Jedes Gefühl darauf wirkt wie ein Ladeimpuls für unseren Stimmungsspeicher.</p>
+    </div>
+    <div class="moment" data-id="wieder" data-ladung="−" data-tempo="2.6" data-fall="2.4" data-oeffnet>
+      <p>Kommentar des Kollegen</p>
+      <p data-wer="fühlen">unangenehm</p>
+      <p data-wer="denken">„Arbeit nervt mich“</p>
+      <p class="fall">Ein negativer Impuls.</p>
+    </div>
+    <div class="moment" data-id="film" data-ladung="+" data-tempo="2.6" data-fall="2.4">
+      <p>abends ein Film</p>
+      <p data-wer="Geschichte">„das bin ja ich“</p>
+      <p data-wer="fühlen">leichter</p>
+      <p class="fall">Ein positiver Impuls.</p>
+    </div>
+  </section>
+
+  <section id="l0" data-kapitel="Ladung" data-auto="laecheln">
+    <div class="kurz">
+      <!-- Seitentext, nicht aus dem Buch -->
+      <p>Der nächste Moment: Jemand lächelt dich an.</p>
+    </div>
+    <div class="moment" data-id="laecheln" data-ladung="+" data-tempo="2.4" data-fall="2.6">
+      <p>jemand lächelt dich an</p>
+      <p data-wer="fühlen" data-satz="Die Ladung selbst, roh, noch ohne Adresse.">Freude</p>
+      <p data-wer="denken" data-satz="Erst der Verstand macht daraus etwas Benanntes.">ach wie nett</p>
+      <p class="zu">Ein Moment, mit seiner eigenen Ladung.</p>
+      <p class="fall">Die Ladung fällt in den Speicher.</p>
+    </div>
+  </section>
+
+  <section id="lx" data-kapitel="Ladung" data-auto="ausgelacht">
+    <div class="kurz">
+      <p>Jeder dieser kleinen Ausschläge steht für ein Gefühl, für dessen Intensität zu einem Gedanken.</p>
+    </div>
+    <div class="moment" data-id="ausgelacht" data-ladung="−" data-tempo="2.4" data-fall="2.2">
+      <p data-wer="denken">hat der mich vielleicht ausgelacht?</p>
+      <p data-wer="fühlen">unsicher</p>
+      <!-- Platzhalter, nicht aus dem Buch -->
+      <p class="fall">Aus demselben Lächeln: ein Plus und ein Minus.</p>
+    </div>
+  </section>
+
+  <section id="l1" data-kapitel="Ladung" data-knoepfe="atem praline stechen">
+    <div class="kurz">
+      <p>Jedes Gefühl, das wir empfinden, ob aktiv oder passiv, wirkt wie ein Ladeimpuls für unseren Stimmungsspeicher.</p>
+    </div>
+    <p class="hinweis">Tippe die drei Momente an.</p>
+    <div class="moment" data-id="atem" data-knopf="tiefer Atemzug" data-ladung="+">
+      <p data-satz="Der Atemzug fühlt sich gut an – ein positiver Impuls.">ein tiefer Atemzug</p>
+    </div>
+    <div class="moment" data-id="praline" data-knopf="kleine Praline" data-ladung="+">
+      <p data-satz="Eine kleine leckere Praline. Positiver Impuls.">eine kleine Praline</p>
+    </div>
+    <div class="moment" data-id="stechen" data-knopf="Stechen in der Seite" data-ladung="−">
+      <p data-satz="Wir bemerken ein Stechen in der Seite – ein negativer Impuls.">ein Stechen in der Seite</p>
+    </div>
+  </section>
+
+  <section id="l2" data-kapitel="Ladung" data-knoepfe="atem praline stechen" data-fertig="5">
+    <div class="kurz">
+      <p>Ein einziges kleines gutes Gefühl macht noch keine gute Stimmung. Aber viele kleine positive heben den Pegel stetig an.</p>
+    </div>
+    <div class="lang">
+      <p>Ein einziges kleines gutes Gefühl macht noch keine gute Stimmung. Aber viele kleine positive heben den Pegel stetig an.</p>
+      <p>Nun erscheint uns in manchen Momenten die Zeit wie unendlich – aber dieser eine Atemzug von eben kehrt nicht mehr zurück. Wir können die Zeit nochmal mit Atmen füllen, trotzdem wird es nie genau derselbe Moment sein.</p>
+      <p>Objektiv betrachtet vergeht die Zeit also, ganz gleichmäßig, ein Moment nach dem anderen.</p>
+    </div>
+    <p class="hinweis">Tippe weiter und schau auf den Pegel.</p>
+  </section>
+
+  <section id="l3" data-kapitel="Ladung" data-folge="frage1 frage2 frage3" data-kette data-knopf="„Wie geht es mir?“">
+    <div class="kurz">
+      <p>Wie ist dein Stimmungsspeicher momentan gefüllt? Stell dir die Frage: „Wie geht es mir?“</p>
+    </div>
+    <div class="lang">
+      <p>Wie ist dein Stimmungsspeicher momentan gefüllt? Stell dir die Frage: „Wie geht es mir?“</p>
+      <p>Und da rattert in uns ein mehr oder weniger einstudierter Fragenkatalog durch. Erste Impulsantwort: gut, weiß nicht, neutral – das werten wir unbewusst positiv. Dann, weiter im Kopf: naja, da ist ein bisschen Stress – das werten wir negativ. Und direkt danach: ach, eigentlich geht es uns gerade gut – wieder positiv.</p>
+      <p>In dem Moment, in dem wir tatsächlich antworten, ist das längst keine einzelne Regung mehr, sondern eine ganze Reihe davon, die gerade durch uns hindurchgelaufen ist.</p>
+    </div>
+    <p class="hinweis">Stell die Frage und schau, was durch den Speicher läuft.</p>
+    <div class="moment" data-id="frage1" data-ladung="+">
+      <p data-satz="„gut, weiß nicht, neutral“">gut, weiß nicht</p>
+    </div>
+    <div class="moment" data-id="frage2" data-ladung="−">
+      <p data-satz="„naja, da ist ein bisschen Stress“">ein bisschen Stress</p>
+    </div>
+    <div class="moment" data-id="frage3" data-ladung="+">
+      <p data-satz="„ach, eigentlich geht es uns gerade gut“">eigentlich gut</p>
+      <p class="fall">Jeder dieser kleinen Ausschläge steht für ein Gefühl.</p>
+    </div>
+  </section>
+
+  <!-- eigenes Verhalten: der Knopf hält die Zeit an (Knoten auf der Zeitlinie, Rahmen um den Speicher) -->
+  <section id="l4" data-kapitel="Ladung" data-knopf="Moment festschreiben">
+    <div class="kurz">
+      <p>Stellen wir uns vor, diesen Moment zu fotografieren. Wir schreiben ihn fest. Als würde man die Zeit an dieser Stelle an beiden Enden fassen und zuknoten.</p>
+    </div>
+    <div class="lang">
+      <p>Und irgendwann in diesem kurzen Hin und Her treffen wir eine Entscheidung: Wann fühlt sich ein Gedanke wie die Wahrheit an? Wir beenden den Moment.</p>
+      <p>Stellen wir uns vor, diesen Moment zu fotografieren. Wir schreiben ihn fest.</p>
+      <p>Als würde man die Zeit an dieser Stelle an beiden Enden fassen und zuknoten.</p>
+    </div>
+    <!-- {stimmung} wird durch den aktuellen Stand ersetzt -->
+    <p class="satz" data-id="grundstimmung">Grundstimmung im Stimmungsspeicher: {stimmung}.</p>
+  </section>
+
+  <!-- neben dem Foto steht noch einmal das Männchen (Idee der Autorin). Die Wörter für {stimmung} stehen oben bei den Beschriftungen. -->
+  <section id="ende" data-kapitel="Ladung" data-ich>
+    <div class="kurz">
+      <p>Ein festgehaltener Moment, mit seiner eigenen Ladung.</p>
+      <p class="begriff">Nächste Station: Ladungsträger. Das Gefühl bekommt eine Adresse.</p>
+    </div>
+    <p class="satz" data-id="an">„Mir geht es im Moment {stimmung}.“</p>
+  </section>
+
+
+  <!-- ================================ LADUNGSTRÄGER ================================ -->
+
+  <!-- Brücke von der Ladung zum Ladungsträger, ohne die Bühne zu leeren: das Foto des Stimmungsspeichers ist selbst
+       ein Ladungsträger. Es bekommt den Namen „Moment“ (Wahl der Autorin), sein Rahmen wird zu den beiden Platten: Moment |Ladungen|.
+       Text und Satz dieses Schritts sind von der Autorin. -->
+  <section id="ka" data-kapitel="Ladungsträger" data-anker="ladungstraeger" data-start="vorher" data-foto data-rahmen="Moment" data-uebergang="rahmen">
+    <div class="kurz">
+      <!-- Formulierung der Autorin -->
+      <p>Wir haben bereits gemeinsam einen Ladungsträger erstellt. Der Moment war so etwas. Wir haben die Ladungen gesammelt und diese Sammlung benannt.</p>
+    </div>
+    <!-- Formulierung der Autorin -->
+    <p class="satz" data-id="an">Ein Ladungsträger sagt uns, woher eine Ladung kam, macht sie für uns benennbar.</p>
+  </section>
+
+  <!-- Blick ins Foto: die Ladungen darin bekommen im Nachhinein ihre Adresse. Der erste Satz im Text ist Seitentext. -->
+  <section id="kb" data-kapitel="Ladungsträger" data-foto data-rahmen="Moment">
+    <div class="kurz">
+      <p>Die Ladungen im Foto haben noch keine Adresse. Ein Ladungsträger sagt uns, woher eine Ladung kam, macht sie im Nachhinein auffindbar und zuordenbar.</p>
+    </div>
+    <div class="lang">
+      <p>Die Ladungen im Foto haben noch keine Adresse.</p>
+      <p>Ladungsträger sind keine Bedingung dafür, dass Ladung in unseren Stimmungsspeicher fließt. Jeder Impuls fließt hinein, ob wir ihn verorten können oder nicht.</p>
+      <p>Der Ladungsträger ist etwas anderes. Er trägt die Beschriftung, eine ansprechbare Adresse. Er sagt uns, woher eine Ladung kam, macht sie im Nachhinein auffindbar und zuordenbar.</p>
+    </div>
+    <p class="hinweis">Gib den Ladungen eine Adresse.</p>
+    <p class="adresse" data-von="laecheln ausgelacht" data-id="laecheln" data-name="Lächeln">Das Gefühl gehört jetzt zum Lächeln, wir können den Moment benennen und zuordnen.</p>
+    <p class="adresse" data-von="wieder" data-id="kollege" data-name="Kollege">Ein anderer Mensch. Alles, was wir konkret benennen können.</p>
+    <p class="adresse" data-von="praline" data-id="praline" data-name="Praline">Ich nenne diese Orte Ladungsträger.</p>
+  </section>
+
+  <!-- Zwischenschritt: nur das Foto löst sich, sonst nichts. Der Text ist Seitentext, zum Umschreiben. -->
+  <section id="kz" data-kapitel="Ladungsträger" data-foto data-rahmen="Moment" data-uebergang="weiter">
+    <div class="kurz">
+      <p>Die Zeit läuft weiter. Was einen Namen hat, behält ihn. Der Rest liegt lose im Stimmungsspeicher.</p>
+    </div>
+  </section>
+
+  <section id="k1" data-kapitel="Ladungsträger" data-auto="kribbeln">
+    <div class="kurz">
+      <!-- der erste Satz ist Seitentext, zum Umschreiben -->
+      <p>Auch ein neues Gefühl kommt zuerst ohne Namen an. Du möchtest zum Wasser, stehst auf – und fühlst ein unangenehmes Kribbeln. Ein negativer Impuls, aber noch ohne Ort.</p>
+    </div>
+    <div class="lang">
+      <p>Auch ein neues Gefühl kommt zuerst ohne Namen an.</p>
+      <p>Du atmest, du fühlst dich gut. Die Zeit vergeht, und auch wenn du sie kaum bemerkst, meldet sich irgendwann dein Körper: Du bekommst Durst.</p>
+      <p>Du möchtest zum Wasser, stehst auf – und fühlst ein unangenehmes Kribbeln. Ein negativer Impuls, aber noch ohne Ort.</p>
+    </div>
+    <div class="moment" data-id="kribbeln" data-ladung="−" data-tempo="2.2">
+      <p>du stehst auf</p>
+      <p data-wer="fühlen" data-satz="Ein negativer Impuls, aber noch ohne Ort.">ein Kribbeln</p>
+      <p class="fall">Jeder Impuls fließt hinein, ob wir ihn verorten können oder nicht.</p>
+    </div>
+  </section>
+
+  <section id="k2" data-kapitel="Ladungsträger" data-folge="fuss" data-knopf="Fuß">
+    <div class="kurz">
+      <p>Erst wenn du bemerkst, dass es dein eingeschlafener Fuß ist, bekommt das Gefühl eine Adresse.</p>
+    </div>
+    <div class="lang">
+      <p>Erst wenn du bemerkst, dass es dein eingeschlafener Fuß ist, bekommt das Gefühl eine Adresse. Er war zwar die ganze Zeit da, aber ohne diese Veränderung wärst du in diesem Moment gar nicht auf ihn aufmerksam geworden.</p>
+      <p>Und genau dieser Prozess – ein Gefühl an eine lokalisierbare Adresse zu binden – lässt die Ladung für uns relevanter werden.</p>
+      <p>Was könnte noch so ein Ort sein? Vielleicht eine Narbe. Ein Körperteil. Wir selbst, als ganzer Mensch. Ein anderer Mensch. Oder auch ein Objekt, wie ein Auto oder ein Spiegel. Alles, was wir konkret benennen können. Ich nenne diese Orte Ladungsträger.</p>
+    </div>
+    <!-- dieselbe Geste wie am Foto: ein Knopf mit dem Namen, derselbe Hinweis -->
+    <p class="hinweis">Gib der Ladung eine Adresse.</p>
+    <div class="moment" data-id="fuss" data-ladung="0" data-tempo="2.4" data-ordnet="fuss" data-name="Fuß">
+      <p data-wer="denken">mein eingeschlafener Fuß</p>
+      <p class="fall">Das negative Gefühl gehört jetzt zum Fuß, wir können den Moment benennen und zuordnen.</p>
+    </div>
+  </section>
+
+  <!-- vorerst abgeschaltet (Autorin). Damit fehlt der Spiegel auch im Kapitel Bindung, und das Wiederaufrufen (Echo) wird nirgends mehr gezeigt. -->
+  <section id="k3" data-aus data-kapitel="Ladungsträger" data-folge="spiegel1 spiegel2 spiegel3 spiegel4" data-knopf="Spiegel">
+    <div class="kurz">
+      <p>Nehmen wir unser Spiegelbild als Ladungsträger mit eigener Historie.</p>
+    </div>
+    <div class="lang">
+      <p>Nehmen wir unser Spiegelbild als Ladungsträger mit eigener Historie. Stell dir vor, du schaust zum ersten Mal überhaupt in deinem Leben in einen Spiegel. Du wärst vermutlich so überwältigt, dass diesem Moment eine riesige positive Ladung zugeordnet würde.</p>
+      <p>Was passiert das nächste Mal, wenn dein Auge von weitem einen Spiegel erkennt? Vorfreude. Natürlich rufen wir dabei nie die volle ursprüngliche Ladung wieder ab.</p>
+      <p>Was aber, wenn wir irgendwann im Spiegel ein negatives Gefühl haben? Wir bestätigen den Ladungsträger trotzdem – nur laden wir ihn diesmal negativ auf. Das Bild dreht sich dadurch nicht komplett um.</p>
+    </div>
+    <p class="hinweis">Tippe viermal auf den Spiegel.</p>
+    <!-- Die Zeilen in diesen vier Momenten sind aus dem Buchtext abgeleitet, nicht wörtlich. -->
+    <div class="moment" data-id="spiegel1" data-ladung="++" data-tempo="2.2" data-adresse="spiegel" data-name="Spiegel">
+      <p>zum ersten Mal ein Spiegel</p>
+      <p data-wer="fühlen">überwältigt</p>
+      <p data-wer="denken">das bin ich</p>
+      <p class="fall">Diesem Moment wird eine riesige positive Ladung zugeordnet.</p>
+    </div>
+    <div class="moment" data-id="spiegel2" data-ladung="+" data-tempo="2.2" data-adresse="spiegel" data-name="Spiegel">
+      <p>von weitem: ein Spiegel</p>
+      <p data-wer="denken" data-ruft="spiegel" data-satz="Die Verknüpfung zu diesem Ladungsträger wird wieder aufgerufen.">Spiegel</p>
+      <p data-wer="fühlen" data-satz="Nie die volle ursprüngliche Ladung.">Vorfreude</p>
+      <p class="fall">Die Bestätigung lässt uns den Ladungsträger als positiv beibehalten.</p>
+    </div>
+    <div class="moment" data-id="spiegel3" data-ladung="−" data-tempo="2.2" data-adresse="spiegel" data-name="Spiegel">
+      <p>ein müder Morgen vor dem Spiegel</p>
+      <p data-wer="fühlen">unwohl</p>
+      <p data-wer="denken">Spiegel</p>
+      <p class="fall">Wir bestätigen den Ladungsträger trotzdem – nur laden wir ihn diesmal negativ auf.</p>
+    </div>
+    <div class="moment" data-id="spiegel4" data-ladung="0" data-tempo="2.4">
+      <p>von weitem: ein Spiegel</p>
+      <p data-wer="denken" data-ruft="spiegel" data-satz="Widersprüchliche Signale aus der Adresse.">Spiegel</p>
+      <p data-wer="fühlen">instinktiv zuerst negativ</p>
+      <p class="fall">Er ist genauso relevant wie vorher bei der Vorfreude.</p>
+    </div>
+  </section>
+
+  <section id="k4" data-kapitel="Ladungsträger" data-auto="zeh">
+    <div class="kurz">
+      <p>Du stolperst, stößt dir den Zeh an einem Türrahmen. Wir selbst bestimmen, welche Adresse ein Gefühl bekommt.</p>
+    </div>
+    <div class="lang">
+      <p>Du stolperst, stößt dir den Zeh an einem Türrahmen. Ein lokalisierbarer Schmerz. Der Ladungsträger ist hier aber nicht der Zeh, sondern der Türrahmen.</p>
+      <p>Beim eingeschlafenen Fuß kam der Auslöser von innen – der Körper war Ursache und Ort zugleich. Beim Zeh kommt der Schmerz zwar im Körper an, aber die Ursache liegt draußen, am Objekt.</p>
+      <p>Wir selbst bestimmen, welche Adresse ein Gefühl bekommt. Manchmal suchen wir die Ursache zuerst im Innen. Dann indexieren wir nicht den Türrahmen, sondern unsere eigene Ungeschicklichkeit.</p>
+    </div>
+    <p class="hinweis">Wähle, wohin der Schmerz gehört.</p>
+    <div class="moment" data-id="zeh" data-ladung="−" data-tempo="2.2" data-wartet>
+      <p>du stößt dir den Zeh</p>
+      <p data-wer="fühlen" data-satz="Ein lokalisierbarer Schmerz.">Schmerz</p>
+    </div>
+    <p class="wahl" data-id="tuer" data-knopf="Türrahmen" data-name="Türrahmen" data-zeile="der Türrahmen">Wenn du später denselben Türrahmen wiedersiehst, spürst du schon vorher eine Art Vorsicht.</p>
+    <p class="wahl" data-id="ich" data-knopf="ich selbst" data-name="ich" data-zeile="meine Ungeschicklichkeit">Wir geben ihr, emotionsgetrieben, die ganze Schuld. Das nennt sich dann Selbstsabotage.</p>
+    <p class="wahl" data-id="anders" data-knopf="jemand anders" data-name="jemand anders" data-zeile="jemand anders war schuld">Manchmal ist auch jemand anders schuld, der unsere Aufmerksamkeit gerade in Beschlag nahm.</p>
+  </section>
+
+  <section id="k5" data-kapitel="Ladungsträger">
+    <div class="kurz">
+      <p>Dein aktueller Gemütszustand ist also nicht nur eine Reaktion auf den gegenwärtigen Moment. Er ist die Summe aus dem, was gerade passiert, plus all den alten Ladungsträgern, die dabei unbemerkt mitschwingen.</p>
+      <p class="begriff">Nächste Station: Bindung. Was uns an einen Ladungsträger bindet.</p>
+    </div>
+  </section>
+
+
+  <!-- ================================ BINDUNG ================================ -->
+
+  <!-- ENTWURF. Übergang ohne die Bühne zu leeren: die benannten Ladungsträger wandern aus dem Stimmungsspeicher und stellen sich
+       als Hüllen um ihn auf, der Speicher mit den losen Ladungen wird zum Männchen „du“ in der Mitte, dann spinnt Aufmerksamkeit die Fäden.
+       Der Kapitelanfang aus dem Buch („von Gott geküsst“ bis „Aktiv oder passiv“) ist auf Wunsch der Autorin weggelassen.
+       Es fehlen noch: Zeitspanne, die Kette Arbeit, Geld, Zuhause.
+       Die Schreibweise mit Punkten (0 bis 3 je nach Bindung) ist vorerst weggelassen, die Fäden bleiben sichtbar (Autorin). -->
+  <section id="ba" data-kapitel="Bindung" data-anker="bindung" data-start="vorher" data-uebergang="hinaus">
+    <div class="kurz">
+      <!-- Seitentext, zum Umschreiben -->
+      <p>Ein Ladungsträger trägt seine Ladung selbst. Was keinen Namen hat, bleibt im Stimmungsspeicher.</p>
+    </div>
+  </section>
+
+  <section id="bb" data-kapitel="Bindung" data-uebergang="figur" data-dauer="4">
+    <div class="kurz">
+      <!-- Seitentext, zum Umschreiben -->
+      <p>In der Mitte bleibst du.</p>
+    </div>
+  </section>
+
+  <!-- Zwischen „du“ und den Hüllen ist nichts. Erst hier kommt die Frage, und der erste Faden. -->
+  <section id="bc" data-kapitel="Bindung" data-szene="bindung" data-huellen="alle" data-frei data-vorfuehren="2" data-fertig="2">
+    <div class="kurz">
+      <p>Was bindet uns an einen Ladungsträger, wenn er selbst die Ladung trägt? Ich nenne es Bindungsenergie. Du kannst es dir vorstellen wie den Faden einer Spinne.</p>
+    </div>
+    <div class="lang">
+      <p class="begriff"><b>Bindungsenergie:</b> Bindet Ladungsträger an uns. Daraus werden Erinnerungen.</p>
+      <p>Ein negativ besetzter Türrahmen kann genauso viel Raum beanspruchen wie ein positiv besetzter Spiegel. Die Ladung sagt uns nur, wie es sich anfühlt. Sie sagt uns nichts darüber, wie stark die Verbindung zu ihm ist.</p>
+      <p>Was bindet uns an einen Ladungsträger, wenn er selbst die Ladung trägt? Ich nenne es Bindungsenergie. Du kannst es dir vorstellen wie den Faden einer Spinne.</p>
+      <p>Je mehr Aufmerksamkeit du dem Ladungsträger schenkst, je stärker es dich fesselt, je öfter es passiert – ob du das willst oder nicht – umso mehr Fäden verbinden dich mit ihm.</p>
+      <p>Die Ladung selbst spielt für diese Rechnung keine Rolle. Schmerz bindet so fest wie Freude.</p>
+    </div>
+    <!-- erscheint, nachdem zwei Fäden von selbst gezogen wurden (Formulierung der Autorin) -->
+    <p class="satz" data-id="danach">Schenke einem Ladungsträger Aufmerksamkeit und tippe ihn an, um Bindung zu erzeugen.</p>
+    <p class="satz" data-id="faden">Umso mehr Fäden verbinden dich mit ihm.</p>
+    <p class="satz" data-id="faden-minus">Schmerz bindet so fest wie Freude.</p>
+  </section>
+
+  <section id="bd" data-kapitel="Bindung" data-szene="bindung" data-huellen="alle">
+    <div class="kurz">
+      <p>Je mehr Sinne, die in dem Moment des Gefühls mitspielen, umso stabiler die Bindung.</p>
+    </div>
+    <div class="lang">
+      <p>Je mehr Sinne, die in dem Moment des Gefühls mitspielen, umso stabiler die Bindung. Ein Gedanke allein spinnt einen Faden.</p>
+      <p>Kommt der Geruch dazu, das Geräusch, die Berührung, entstehen mehrere Fäden gleichzeitig statt einer nach dem anderen – der Ladungsträger bekommt seine Bindungsenergie nicht Faden für Faden, sondern auf einen Schlag von mehreren Seiten.</p>
+      <p>Deshalb reicht bei manchen Momenten ein einziges Mal, um sie fest zu verankern, während andere sich über Wochen aufbauen müssen, Faden für Faden.</p>
+    </div>
+    <p class="hinweis">Tippe beide Knöpfe an und vergleiche.</p>
+    <!-- Zuordnung für die Seite: ein Gedanke an den Kollegen, der Stoß am Türrahmen mit mehreren Sinnen auf einmal -->
+    <p class="faden" data-huelle="kollege" data-knopf="Gedanke" data-sinne="Gedanke">Ein Gedanke allein spinnt einen Faden.</p>
+    <p class="faden" data-huelle="tuer" data-knopf="Gedanke, Geruch, Geräusch, Berührung" data-sinne="Gedanke Geruch Geräusch Berührung">Mehrere Fäden gleichzeitig statt einer nach dem anderen.</p>
+  </section>
+
+  <!-- Wozu die Fäden: sie entscheiden, was bleibt. Die Frage ist der Satz aus dem Buch, die Bühne antwortet.
+       Die Zeit vergeht: Hüllen ohne Faden verschwinden zuerst, Hüllen mit wenigen Fäden verlieren sie und verschwinden danach.
+       Was vier oder mehr Fäden hat, wird fest. Die Zahl vier steht nicht im Buch: so viele spinnt der Stoß am Türrahmen auf einen Schlag
+       („Deshalb reicht bei manchen Momenten ein einziges Mal, um sie fest zu verankern“). -->
+  <section id="bf" data-kapitel="Bindung" data-szene="bindung" data-huellen="alle" data-verblassen="1.3" data-merken data-nochmal>
+    <div class="kurz">
+      <p>Wie sind unsere Regeln, welcher Ladungsträger einen festen Platz bekommt, welchen wir nähren, und welcher verblasst?</p>
+    </div>
+    <p class="hinweis">Tippe an, was bleiben soll. Der Rest verblasst.</p>
+    <!-- aus dem Absatz über das Instrument -->
+    <p class="satz" data-id="weg">Sie verblassen wieder, wenn sie nicht genutzt werden.</p>
+    <p class="satz" data-id="faden">Umso mehr Fäden verbinden dich mit ihm.</p>
+    <!-- die beiden Hälften desselben Buchsatzes, gekürzt -->
+    <p class="satz" data-id="fest">Bei manchen Momenten reicht ein einziges Mal, um sie fest zu verankern.</p>
+    <p class="satz" data-id="fest-tipp">Andere müssen sich über Wochen aufbauen, Faden für Faden.</p>
+  </section>
+
+  <!-- ZWISCHENSPEICHER UND AKKORD: vorerst abgeschaltet (Autorin), wie der Spiegel. Abgeschaltet sind bg, bh, bi, bj und der Schritt „Gemisch“ (bk),
+       der den Akkord als Beispiel braucht. Der Muskel-Satz (bm) bleibt und folgt jetzt direkt auf das Verblassen.
+       Reihenfolge anders als im Buch: erst „nach Tag zwei aufhören“, dann weiter üben bis ins Feste.
+       So steht am Ende der feste Akkord auf der Bühne, und niemand muss von einem festen Träger zurückspulen. -->
+
+  <!-- Tag eins: ein neuer Ladungsträger erscheint nach der Lesepause. Noch ohne Faden, wie alle Hüllen am Anfang des Kapitels. -->
+  <section id="bg" data-aus data-kapitel="Bindung" data-szene="bindung" data-huellen="alle" data-merken data-nochmal>
+    <div class="kurz">
+      <p>Du lernst ein neues Instrument. Der erste Akkord fühlt sich fremd an, die Finger wollen nicht. Ein neuer Ladungsträger entsteht, negativ besetzt: der Akkord.</p>
+    </div>
+    <div class="lang">
+      <p>Und wie beim Lernen eines Instruments existieren neue Ladungsträger erst flüchtig und verblassen wieder, wenn sie nicht genutzt werden. Sie bleiben temporär im Speicher.</p>
+      <p>Nehmen wir ein Beispiel. Du lernst ein neues Instrument. Der erste Akkord fühlt sich fremd an, die Finger wollen nicht. Ein neuer Ladungsträger entsteht, negativ besetzt: der Akkord.</p>
+      <p>Aber er sitzt noch nicht fest. Er liegt im Zwischenspeicher, bereit wieder zu verschwinden, wenn du das Instrument in die Ecke stellst und drei Wochen nicht anfasst.</p>
+    </div>
+    <div class="huelle" data-id="akkord" data-name="Akkord" data-ladung="−" data-fluechtig></div>
+    <p class="satz" data-id="an">Aber er sitzt noch nicht fest. Er liegt im Zwischenspeicher.</p>
+  </section>
+
+  <!-- Tag zwei: derselbe Träger bekommt seinen ersten Faden und eine zweite Ladung -->
+  <section id="bh" data-aus data-kapitel="Bindung" data-szene="bindung" data-huellen="alle" data-merken data-ueben="akkord" data-knopf="Am nächsten Tag üben">
+    <div class="kurz">
+      <p>Übst du am nächsten Tag wieder, verstärkst du denselben Träger, statt einen neuen zu bilden.</p>
+    </div>
+    <p class="tag" data-nr="2" data-ladung="−">Am ersten und zweiten Tag bleibt er negativ.</p>
+  </section>
+
+  <!-- Nach Tag zwei aufhören: erst der Satz, dann vergeht die Zeit. Der Faden verblasst, danach der Akkord. -->
+  <section id="bi" data-aus data-kapitel="Bindung" data-szene="bindung" data-huellen="alle" data-verblassen="1.3" data-zusehen data-merken data-nochmal>
+    <div class="kurz">
+      <p>Was aber, wenn du nach Tag zwei aufhörst?</p>
+    </div>
+    <div class="lang">
+      <p>Was aber, wenn du nach Tag zwei aufhörst? Dann bleibt er, noch negativ besetzt, im Zwischenspeicher hängen, ohne je gefestigt zu werden.</p>
+      <p>Ein paar Wochen später ist er weg, als hätte es ihn nie gegeben. Nicht weil dein Gehirn ihn vergessen „wollte“, sondern weil er nie genug Bindungsenergie gesammelt hat, um den Sprung ins Feste zu schaffen.</p>
+    </div>
+    <!-- gekürzt -->
+    <p class="satz" data-id="zuerst">Er bleibt, noch negativ besetzt, im Zwischenspeicher hängen.</p>
+    <p class="satz" data-id="weg">Ein paar Wochen später ist er weg, als hätte es ihn nie gegeben.</p>
+  </section>
+
+  <!-- Der Muskel-Satz folgt auf das Verblassen: „abbauen“ meint, was noch nicht fest ist.
+       Was fest ist, bleibt stehen, auch ohne Aufmerksamkeit (Autorin). Die Bühne steht still. -->
+  <section id="bm" data-kapitel="Bindung" data-szene="bindung" data-huellen="alle">
+    <div class="kurz">
+      <p>Bindungsenergie lässt sich also auf- und abbauen wie ein Muskel, wenn man bewusst Aufmerksamkeit gibt oder entzieht.</p>
+    </div>
+  </section>
+
+  <!-- Zurück zu Tag zwei, diesmal weiter üben. Am fünften Tag kippt er ins Positive, danach wird er fest. -->
+  <section id="bj" data-aus data-kapitel="Bindung" data-szene="bindung" data-huellen="alle" data-merken data-wieder="akkord" data-ueben="akkord" data-knopf="Am nächsten Tag üben">
+    <div class="kurz">
+      <!-- Seitentext, zum Umschreiben -->
+      <p>Zurück zu Tag zwei. Diesmal übst du weiter.</p>
+    </div>
+    <div class="lang">
+      <p>Zurück zu Tag zwei. Diesmal übst du weiter.</p>
+      <p>Am ersten und zweiten Tag bleibt er negativ – aber schon am fünften kippt er vielleicht ins Positive. Irgendwann, meist ohne dass du den genauen Moment benennen könntest, kippt der Träger vom Zwischenspeicher in eine feste Adresse.</p>
+      <p>Die Finger finden den Akkord, ohne dass du nachdenkst. Er ist jetzt gebunden – fest abgelegt, mit einer Adresse, die du jederzeit wiederfindest, und mit einer eigenen, deutlichen Bindung.</p>
+    </div>
+    <!-- Seitentext -->
+    <p class="hinweis">Übe weiter, Tag für Tag.</p>
+    <p class="tag" data-nr="3" data-ladung="+"></p>
+    <p class="tag" data-nr="4" data-ladung="+"></p>
+    <p class="tag" data-nr="5" data-ladung="+">Schon am fünften kippt er vielleicht ins Positive.</p>
+    <!-- gekürzt -->
+    <p class="satz" data-id="fest">Irgendwann kippt der Träger vom Zwischenspeicher in eine feste Adresse.</p>
+  </section>
+
+  <!-- Gemisch: kein neues Bild. Der Akkord steht schon mit Minus und Plus da, daneben der Türrahmen: beide fest, verschieden geladen. -->
+  <section id="bk" data-aus data-kapitel="Bindung" data-szene="bindung" data-huellen="alle" data-zeigen="akkord">
+    <div class="kurz">
+      <p>Ein Ladungsträger sammelt über die Zeit nicht nur eine einzelne Ladung, sondern viele einzelne Impulse. In Summe ergibt das kein reines Plus oder Minus, sondern ein Gemisch aus beidem.</p>
+    </div>
+    <div class="lang">
+      <p>Ein Ladungsträger sammelt über die Zeit nicht nur eine einzelne Ladung, sondern viele einzelne Impulse – genau wie unsere Stimmungsabfrage von vorhin. Bei „Arbeit“ war heute ein guter Moment, gestern ein frustrierender, letzte Woche ein stolzer.</p>
+      <p>In Summe ergibt das kein reines Plus oder Minus, sondern ein Gemisch aus beidem. Die Bindungsstärke – wie viel dahintersteht – sagt dir dabei nichts darüber, ob das Gemisch eher positiv oder negativ ausfällt, nur wie viel Aufmerksamkeit insgesamt reingeflossen ist.</p>
+    </div>
+    <!-- gekürzt -->
+    <p class="satz" data-id="an">Die Bindungsstärke sagt nichts darüber, ob das Gemisch eher positiv oder negativ ausfällt.</p>
+  </section>
+
+  <!-- Beispiele aus dem Alltag. Drei von den fünf aus dem Buch: Partner und Familie stehen nur im ausführlichen Text,
+       sie zeigen dasselbe wie das Zuhause. Stark gebunden: sechs Fäden, fest. Schwach gebunden: zwei lose Fäden, ohne „fest“.
+       Die Ladungen in den Klammern sind für die Seite gesetzt (Arbeit nach dem Buchsatz: guter, frustrierender, stolzer Moment). -->
+  <!-- vorerst abgeschaltet (Autorin): als direkte Frage ist der Schritt überflüssig. Richtig genutzt müsste er mehr Ladungsträger
+       und die Ladung getrennt zur Auswahl anbieten, das kommt später. -->
+  <section id="bl" data-aus data-kapitel="Bindung" data-szene="bindung" data-huellen="alle" data-merken>
+    <div class="kurz">
+      <p>Wenn du an dein aktuelles alltägliches Leben denkst, welche Ladungsträger würdest du ohne großes Rätseln benennen und einteilen?</p>
+    </div>
+    <div class="lang">
+      <p>Wenn du an dein aktuelles alltägliches Leben denkst, welche Ladungsträger würdest du ohne großes Rätseln benennen und einteilen? Hierbei geht es nicht um die Abhängigkeit weil du Arbeit benötigst, um Geld zu verdienen, sondern um die Bindungsstärke und welche Gefühlsladung du für sie hast.</p>
+      <p>Ich gebe dir ein paar Beispiele vor. Das Zuhause, stark positiv gebunden. Der eigene Körper, gemischt, aber ebenso stark gebunden. Die Arbeit, gemischt, aber nur schwach gebunden. Der Partner, stark positiv gebunden. Die Familie, ebenso.</p>
+    </div>
+    <!-- Seitentext -->
+    <p class="hinweis">Tippe die Beispiele an.</p>
+    <p class="beispiel" data-id="zuhause" data-name="Zuhause" data-ladung="+ + +" data-faeden="6">Das Zuhause, stark positiv gebunden.</p>
+    <p class="beispiel" data-id="koerper" data-name="Körper" data-ladung="+ − − +" data-faeden="6">Der eigene Körper, gemischt, aber ebenso stark gebunden.</p>
+    <p class="beispiel" data-id="arbeit" data-name="Arbeit" data-ladung="+ − +" data-faeden="2">Die Arbeit, gemischt, aber nur schwach gebunden.</p>
+  </section>
+
+  <!-- DIE ZEIT KOMMT WIEDER INS SPIEL (Bild der Autorin): oben du auf der Zeitlinie, darunter dein Stimmungsspeicher, groß gezeichnet.
+       Die Ladungsträger liegen darin, ihre Bindung steckt in ihnen und zeigt sich nur, wenn sie wirkt.
+       Steht am Kapitelende (Autorin): hinein in dieses Bild · der Türrahmen kommt noch einmal · derselbe Tag geht weiter, der Kollege.
+       Von hier geht es in die Stegbildung. Der Rückweg in den Ring ist abgeschaltet, steht aber noch im Drehbuch.
+       Die Texte von „bn“ und „bo“ sind Seitentext, zum Umschreiben. Die Zeilen in den Momenten sind von der Autorin. -->
+  <section id="bn" data-kapitel="Bindung" data-mann data-uebergang="hinein" data-merken data-nochmal>
+    <div class="kurz">
+      <p>Bringen wir die Zeit wieder ins Spiel. Dafür gehen die Ladungsträger zurück in deinen Stimmungsspeicher. Ihre Bindung nehmen sie mit: Man sieht sie erst wieder, wenn sie wirkt.</p>
+    </div>
+    <p class="satz" data-id="an">Oben du, unter dir die Zeit. Darunter dein Stimmungsspeicher, groß gezeichnet.</p>
+  </section>
+
+  <section id="bo" data-kapitel="Bindung" data-mann data-tuer="tuer2" data-merken data-nochmal>
+    <div class="kurz">
+      <p>Du gehst durch die Welt. Und da kommt er wieder, der Türrahmen.</p>
+    </div>
+    <div class="moment" data-id="tuer2" data-ladung="−" data-tempo="2.4" data-fall="1.8" data-adresse="tuer" data-name="Türrahmen">
+      <p>du stößt dir den Zeh</p>
+      <p data-wer="fühlen">Aua</p>
+      <p data-wer="denken">ach, schon wieder dieser Türrahmen</p>
+    </div>
+    <!-- Reihenfolge nach der Autorin: erst kommt das Minus beim Träger an, dann schlägt die Bindung zurück, in aller Wucht.
+         Der Satz dazu ist angelehnt an das Kapitel Potentialausgleich („zu diesem Menschen“ weggelassen). -->
+    <p class="satz" data-id="wucht">Je stärker die Bindungsenergie, desto lauter schlägt sein Ladungsträger bei dir an.</p>
+    <!-- aus dem Kapitel Bindung, gekürzt -->
+    <p class="satz" data-id="faden">Je öfter es passiert, umso mehr Fäden verbinden dich mit ihm.</p>
+  </section>
+
+  <!-- Derselbe Tag geht weiter (Autorin): nach dem Türrahmen der Spruch des Kollegen. Zwei Ladungsträger, die nichts miteinander zu tun haben.
+       Erst der Gedanke „was für ein Scheißtag“ fasst sie zusammen. Ist das Minus beim Kollegen angekommen, rückt er neben den Türrahmen,
+       und zwischen beiden entsteht die erste Verbindung: der kleinste Steg. Text und Zeilen nach den Worten der Autorin. -->
+  <section id="bq" data-kapitel="Bindung" data-mann data-tuer="spruch" data-kommt="mensch" data-steg="tuer kollege" data-merken data-nochmal>
+    <div class="kurz">
+      <p>Du hast die Tür passiert und vermutlich direkt schlechte Laune an dem Tag. Dann kommst du auf Arbeit, und dein Kollege haut den blöden Spruch raus.</p>
+    </div>
+    <div class="moment" data-id="spruch" data-ladung="−" data-tempo="2.6" data-fall="1.8" data-adresse="kollege" data-name="Kollege">
+      <p>„Hättest du mal gefragt.“</p>
+      <p data-wer="fühlen">Unbehagen</p>
+      <p data-wer="denken">erst der Türrahmen, jetzt das</p>
+      <p data-wer="denken">was für ein Scheißtag</p>
+    </div>
+    <!-- aus dem Kapitel Stegbildung, gekürzt -->
+    <p class="satz" data-id="steg">Deine Aufmerksamkeit läuft einmal los und pickt unterwegs mit, was passt.</p>
+  </section>
+
+  <!-- Auf dieselbe Art dockt das Gute an (Autorin): abends der Film aus der Eröffnung. Du erkennst deine Situation wieder, das Plus fällt
+       zum neuen Ladungsträger Film, er rückt unter den Kollegen und hängt sich an dieselbe Kette. Text und Zeilen aus der Eröffnung. -->
+  <section id="br" data-kapitel="Bindung" data-mann data-tuer="film2" data-kommt="film" data-steg="kollege film" data-merken data-nochmal>
+    <div class="kurz">
+      <p>Abends ein Film. Du erkennst deine Situation darin wieder und kannst darüber lachen.</p>
+    </div>
+    <div class="moment" data-id="film2" data-ladung="+" data-tempo="2.6" data-fall="1.8" data-adresse="film" data-name="Film">
+      <p>abends ein Film</p>
+      <p data-wer="Geschichte">„das bin ja ich“</p>
+      <p data-wer="fühlen">leichter</p>
+    </div>
+    <!-- aus dem Kapitel Stegbildung, gekürzt -->
+    <p class="satz" data-id="steg">Derselbe Docking-Effekt, nur mit umgekehrtem Vorzeichen.</p>
+  </section>
+
+  <!-- ÜBERGANG ZUR STEGBILDUNG (Entwurf, zum Ansehen): die drei verbundenen Ladungsträger lösen sich aus dem Speicher und werden zum Schwimmsteg.
+       Text nach dem Anfang des Kapitels Stegbildung, gekürzt. Dort stehen Arbeit, Geld, Zuhause als Beispiel.
+       Der Name „Scheißtag“ für den Steg ist für die Seite gesetzt, nach dem Gedanken der Autorin im Moment mit dem Kollegen. -->
+  <section id="bs" data-kapitel="Bindung" data-mann data-uebergang="steg" data-merken data-nochmal>
+    <div class="kurz">
+      <p>Nun hast du die kleinste Form der Stegbildung bereits kennen gelernt. So ein Verhalten braucht ein eigenes Bild. Stell dir diese Ladungsträger als einzelne Schwimmelemente vor, über Verbindungsstücke miteinander gebunden.</p>
+    </div>
+    <p class="satz" data-id="name">Scheißtag</p>
+    <p class="satz" data-id="an">Wie ein Schwimmsteg.</p>
+  </section>
+
+  <!-- abgeschaltet: der Rückweg in den Ring -->
+  <section id="bp" data-aus data-kapitel="Bindung" data-mann data-uebergang="heraus" data-merken data-nochmal>
+    <div class="kurz">
+      <p>Zurück zu den Fäden. Wir stellen die Ladungsträger wieder um dich herum, damit man ihre Bindung sieht.</p>
+    </div>
+    <p class="satz" data-id="an">Der Türrahmen hat jetzt ein Minus und einen Faden mehr.</p>
+  </section>
+
+
+  <!-- ================================ STEGBILDUNG ================================ -->
+
+  <!-- Entwurf, zum Ansehen: der Steg aus dem Kapitel davor. Ein Glied antippen, die Welle läuft durch alle. -->
+  <section id="s1" data-kapitel="Stegbildung" data-anker="stegbildung" data-szene="steg">
+    <div class="kurz">
+      <p>Kommt eine Welle, bewegt sich nicht ein Element allein. Der ganze Steg schwingt mit.</p>
+    </div>
+    <p class="hinweis">Tippe ein Element an.</p>
+    <p class="glied" data-id="tuer" data-name="Türrahmen" data-ladung="− −"></p>
+    <p class="glied" data-id="kollege" data-name="Kollege" data-ladung="−"></p>
+    <p class="glied" data-id="film" data-name="Film" data-ladung="+"></p>
+    <p class="satz" data-id="name">Scheißtag</p>
+    <!-- aus dem Kapitel Bindung, Absatz über die Kette -->
+    <p class="satz" data-id="an">Du spürst nicht einen Träger, du spürst ein ganzes Netzwerk.</p>
+  </section>
+
+  <!-- Entwurf: ein neues Element kommt, und der Gedanke entscheidet, ob es andockt. Wunsch der Autorin: die bewusste Wahl soll sichtbar sein.
+       Der Bus, der Text und die beiden Gedanken sind für die Seite gesetzt. Dass es ohne Wahl von selbst andockt, ist eine Lesart von
+       „ganz gleich, ob du es willst oder nicht“. -->
+  <section id="s2" data-kapitel="Stegbildung" data-szene="steg">
+    <div class="kurz">
+      <p>Auf dem Heimweg verpasst du den Bus. Ein neuer Ladungsträger treibt heran. Gehört er zum Scheißtag?</p>
+    </div>
+    <p class="hinweis">Tippe einen Gedanken an.</p>
+    <p class="glied" data-id="tuer" data-name="Türrahmen" data-ladung="− −"></p>
+    <p class="glied" data-id="kollege" data-name="Kollege" data-ladung="−"></p>
+    <p class="glied" data-id="film" data-name="Film" data-ladung="+"></p>
+    <p class="glied" data-neu data-id="bus" data-name="Bus" data-ladung="−"></p>
+    <p class="gedanke" data-id="passt" data-wirkt="andocken">passt ja zu heute</p>
+    <p class="gedanke" data-id="weg" data-wirkt="vorbei">der Bus ist weg, mehr nicht</p>
+    <p class="satz" data-id="name">Scheißtag</p>
+    <!-- aus dem Kapitel Stegbildung -->
+    <p class="satz" data-id="dockt">Ein großer Steg zieht neue Elemente leichter an als ein kleiner.</p>
+    <!-- aus dem Kapitel Stegbildung, gekürzt -->
+    <p class="satz" data-id="selbst">Deine Aufmerksamkeit pickt mit, was passt, ganz gleich, ob du es willst oder nicht.</p>
+    <!-- erster Satz Seitentext, zweiter aus dem Kapitel Bindung -->
+    <p class="satz" data-id="frei">Der Bus bleibt für sich. Aktiv oder passiv, das entscheidest du.</p>
+  </section>
+
+  <!-- Entwurf: das Männchen wieder auf der Zeitlinie, zweimal. Idee der Autorin: zeigen, wie ein aktiver und ein passiver Mensch arbeiten, parallel.
+       Text, die Gedanken des aktiven Menschen und die Sätze unter der Bühne sind für die Seite gesetzt.
+       „erst der Türrahmen, jetzt das“ ist von der Autorin. Das Hinschauen nach dem Buch: „zurück zu dem, was tatsächlich passiert ist“. -->
+  <section id="s3" data-kapitel="Stegbildung" data-szene="zwei" data-nochmal>
+    <div class="kurz">
+      <p>Derselbe Tag, zwei Menschen. Dem einen läuft die Aufmerksamkeit von selbst. Der andere schaut jedes Mal hin, was gerade passiert ist.</p>
+    </div>
+    <div class="ereignis" data-id="tuer" data-art="tuer" data-name="Türrahmen" data-ladung="−">
+      <p data-bahn="passiv">Aua. Der Türrahmen.</p>
+      <p data-bahn="aktiv">Aua. Der Türrahmen.</p>
+    </div>
+    <div class="ereignis" data-id="kollege" data-art="mensch" data-name="Kollege" data-ladung="−">
+      <p data-bahn="passiv" data-verbindet>erst der Türrahmen, jetzt das</p>
+      <p data-bahn="aktiv">ein Spruch, mehr nicht</p>
+    </div>
+    <div class="ereignis" data-id="bus" data-art="bus" data-name="Bus" data-kommt="Bus verpasst" data-ladung="−">
+      <p data-bahn="passiv" data-verbindet>passt ja zu heute</p>
+      <p data-bahn="aktiv">der Bus ist weg, mehr nicht</p>
+    </div>
+    <p class="satz" data-id="name">Scheißtag</p>
+    <p class="satz" data-id="tippen">Tippe ein Element an und vergleiche.</p>
+    <p class="satz" data-id="welle">Passiv schwingt der ganze Steg mit. Aktiv bewegt sich nur der eine Träger.</p>
+  </section>
+
+  <!-- Entwurf. Idee der Autorin: derselbe Tag, wieder parallel. Der Türrahmen triggert durch Sichtkontakt, der eine flippt aus, der andere nicht.
+       Text und beide Gedanken sind für die Seite gesetzt. Der Satz unter der Bühne ist aus dem Kapitel Stegbildung (dort über Panik). -->
+  <section id="s4" data-kapitel="Stegbildung" data-szene="zwei" data-stand="s3" data-nochmal>
+    <div class="kurz">
+      <p>Später am selben Tag kommen beide wieder am Türrahmen vorbei. Diesmal stößt sich keiner. Sie sehen ihn nur.</p>
+    </div>
+    <div class="ereignis" data-id="sicht" data-art="tuer" data-name="Türrahmen" data-sicht data-ruft="tuer">
+      <p data-bahn="passiv">nicht schon wieder! Was für ein Scheißtag!</p>
+      <p data-bahn="aktiv">ach ja, der Türrahmen von heute früh</p>
+    </div>
+    <p class="satz" data-id="name">Scheißtag</p>
+    <p class="satz" data-id="an">Es ist kein einzelner Ladungsträger, der besonders stark wäre. Es ist die schiere Menge der verketteten Elemente, die gemeinsam auftauchen.</p>
+  </section>
+
+  <!-- ================================ POTENTIALAUSGLEICH ================================ -->
+
+  <!-- Entwurf: derselbe Morgen von beiden Seiten. Für den Morgen des Kollegen genügt nach der Autorin: der Chef macht Druck.
+       Dass der Spruch des Kollegen seine Entladung ist, ist für die Seite gesetzt (im Buch: der Anruf der Freundin). Der Text ist Seitentext.
+       Der Satz unter der Bühne ist auch Seitentext. -->
+  <section id="s5" data-kapitel="Potentialausgleich" data-anker="potentialausgleich" data-szene="zwei" data-oben="du" data-unten="Kollege" data-nochmal>
+    <div class="kurz">
+      <p>Noch einmal derselbe Morgen, diesmal von beiden Seiten. Auch dein Kollege hat schon etwas hinter sich, bevor ihr euch trefft.</p>
+    </div>
+    <div class="ereignis" data-id="tuer" data-art="tuer" data-name="Türrahmen" data-ladung="−">
+      <p data-bahn="oben">Aua. Der Türrahmen.</p>
+    </div>
+    <div class="ereignis" data-id="chef" data-art="mensch" data-name="Chef" data-ladung="− −" data-bleibt>
+      <p data-bahn="unten">der Chef macht Druck</p>
+    </div>
+    <p class="satz" data-id="an">Dein Kollege ist geladen, bevor er dich überhaupt sieht.</p>
+  </section>
+
+  <!-- Entwurf: aus den zwei Bahnen werden zwei Inseln, dann lädt der Kollege ab: sein Spruch aus der Eröffnung.
+       Text nach dem Anfang des Kapitels Potentialausgleich, gekürzt und auf den Kollegen gewendet. Der Satz unter der Bühne ist aus dem Buch.
+       Vorgabe der Autorin: die Ladung geht von Männchen zu Männchen, nicht erst in den Stimmungsspeicher. -->
+  <section id="s6" data-kapitel="Potentialausgleich" data-szene="zwei" data-oben="du" data-unten="Kollege" data-stand="s5" data-uebergang="inseln" data-nochmal>
+    <div class="kurz">
+      <p>Dann trefft ihr euch. Jeder auf seiner Insel, die mit ihrer eigenen Stimmung treibt, hoch und runter. Wer überwiegend negativ geladen ist, bei dem wird sich das irgendwann abladen.</p>
+    </div>
+    <p class="spruch" data-von="unten" data-an="oben" data-id="kollege" data-name="Kollege" data-ladung="−">Das war so nicht richtig. Hättest du mal gefragt.</p>
+    <p class="satz" data-id="an">Die Welt der Gefühle endet nicht bei dir.</p>
+  </section>
+
+  <!-- Entwurf: der Kanal zum Kollegen. Idee der Autorin: am Kanal zum Kollegen rein, raus, dicht zeigen.
+       Text und die drei Sätze unter der Bühne nach dem Kapitel Potentialausgleich, gekürzt und vom Anruf der Freundin auf den Kollegen gewendet.
+       „Das kriegen wir hin.“ steht so im Buch, „Lass uns später reden.“ heißt dort „Lass uns später telefonieren“.
+       Für die Seite gesetzt: wie die drei Wege gezeichnet sind (bei „raus“ heben sich sein Minus und dein Plus in der Mitte auf). -->
+  <section id="s7" data-kapitel="Potentialausgleich" data-szene="zwei" data-oben="du" data-unten="Kollege" data-stand="s5" data-uebergang="kanal">
+    <div class="kurz">
+      <p>Jede Bindung zu einem Menschen ist ein offener Kanal. Wie offen er ist, entscheidet sich immer wieder neu. Derselbe Satz, dieselbe Sekunde, kann auf drei Arten weitergehen.</p>
+    </div>
+    <p class="spruch" data-von="unten" data-an="oben" data-id="kollege" data-name="Kollege" data-ladung="−">Das war so nicht richtig. Hättest du mal gefragt.</p>
+    <p class="weg" data-id="rein" data-knopf="rein">Rein: Der Kanal steht offen, ungefiltert. Seine Anspannung wird zu deiner.</p>
+    <p class="weg" data-id="raus" data-knopf="raus" data-sagt="Das kriegen wir hin.">Raus: Du hältst dagegen, ohne dichtzumachen. Etwas von deiner Energie fließt zu ihm.</p>
+    <p class="weg" data-id="dicht" data-knopf="dicht" data-sagt="Lass uns später reden.">Dicht: Der Kanal bleibt für den Moment geschlossen. Seine Ladung bleibt seine.</p>
+    <p class="satz" data-id="tippen">Tippe eine der drei an.</p>
+    <p class="satz" data-id="alle">Keine dieser drei Reaktionen ist falsch.</p>
+  </section>
+
+
+  <!-- ================================ GENERALISIERUNG ================================ -->
+
+  <!-- Entwurf. Idee der Autorin: viele Inseln der Arbeit und Kunden, und die Momente sammeln sich,
+       bis aus einem Scheißtag Scheißtage, ein Scheißjahr und Scheißarbeit wird. Welche Inseln es sind und wer schickt, ist für die Seite gesetzt, ebenso die Texte. -->
+  <section id="g1" data-kapitel="Generalisierung" data-anker="generalisierung" data-szene="arbeit" data-nochmal>
+    <div class="kurz">
+      <p>Der Kollege ist nicht die einzige Insel. Auf der Arbeit stehen viele um dich herum, und zu jeder führt ein Kanal.</p>
+    </div>
+    <p class="glied" data-id="tuer" data-name="Türrahmen" data-ladung="−"></p>
+    <p class="insel" data-id="kollege" data-name="Kollege" data-winkel="18" data-geladen="2" data-schickt="−" data-da data-hat="Chef" data-hat-ladung="− −"></p>
+    <p class="insel" data-id="kunde" data-name="Kunde" data-winkel="90" data-geladen="1" data-schickt="−"></p>
+    <p class="insel" data-id="chef" data-name="Chef" data-winkel="-54" data-geladen="1" data-schickt="−"></p>
+    <p class="insel" data-id="kollegin" data-name="Kollegin" data-winkel="234"></p>
+    <p class="insel" data-id="kunde2" data-name="Kunde" data-winkel="162"></p>
+    <p class="satz" data-id="name">Scheißtag</p>
+    <p class="satz" data-id="an">Ein Tag, drei offene Kanäle. Am Abend liegt bei dir ein Steg.</p>
+  </section>
+
+  <!-- Die Kette Tag, Tage, Jahr, Arbeit ist von der Autorin. Der Text ist aus drei Buchsätzen gebaut (Stegbildung, Generalisierung) und ihrer Kette.
+       Der Satz unter der Bühne ist aus dem Kapitel Generalisierung. -->
+  <section id="g2" data-kapitel="Generalisierung" data-szene="arbeit" data-stand="g1" data-nochmal>
+    <div class="kurz">
+      <p>Ein großer Steg zieht neue Elemente leichter an als ein kleiner. Aus einem Scheißtag werden Scheißtage, aus Scheißtagen ein Scheißjahr. Irgendwann kippt etwas: Die Adresse selbst wechselt.</p>
+    </div>
+    <p class="stufe" data-teil="Scheißtag" data-name="Scheißtage" data-ladung="− −"></p>
+    <p class="stufe" data-teil="Scheißtage" data-name="Scheißjahr" data-ladung="− −"></p>
+    <p class="stufe" data-teil="Scheißjahr" data-name="Scheißarbeit" data-ladung="− −"></p>
+    <p class="stufe" data-teil="Arbeit" data-ladung="− − −" data-ende></p>
+    <p class="satz" data-id="an">Je gröber die Adresse, desto schwieriger lässt sich an ihr tatsächlich etwas prüfen oder verändern.</p>
+  </section>
+
+  <!-- Entwurf. Idee der Autorin: erst auf die Spitze treiben, bis wir überwiegend negativ sind und nicht genau wissen warum, weil überall alles in diesem Muster läuft.
+       Geld, Zuhause und Partner als weitere Träger sind für die Seite gesetzt, ebenso Text und Antwort.
+       Die Frage ist die aus dem Kapitel Ladung. Der Satz unter der Bühne ist aus dem Kapitel Überschuss, gekürzt. -->
+  <section id="g3" data-kapitel="Generalisierung" data-szene="grob" data-nochmal>
+    <div class="kurz">
+      <p>Was bei der Arbeit passiert, passiert auch woanders. Überall dasselbe Muster, und überall bleibt am Ende nur ein grobes Wort.</p>
+    </div>
+    <p class="grob" data-id="arbeit" data-name="Arbeit" data-ladung="− − −" data-da></p>
+    <p class="grob" data-id="geld" data-name="Geld" data-ladung="− −"></p>
+    <p class="grob" data-id="zuhause" data-name="Zuhause" data-ladung="− −"></p>
+    <p class="grob" data-id="partner" data-name="Partner" data-ladung="−"></p>
+    <p class="frage">Wie geht es dir?</p>
+    <p class="antwort">Schlecht. Irgendwie alles.</p>
+    <p class="satz" data-id="an">Du spürst ein diffuses Zuviel. Aber was genau nicht in Ordnung ist, wirst du so nicht lokalisieren.</p>
+  </section>
+
+  <!-- Entwurf: Arbeit wechseln. Gedanke der Autorin: Arbeit wechseln beginnt nur mit neuem Speicher; gebaut als neuer, leerer Träger Arbeit im selben Speicher.
+       Der zweite Satz des Textes ist aus dem Kapitel Indexierung. Erster Satz und Knopf sind für die Seite gesetzt.
+       Nach der Autorin macht eine neue Arbeit meistens erstmal Plus („Neue Besen kehren gut“). Wie es weitergeht, bleibt an der Stelle offen.
+       Der neue Träger bekommt deshalb ein Plus, und was danach kommt, zeigt die Seite nicht. -->
+  <section id="g4" data-kapitel="Generalisierung" data-szene="grob" data-stand="g3" data-wechsel="arbeit" data-knopf="neuer Job">
+    <div class="kurz">
+      <p>„Arbeit nervt mich“ ist die gröbste Ebene. Wenn du auf Dauer in dieser Ebene bleibst, suchst du dir wahrscheinlich einfach einen neuen Job.</p>
+    </div>
+    <p class="satz" data-id="tippen">Tippe auf „neuer Job“.</p>
+    <p class="satz" data-id="an">Neue Besen kehren gut. Der Speicher ist derselbe.</p>
+  </section>
+
+
+  <!-- ================================ INDEXIERUNG ================================ -->
+
+  <!-- Entwurf. Übergang der Autorin: was, wenn kein neuer Job, sondern diese Frage. Von dort geht es zur Indexierung.
+       Die Frage im Text und die vier Fragen der Ebenen sind aus dem Buch (Generalisierung, Indexierung), ebenso die Sätze unter der Bühne (der letzte gekürzt).
+       Im Buch gehören zu Arbeit „Kollegen, der Chef, die Aufgaben selbst“. Hier stehen die Kunden statt der Aufgaben, weil sie auf der Seite schon vorkommen. -->
+  <section id="i1" data-kapitel="Indexierung" data-anker="indexierung" data-szene="grob" data-stand="g3" data-wurzel="arbeit" data-nochmal>
+    <div class="kurz">
+      <p>Aber was, wenn kein neuer Job, sondern diese Frage: Was ist eigentlich mein Problem? Generalisierung passiert von selbst. Das Zurückzoomen nicht. Das musst du aktiv tun, aber du kannst es.</p>
+    </div>
+    <p class="satz" data-id="tippen">Tippe auf die Frage.</p>
+    <div class="ebene" data-frage="Was gehört alles zu Arbeit?">
+      <p data-name="Kollegen" data-ladung="−" data-weiter></p><p data-name="Chef" data-ladung="−"></p><p data-name="Kunden" data-ladung="−"></p>
+    </div>
+    <div class="ebene" data-frage="Woran liegt's gerade?" data-satz="Du findest die Kollegen blöd, merkst du."></div>
+    <div class="ebene" data-frage="Welcher Kollege genau?" data-satz="Und einer fällt dir sofort ein." data-dimmt>
+      <p data-name="Kollege" data-ladung="−" data-weiter></p><p data-name="Kollegin" data-ladung=""></p>
+    </div>
+    <div class="ebene" data-frage="Was genau war es?">
+      <p data-name="„Hättest du mal gefragt.“" data-ladung="−" data-weiter></p>
+    </div>
+    <p class="satz" data-id="an">Jetzt kannst du gezielt eingreifen: nicht bei der ganzen Arbeit, nicht bei allen Kollegen, nicht mal bei einer Person. Sondern bei einem einzelnen Kommentar.</p>
+  </section>
+
+  <!-- Entwurf: eine Stufe tiefer, die Kompetenz. Text und die Sätze unter der Bühne sind aus dem Kapitel Indexierung.
+       „kann ich das überhaupt?“ ist der dritte Grübelsatz der Eröffnung. Der Partner als zweiter Ort steht für den „Beziehungs-Steg“ aus dem Kapitel Stegbildung.
+       Für die Seite gesetzt: die zwei Knöpfe und wie sich die Ladung im Bild ändert (oben nur auf dem Weg, unten auf dem Weg und beim Partner). -->
+  <!-- abgeschaltet: von der Autorin verworfen -->
+  <section id="i2alt" data-aus data-kapitel="Indexierung" data-szene="grob" data-stand="i1" data-wurzel="arbeit">
+    <div class="kurz">
+      <p>Aber der eine Satz berührt etwas wie die eigene Kompetenz, ebenfalls gemischt geladen. Kompetenz ist kein Ladungsträger für sich allein, er ist ein Baustein, an dem viele andere hängen.</p>
+    </div>
+    <p class="tiefer" data-name="Kompetenz" data-ladung="− +" data-denkt="kann ich das überhaupt?"></p>
+    <p class="daneben" data-name="Partner" data-ladung="−"></p>
+    <p class="eingriff" data-id="oben" data-knopf="mit dem Kollegen reden">Der Eingriff beim Kollegen ist der leichtere Weg. Ein Gespräch, eine Klärung, fertig.</p>
+    <p class="eingriff" data-id="unten" data-knopf="an der Kompetenz arbeiten">Die Arbeit an der negativ besetzten Kompetenz selbst ist härter. Sie sitzt tiefer und hat dadurch viel mehr Effekt.</p>
+    <p class="satz" data-id="tippen">Tippe einen der beiden Wege an.</p>
+    <!-- weggelassen, weil der Satz unter der Bühne sonst vier Zeilen hat: „Je stärker etwas an unser Selbstbild rührt, desto mehr wehren wir ab.“ -->
+  </section>
+
+  <!-- Entwurf. Idee der Autorin: den Satz „Hättest du mal gefragt“ auf zwei Arten nehmen. „Hätte ich es mal besser gemacht“, oder ich fühle mich angegriffen,
+       dann ist es das Ego, das die eigene Kompetenz nicht negativ laden will. Die beiden Gedanken und der Satz zum Ego sind ihre Worte.
+       Erster Satz des Textes und der zweite Satz unter „ab“ sind aus dem Kapitel Indexierung (dort „das Ich“, hier nach der Autorin „Ego“).
+       Für die Seite gesetzt: die Frage im Text, das Tor als Zeichen fürs Ego und dass die Ladung danach den Baum hinaufwandert. -->
+  <section id="i2" data-kapitel="Indexierung" data-szene="grob" data-stand="i1" data-wurzel="arbeit">
+    <div class="kurz">
+      <p>Der eine Satz berührt etwas wie die eigene Kompetenz. Wie nimmst du ihn?</p>
+    </div>
+    <p class="tiefer" data-name="Kompetenz" data-ladung=""></p>
+    <p class="nimmt" data-id="an" data-knopf="hätte ich es mal besser gemacht">Das Minus kommt bei der Kompetenz an. Sie ist jetzt negativ besetzt.</p>
+    <p class="nimmt" data-id="ab" data-knopf="ich fühle mich angegriffen">Dein Ego will die eigene Kompetenz nicht negativ laden. Je stärker etwas an unser Selbstbild rührt, desto mehr wehren wir ab.</p>
+    <p class="satz" data-id="tippen">Tippe einen Gedanken an.</p>
+    <p class="satz" data-id="tor">Ego</p>
+    <p class="satz" data-id="oben">Arbeit nervt mich</p>
+  </section>
+
+  <!-- Entwurf: die gelben Autos. Text und Satz unter der Bühne aus dem Kapitel Indexierung, der Satz leicht gekürzt.
+       Die zwei Zähler und der Knopf sind für die Seite gesetzt. -->
+  <section id="i3" data-kapitel="Indexierung" data-szene="strom" data-knopf="achte auf Gelb" data-zaehlt="gelb vorbeigefahren" data-gesehen="davon gesehen">
+    <div class="kurz">
+      <p>Indexierung lässt sich richten. Wer eine Weile bewusst auf gelbe Autos achtet, sieht plötzlich überall gelbe Autos.</p>
+    </div>
+    <p class="hinweis">Lass ein paar vorbeifahren. Dann tippe auf „achte auf Gelb“.</p>
+    <p class="ding" data-art="auto"></p><p class="ding" data-art="auto"></p><p class="ding" data-art="auto" data-passt></p><p class="ding" data-art="auto"></p>
+    <p class="ding" data-art="auto"></p><p class="ding" data-art="auto" data-passt></p><p class="ding" data-art="auto"></p><p class="ding" data-art="auto"></p>
+    <p class="satz" data-id="an">Das ist kein Zufall und keine geheime Häufung. Es ist die Indexierung bei der Arbeit, genau dort, wohin man sie gerichtet hat.</p>
+  </section>
+
+  <!-- Entwurf. Gedanke der Autorin: Fühlen wir uns einmal vom Kollegen in der Kompetenz angegriffen, fühlen wir uns ständig darin angegriffen,
+       bei anderen Menschen, in anderen Situationen. Der Text ist nach ihren Worten gebaut.
+       Die Menschen und ihre Sätze, der Knopf und die Zähler sind für die Seite gesetzt. Die zwei Sätze unter der Bühne sind aus dem Kapitel Indexierung, der zweite gekürzt. -->
+  <section id="i4" data-kapitel="Indexierung" data-szene="strom" data-knopf="mit dem Satz vom Kollegen im Ohr" data-zaehlt="Sätze, die passen könnten" data-gesehen="als Angriff gehört" data-traeger="Kompetenz">
+    <div class="kurz">
+      <p>Dasselbe passiert ohne Absicht. Fühlst du dich einmal in deiner Kompetenz angegriffen, hörst du den Angriff bald überall: bei anderen Menschen, in anderen Situationen.</p>
+    </div>
+    <p class="hinweis">Hör erst zu. Dann tippe auf den Knopf.</p>
+    <p class="ding" data-art="mensch" data-name="Chef" data-passt>Bis wann schaffst du das?</p>
+    <p class="ding" data-art="mensch" data-name="Kundin" data-passt>Können Sie das noch mal erklären?</p>
+    <p class="ding" data-art="mensch" data-name="Kunde" data-ladung="+">Danke, hat gut geklappt.</p>
+    <p class="ding" data-art="mensch" data-name="Kollegin" data-passt>Soll ich dir helfen?</p>
+    <p class="ding" data-art="mensch" data-name="Partner" data-passt>Hast du an den Termin gedacht?</p>
+    <p class="satz" data-id="an">Jeder neue Fall, der passt, wirkt wie ein weiterer Beweis, obwohl er nur zeigt, dass die Aufmerksamkeit dorthin ausgerichtet ist.</p>
+    <p class="satz" data-id="rest">Der Unterschied liegt darin, ob man noch prüft, was nicht dazu passt.</p>
+  </section>
+
+  <!-- Entwurf: Abschluss der Indexierung. Zurück zum Speicher mit den groben Trägern und zur Frage aus dem Kapitel Ladung.
+       Der Satz unter der Bühne ist aus dem Kapitel Indexierung. Text, die neue Zeile im Speicher und die Antwort sind für die Seite gesetzt. -->
+  <section id="i5" data-kapitel="Indexierung" data-szene="grob" data-stand="g3" data-nochmal>
+    <div class="kurz">
+      <p>Zurück zu der Frage, auf die es vorhin nur „irgendwie alles“ gab. Mit der Adresse sieht man auch, was nicht dazugehört.</p>
+    </div>
+    <p class="genau" data-von="arbeit" data-name="Satz vom Kollegen" data-ladung="−"></p>
+    <p class="frage">Wie geht es dir?</p>
+    <p class="antwort">Der Satz vom Kollegen.</p>
+    <p class="satz" data-id="an">Und du siehst, was nicht dazugehört: der Chef insgesamt, die Arbeit insgesamt, nicht mal der Kollege insgesamt und schon gar nicht der eigene Partner.</p>
+  </section>
+
+
+  <!-- ================================ PERSPEKTIVEN ================================ -->
+
+  <!-- Perspektive in der Welt der Inseln. Bild aus dem Kapitel Namensgebung: „deine schwimmende Insel verschiebt sich, und weil sich deine Insel
+       verschoben hat, wirkt auch alles um dich herum plötzlich anders. Nicht weil sich das Außen verändert hat.“ Der Satz unter der Bühne ist daraus gekürzt,
+       der Knopf ist aus demselben Satz („Du richtest deine Aufmerksamkeit neu aus“). „der Chef macht Druck“ ist die Zeile aus dem Morgen des Kollegen.
+       „er greift mich an“ und „vielleicht habe ich es falsch verstanden“ sind Worte der Autorin. Der Text oben ist Seitentext.
+       Für die Seite gesetzt: der Schatten hinter der Insel des Kollegen als das, was man von der eigenen Insel aus nicht sieht. -->
+  <section id="p0" data-kapitel="Perspektiven" data-anker="perspektiven" data-szene="sicht" data-knopf="Aufmerksamkeit neu ausrichten" data-nochmal>
+    <div class="kurz">
+      <p>Zurück auf die Inseln. Der Satz kommt durch den Kanal bei dir an, und von deiner Insel aus sieht es so aus, als käme er vom Kollegen.</p>
+    </div>
+    <p class="satz" data-id="satz">„Hättest du mal gefragt.“</p>
+    <p class="satz" data-id="kollege">Kollege</p>
+    <p class="satz" data-id="chef">Chef</p>
+    <p class="satz" data-id="druck">der Chef macht Druck</p>
+    <p class="satz" data-id="verdeckt">verdeckt</p>
+    <p class="blase" data-wer="denken">er greift mich an</p>
+    <p class="blase" data-wer="denken">vielleicht habe ich es falsch verstanden</p>
+    <p class="satz" data-id="tippen">Tippe auf deine Insel.</p>
+    <p class="satz" data-id="an">Weil sich deine Insel verschoben hat, wirkt auch alles um dich herum plötzlich anders. Nicht weil sich das Außen verändert hat.</p>
+  </section>
+
+  <!-- Wunsch der Autorin: dasselbe auch von sich aus sehen. Derselbe Schatten, vom Kollegen aus auf dich.
+       Hinter dir liegt der Türrahmen vom Morgen, der Satz dockt dort an, der Steg heißt „Scheißtag“ (wie in Stegbildung und Generalisierung).
+       „passt ja zu heute“ ist der Gedanke aus dem Bus-Schritt. Der Text oben, der Knopf und der Satz unter der Bühne sind Seitentext,
+       der Satz ist das Gegenstück zu „Dein Kollege ist geladen, bevor er dich überhaupt sieht.“ -->
+  <section id="p0b" data-kapitel="Perspektiven" data-anker="selbst" data-szene="sicht" data-rueck data-knopf="hinter dich schauen" data-nochmal>
+    <div class="kurz">
+      <p>Jetzt andersherum: So sieht der Kollege dich. Auch hinter deiner Insel liegt etwas, das er von seiner aus nicht sieht.</p>
+    </div>
+    <p class="satz" data-id="satz">„Hättest du mal gefragt.“</p>
+    <p class="satz" data-id="kollege">Kollege</p>
+    <p class="satz" data-id="chef">Chef</p>
+    <p class="satz" data-id="druck">der Chef macht Druck</p>
+    <p class="satz" data-id="verdeckt">verdeckt</p>
+    <p class="glied" data-id="tuer" data-name="Türrahmen" data-ladung="−"></p>
+    <p class="glied" data-id="kollege" data-name="Kollege" data-ladung="−"></p>
+    <p class="satz" data-id="name">Scheißtag</p>
+    <p class="blase" data-wer="denken">vielleicht habe ich es falsch verstanden</p>
+    <p class="blase" data-wer="denken">passt ja zu heute</p>
+    <p class="satz" data-id="tippen">Tippe auf deine Insel.</p>
+    <p class="satz" data-id="an">Auch du warst geladen, bevor er dich überhaupt gesehen hat.</p>
+  </section>
+
+  <!-- Potentialausgleich in der Draufsicht, an dieser Stelle auf Wunsch der Autorin. Die ganze Kette Chef, Kollege, du,
+       dahinter die nächste Insel. rein, raus, dicht mit denselben Antworten wie im Kapitel Potentialausgleich, diesmal mit der Folge für die nächste Insel.
+       Die ersten Sätze der drei Texte stammen aus dem Kanal-Schritt (dort aus dem Buch), „Keine dieser drei Reaktionen ist falsch.“ ist aus dem Buch.
+       Für die Seite gesetzt: der Text oben, die Insel „zu Hause“, jeweils der zweite Satz der drei Texte, und dass von der nächsten Insel aus der Schatten über Kollege und Chef liegt. -->
+  <section id="p0c" data-kapitel="Perspektiven" data-anker="kette" data-szene="sicht" data-reihe data-nochmal>
+    <div class="kurz">
+      <p>Der Druck läuft vom Chef zum Kollegen und vom Kollegen zu dir. Hinter dir liegt schon die nächste Insel. Noch einmal dieselbe Sekunde: Was du jetzt tust, entscheidet, ob er dort ankommt.</p>
+    </div>
+    <p class="satz" data-id="kollege">Kollege</p>
+    <p class="satz" data-id="chef">Chef</p>
+    <p class="satz" data-id="partner">zu Hause</p>
+    <p class="satz" data-id="verdeckt">verdeckt</p>
+    <p class="glied" data-id="tuer" data-name="Türrahmen" data-ladung="−"></p>
+    <p class="glied" data-id="kollege" data-name="Kollege" data-ladung="−"></p>
+    <p class="satz" data-id="name">Scheißtag</p>
+    <p class="blase" data-wer="denken">vielleicht habe ich es falsch verstanden</p>
+    <p class="blase" data-wer="denken">passt ja zu heute</p>
+    <p class="weg" data-id="rein" data-knopf="rein">Rein: Seine Anspannung wird zu deiner. Zu Hause sieht es so aus, als käme sie von dir.</p>
+    <p class="weg" data-id="raus" data-knopf="raus" data-sagt="Das kriegen wir hin.">Raus: Etwas von deiner Energie fließt zu ihm. Zu Hause kommt nichts an.</p>
+    <p class="weg" data-id="dicht" data-knopf="dicht" data-sagt="Lass uns später reden.">Dicht: Seine Ladung bleibt seine. Zu Hause kommt nichts an.</p>
+    <p class="satz" data-id="tippen">Tippe eine der drei an.</p>
+    <p class="satz" data-id="alle">Keine dieser drei Reaktionen ist falsch.</p>
+  </section>
+
+  <!-- Entwurf: der Film aus der Eröffnung. Text und der Satz unter der Bühne aus dem Kapitel Perspektiven (der erste Satz ist der aus der Eröffnung).
+       „das bin ja ich“ und „leichter“ sind die Zeilen aus der Eröffnung. „vielleicht habe ich es falsch verstanden“ ist von der Autorin.
+       Vorgabe der Autorin: nicht den Träger Kompetenz benennen, sondern nur die Stimmung. Deshalb geht das Plus hier direkt zu dir, und der Satz behält sein Minus.
+       Für die Seite gesetzt: dass im Film derselbe Satz fällt und dass die Figur lacht. -->
+  <section id="f1" data-kapitel="Perspektiven" data-anker="film" data-szene="film" data-nochmal>
+    <div class="kurz">
+      <p>Abends ein Film. Manchmal stößt du ganz anders auf dieselbe Stelle: in einer fremden Geschichte. Der Ablauf läuft dann rückwärts.</p>
+    </div>
+    <p class="satz" data-id="satz">„Hättest du mal gefragt.“</p>
+    <p class="satz" data-id="film">Hättest du mal gefragt!</p>
+    <p class="blase" data-wer="Geschichte">das bin ja ich</p>
+    <p class="blase" data-wer="denken">vielleicht habe ich es falsch verstanden</p>
+    <p class="blase" data-wer="fühlen">leichter</p>
+    <p class="satz" data-id="an">Etwas wird leichter statt schwerer, du weißt plötzlich, was als Nächstes zu tun ist, statt weiter im Kreis zu denken.</p>
+  </section>
+
+  <!-- Der Schritt zurück. Idee der Autorin: die Linie vom Anfang wieder zum Dreieck machen und sich in die Position Metaphorik stellen.
+       Die gelben Autos und der Film sind die zwei Bilder, mit denen die Seite diesen Schritt schon gemacht hat (Analogie statt Rauszoomen).
+       „Kann ich es drehen?“ ist die Frage der Autorin. Der Text oben und der Gedanke „ich habe es falsch gemacht“ sind Seitentext, nicht aus dem Buch. -->
+  <section id="p1" data-kapitel="Perspektiven" data-anker="spitze" data-szene="spitze" data-nochmal>
+    <div class="kurz">
+      <p>Zweimal hast du schon von woanders auf dich geschaut: bei den gelben Autos und beim Film. Das ist die Spitze der Karte vom Anfang.</p>
+    </div>
+    <p class="satz" data-id="autos">gelbe Autos</p>
+    <p class="blase" data-wer="denken">ich habe es falsch gemacht</p>
+    <p class="satz" data-id="an">Kann ich es drehen?</p>
+  </section>
+
+  <!-- Der Schlüsselbund aus dem Kapitel Perspektiven. Der Text oben und die beiden Sätze unter der Bühne sind aus dem Buch
+       (beim zweiten fehlt nur „dagegen“). Die Ergebnisworte folgen dem Buch: „passen gar nicht rein“, „passen fast, drehen sich aber nicht“, „nur einer öffnet“.
+       Für die Seite gesetzt: dass die Schlüssel Deutungen deines Satzes sind und welche es sind. „Arbeit nervt mich“ und „die Kollegen sind blöd“
+       sind die Grübelgedanken aus der Eröffnung, „vielleicht habe ich es falsch verstanden“ ist die Zeile der Autorin aus dem Film,
+       „war doch nicht so schlimm“ ist das Schönreden und Seitentext. -->
+  <section id="p2" data-kapitel="Perspektiven" data-anker="schluessel" data-szene="schloss" data-nochmal>
+    <div class="kurz">
+      <p>Nicht jede Geschichte, die dich berührt, trägt eine Lösung, die zu dir passt. Stell dir vor, du hast einen Bund mit hundert Schlüsseln, aber nur ein Schloss.</p>
+    </div>
+    <p class="satz" data-id="satz">„Hättest du mal gefragt.“</p>
+    <p class="schluessel" data-art="zu" data-bart="10,10" data-wort="passt nicht rein">Arbeit nervt mich</p>
+    <p class="schluessel" data-art="klemmt" data-bart="5,3,5" data-wort="passt fast, dreht sich nicht" data-fuehlt="schwerer">war doch nicht so schlimm</p>
+    <p class="schluessel" data-art="passt" data-bart="3,6,4" data-wort="öffnet" data-fuehlt="leichter">vielleicht habe ich es falsch verstanden</p>
+    <p class="schluessel" data-art="zu" data-bart="8,3,8" data-wort="passt nicht rein">die Kollegen sind blöd</p>
+    <p class="satz" data-id="tippen">Tippe einen Schlüssel an.</p>
+    <p class="satz" data-id="klemmt">Falsche Deutungen fühlen sich an wie ein Schlüssel, der sich mit Gewalt reindrücken lässt, aber nicht dreht.</p>
+    <p class="satz" data-id="passt">Nicht nur ein Gefühl, das gut tut, sondern eines, das etwas erklärt.</p>
+  </section>
+
+
+  <!-- ================================ SPEICHER FÜLLEN ================================ -->
+
+  <!-- Nach der Einleitung des Kapitels im Buch: erst der Rückblick auf alles, was von außen kam, dann die Wende zu dir.
+       Text oben: „Zurück zu dir“ nach dem letzten Satz des Kapitels Potentialausgleich („Kommen wir wieder zurück zu dir.“), der Rest ist der erste Absatz
+       des Kapitels Speicher füllen. Die Beispiele sind die der Seite statt der des Buchs (dort: Frage, Spiegel, Türrahmen, Anruf, Praline).
+       Der Satz unter der Bühne ist aus dem Buch. Für die Seite gesetzt: die Draufsicht der Kette als Ort, dass Dinge als Zeichen auf dem Wasser liegen,
+       die Wege mit Spitze zu dir, und dass am Ende alles außer dir zurücktritt. -->
+  <section id="sf1" data-kapitel="Speicher füllen" data-anker="fuellen" data-szene="sicht" data-aussen data-nochmal>
+    <div class="kurz">
+      <p>Zurück zu dir. Bisher kam Ladung meist ungeplant zu dir: ein Türrahmen, ein Satz, ein verpasster Bus, ein Film. Alles Impulse von außen, die du nicht beeinflusst hast.</p>
+    </div>
+    <p class="satz" data-id="kollege">Kollege</p>
+    <p class="satz" data-id="chef">Chef</p>
+    <p class="impuls" data-art="tuer" data-name="Türrahmen" data-ladung="−"></p>
+    <p class="impuls" data-art="mensch" data-ladung="−">„Hättest du mal gefragt.“</p>
+    <p class="impuls" data-art="bus" data-name="Bus verpasst" data-ladung="−"></p>
+    <p class="impuls" data-art="film" data-name="Film" data-ladung="+"></p>
+    <p class="satz" data-id="an">Aber du musst nicht auf deiner Insel warten, bis dir etwas passiert.</p>
+  </section>
+
+  <!-- Das Beispiel des Kapitels, auf den Tag der Seite gelegt: der Bus ist weg (Stegbildung), du läufst nach Hause. Zwei Bahnen wie beim passiven und
+       aktiven Menschen. Erster Satz des Textes und der Satz unter der Bühne sind aus dem Buch. „nebenbei Nachrichten checken“ ist aus dem Buch
+       (dort beim Joggen), „der Atem, die Füße auf dem Boden“ ist gekürzt aus „wie dein Atem geht, wie die Füße den Boden treffen“.
+       Das Handy steht im Buch („Spazieren mit oder ohne Handy in der Hand“), ebenso der Träger („dein Körper-Ladungsträger“) und das Verpuffen
+       („hebt die Bewegung kurz deinen Pegel, verpufft dann aber wieder, unadressiert“).
+       Für die Seite gesetzt: der verpasste Bus als Anlass, der Rest des Textes oben, die Namen der beiden Bahnen und wie das Verpuffen aussieht. -->
+  <section id="sf2" data-kapitel="Speicher füllen" data-szene="zwei" data-oben="nebenbei" data-unten="mit Aufmerksamkeit" data-nochmal>
+    <div class="kurz">
+      <p>Du kannst gezielt einen deiner eigenen Ladungsträger füttern. Der Bus ist weg, du läufst nach Hause. Derselbe Weg, dieselbe Zeit, zweimal.</p>
+    </div>
+    <div class="ereignis" data-id="koerper" data-art="bus" data-name="Körper" data-kommt="Bus verpasst" data-ladung="+" data-geht>
+      <p data-bahn="oben" data-verpufft data-handy>nebenbei Nachrichten checken</p>
+      <p data-bahn="unten">der Atem, die Füße auf dem Boden</p>
+    </div>
+    <!-- Weitere Beispiele als Knöpfe. Alle drei stehen im Kapitel Speicher füllen, die Gedanken sind von dort:
+         „statt nebenbei den Tag durchzugehen“, „spüre das Wasser auf der Haut, die Wärme“ · „als Hintergrundrauschen“, „das du wirklich hörst, mit geschlossenen Augen“ ·
+         „statt am Handy vorbeizulaufen“, „bewusst die Luft riechen“. Für die Seite gesetzt: die Namen der Träger. -->
+    <div class="ereignis" data-knopf="Dusche" data-id="dusche" data-art="wort" data-name="Dusche" data-ladung="+" data-innen>
+      <p data-bahn="oben" data-verpufft>nebenbei den Tag durchgehen</p>
+      <p data-bahn="unten">das Wasser auf der Haut, die Wärme</p>
+    </div>
+    <div class="ereignis" data-knopf="Lied" data-id="lied" data-art="wort" data-name="Lied" data-ladung="+" data-innen>
+      <p data-bahn="oben" data-verpufft>läuft als Hintergrundrauschen</p>
+      <p data-bahn="unten">wirklich hören, mit geschlossenen Augen</p>
+    </div>
+    <div class="ereignis" data-knopf="Fenster" data-id="fenster" data-art="wort" data-name="Fenster" data-kommt="offenes Fenster" data-ladung="+" data-innen>
+      <p data-bahn="oben" data-verpufft data-handy>mit dem Handy daran vorbeilaufen</p>
+      <p data-bahn="unten">bewusst die Luft riechen</p>
+    </div>
+    <p class="satz" data-id="an">Nicht die Aktivität macht den Unterschied, sondern ob sie überhaupt irgendwo ankommt, wo du sie wiederfindest.</p>
+    <!-- beide aus dem Kapitel Speicher füllen -->
+    <p class="satz" data-id="mehr">Dasselbe Prinzip, verschiedene Träger.</p>
+    <p class="satz" data-id="alle">Fünf Minuten mit voller Aufmerksamkeit können mehr Bindungsenergie erzeugen als eine Stunde nebenbei.</p>
+  </section>
+
+
+  <!-- ================================ POSITIV INDEXIEREN ================================ -->
+
+  <!-- Aufräumen in zwei Bahnen (Bild der Autorin: alte Gedanken in den Mülleimer werfen und Gedanken sortieren), ersetzt den ausgeschalteten Dreh-Schritt x1.
+       Buch, Kapitel Positiv Indexieren: „ich muss die Unordnung wegmachen“ · „ich entscheide gerade, was in meinem Raum überhaupt noch Platz verdient hat“
+       (hier gekürzt) · „erlaube mir dabei, meine Gedanken zu sortieren oder auch welche zuzulassen, die ich dann förmlich im Außen in die Tonne werfe“ ·
+       „Pflicht“ und „Selbstfürsorge“ · der Satz unter der Bühne. Im Text oben ist „Dinge, die gemacht werden müssen, … keine positive Ladung bringen“ aus dem Buch.
+       Für die Seite gesetzt, mit der Autorin abgestimmt: dass der Steg „Scheißtag“ vom Tag noch auf dem Wasser liegt, dass Sortieren seine Verbindungsstücke löst
+       und dass sein Name in die Tonne fliegt. Ebenfalls für die Seite gesetzt: der Rest des Textes oben und die Namen der beiden Bahnen. -->
+  <section id="x2" data-kapitel="Positiv Indexieren" data-anker="aufraeumen" data-szene="zwei" data-oben="als Pflicht" data-unten="als Auswahl" data-nochmal>
+    <div class="kurz">
+      <p>Zu Hause wartet das Aufräumen. Eines der Dinge, die gemacht werden müssen, dir aber keine positive Ladung bringen. Dieselbe Aufgabe, zweimal.</p>
+    </div>
+    <p class="glied" data-id="tuer" data-name="Türrahmen" data-ladung="−"></p>
+    <p class="glied" data-id="kollege" data-name="Kollege" data-ladung="−"></p>
+    <p class="glied" data-id="bus" data-name="Bus" data-ladung="−"></p>
+    <div class="ereignis" data-id="aufraeumen" data-art="tonne" data-kommt="Aufräumen" data-innen>
+      <p data-bahn="oben" data-name="Pflicht" data-ladung="−">ich muss die Unordnung wegmachen</p>
+      <p data-bahn="unten" data-sortiert data-name="Selbstfürsorge" data-ladung="+">was verdient hier noch Platz?</p>
+    </div>
+    <p class="satz" data-id="name">Scheißtag</p>
+    <p class="satz" data-id="an">Aus einer erzwungenen Pflicht wird ein aktiver Auswahlprozess.</p>
+  </section>
+
+  <!-- Übergang zu Positiv Indexieren über das Drehen: erst drehte sich der Schlüssel, jetzt dreht sich der Ladungsträger.
+       Der Text oben ist aus dem Buch. Das Beispiel ist das Aufräumen aus dem Buch, beide Gedanken sind von dort,
+       ebenso die Wörter „Pflicht“ und „Selbstfürsorge“ („von einer erschöpfenden Pflicht zu einer Selbstfürsorge-Routine“).
+       Der Satz unter der Bühne steht im Buch bei der Steuererklärung. Für die Seite gesetzt: dass der Träger sich sichtbar umdreht und zurückdrehen lässt. -->
+  <!-- Von der Autorin verworfen (Grafik und Einstieg). Ausgeschaltet mit data-aus, zum Einschalten data-aus entfernen. -->
+  <section id="x1" data-aus data-kapitel="Positiv Indexieren" data-anker="positiv" data-szene="drehen" data-knopf="drehen" data-nochmal>
+    <div class="kurz">
+      <p>Wie können wir das alles zusammen in unserem Alltag verwenden? Ich nenne es positiv indexieren. Ich nutze eine Aufgabe, die mir sonst mühselig oder anstrengend erscheint.</p>
+    </div>
+    <p class="satz" data-id="satz">„Hättest du mal gefragt.“</p>
+    <p class="satz" data-id="aufgabe">Aufräumen</p>
+    <p class="seite" data-name="Pflicht" data-ladung="−">ich muss die Unordnung wegmachen</p>
+    <p class="seite" data-name="Selbstfürsorge" data-ladung="+">ich entscheide gerade, was in meinem Raum überhaupt noch Platz verdient hat</p>
+    <p class="satz" data-id="tippen">Tippe auf den Träger.</p>
+    <p class="satz" data-id="an">Die Aufgabe selbst hat sich keinen Millimeter verändert, nur der Ladungsträger, unter dem du sie ablegst, ist ein anderer geworden.</p>
+  </section>
+
+</div>
+
+<script src="js/01-grundlage.js"></script>
+<script src="js/02-bindung.js"></script>
+<script src="js/03-steg.js"></script>
+<script src="js/04-zwei.js"></script>
+<script src="js/05-arbeit.js"></script>
+<script src="js/06-film.js"></script>
+<script src="js/07-spitze.js"></script>
+<script src="js/08-schloss.js"></script>
+<script src="js/09-drehen.js"></script>
+<script src="js/10-sicht.js"></script>
+<script src="js/11-strom.js"></script>
+<script src="js/12-grob.js"></script>
+<script src="js/13-steg-neues-element.js"></script>
+<script src="js/14-zeitlinie.js"></script>
+<script src="js/15-schritte.js"></script>
+<script src="js/16-navigation.js"></script>
+<script src="js/17-buehne-und-start.js"></script>
+</body>
+</html>

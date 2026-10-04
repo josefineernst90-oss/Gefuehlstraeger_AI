@@ -1,0 +1,79 @@
+/* Grundeinstellungen (entsprechen der Hülle, die Claude beim Veröffentlichen als Artefakt davorsetzt) */
+:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}
+img{max-width:100%}
+[hidden]:not([hidden=until-found i]){display:none!important}
+
+/* Layout: eine Spalte wie eine Buchseite. Oben der Satz, in der Mitte die Bühne, unten Momente, Schritte und Kapitel. Farben und Schriften vom Buchcover. */
+:root{
+  --bg:#f6f2eb; --paper:#fbf8f3; --ink:#2a2622; --muted:#7a7268; --line:#cfc7ba;
+  --plus:#b8651f; --minus:#4a6076; --gelb:#e3b320;
+  --serif:"Gelasio",Georgia,"Times New Roman",serif;
+  --sans:"Jost","Century Gothic","Avenir Next",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1b1916; --paper:#24211d; --ink:#ece6dc; --muted:#9a9186; --line:#4a443c;
+  --plus:#dd8f4c; --minus:#93aecb; --gelb:#f0c540; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1b1916; --paper:#24211d; --ink:#ece6dc; --muted:#9a9186; --line:#4a443c;
+  --plus:#dd8f4c; --minus:#93aecb; --gelb:#f0c540; color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.5}
+.app{height:100%;box-sizing:border-box;max-width:760px;margin-inline:auto;padding-inline:16px;padding-block:10px 12px;
+  display:flex;flex-direction:column;gap:10px}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.top .brand{color:var(--ink)}
+.top,.cap,.row,.nav,.chapters{flex-shrink:0}
+.textwrap{display:flex;flex-direction:column;gap:2px;flex:0 1 auto;min-height:0}
+.text{display:flex;flex-direction:column;gap:6px;overflow-y:auto;min-height:0}
+.text>*{flex-shrink:0}
+/* neuer Text blendet ein; bei „warte“ steht er schon an seinem Platz, ist aber noch nicht zu sehen */
+.text{transition:opacity .45s ease}
+.text.warte{opacity:0}
+.app.ruhig .text{transition:none}
+/* meldet das Gerät „weniger Bewegung“, stehen die Bilder still. Hier lässt sich die Bewegung trotzdem einschalten. */
+.ruhe{margin:0;font-size:.85rem;color:var(--muted);flex-shrink:0}
+.ruhe button{background:transparent;border:0;border-bottom:1px solid var(--plus);padding:2px 0;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--plus)}
+/* passt der Text nicht neben die Bühne (ausführliche Fassung, kleines Fenster), scrollt die Seite wie ein Artikel */
+.app.flow{height:auto;min-height:100%}
+.app.flow .text{gap:9px;overflow:visible}
+.app.flow .stage{flex:0 0 auto;height:min(52vh,340px)}
+.cap.hint{font-family:var(--sans);font-style:normal;font-size:.9rem;color:var(--muted)}
+@media (max-width:480px){body{font-size:16px;line-height:1.45}.row{gap:5px}.row button{padding:6px 9px;font-size:.9rem}}
+.text .begriff{font-size:.9rem;color:var(--muted)}
+.text .begriff b{font-weight:500;color:var(--ink)}
+#mode{align-self:flex-start;background:transparent;border:0;padding:6px 0;font-size:.72rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--plus);border-bottom:1px solid transparent}
+#mode:hover{border-bottom-color:var(--plus)}
+.text p{margin:0;max-width:62ch;text-wrap:pretty}
+.text h1{margin:0;font-family:var(--serif);font-weight:400;letter-spacing:.1em;line-height:1.1;
+  font-size:clamp(1.5rem,7vw,2.5rem);text-wrap:balance}
+.text .sub{font-family:var(--serif);font-style:italic;font-size:1.1rem}
+/* die Bühne wird nicht höher, als das Bild braucht: so steht der Satz direkt unter dem Stimmungsspeicher */
+.stage{flex:1 1 0;min-height:290px;max-height:calc((92px + (min(760px,100vw) - 32px)*0.5)/0.78);position:relative;touch-action:none}
+canvas{position:absolute;inset:0;display:block;width:100%;height:100%}
+.cap{min-height:3.1em;display:flex;align-items:flex-start;justify-content:center;margin:0;text-align:center;font-family:var(--serif);font-style:italic;color:var(--ink);text-wrap:balance}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;min-height:44px;align-items:center}
+button{font:inherit;color:var(--ink);cursor:pointer}
+button:focus-visible{outline:2px solid var(--plus);outline-offset:3px}
+.row button{border:1.5px solid var(--ink);background:transparent;border-radius:999px;padding:6px 13px;font-size:.95rem;display:inline-flex;gap:8px;align-items:center}
+.row button .sg{font-weight:500;font-size:1.1em;line-height:1}
+.row button .sg.p{color:var(--plus)} .row button .sg.m{color:var(--minus)}
+.row button.act{border-color:var(--plus);font-family:var(--serif);font-size:1.05rem;padding:8px 20px}
+.row button:disabled{opacity:.45;cursor:default}
+.row button.still{position:absolute;width:1px;height:1px;padding:0;border:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.row button.still:focus-visible{position:static;width:auto;height:auto;padding:6px 13px;border:1.5px solid var(--ink);overflow:visible;clip-path:none;white-space:normal}
+.nav{display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:auto}
+.nav button{background:transparent;border:0;padding:8px 4px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.nav button:disabled{opacity:.35;cursor:default}
+.nav #next{color:var(--ink);border-bottom:1.5px solid var(--line);padding-inline:2px}
+.nav #next.ready{color:var(--plus);border-color:var(--plus)}
+/* Kapitelpunkte: der Punkt ist klein, die Fläche zum Antippen groß. Gefüllt = schon durchlaufen, farbig = hier bist du. */
+.chapters{list-style:none;margin:-2.5px 0;padding:0;display:flex;gap:0;justify-content:center;flex-wrap:wrap}
+.chapters button{width:28px;height:28px;padding:0;border:0;background:transparent;display:grid;place-items:center}
+.chapters button::before{content:"";box-sizing:border-box;width:11px;height:11px;border-radius:50%;border:1.5px solid var(--muted)}
+.chapters button.war::before{background:var(--muted)}
+.chapters button[aria-current="true"]::before{width:13px;height:13px;background:var(--plus);border-color:var(--plus)}
