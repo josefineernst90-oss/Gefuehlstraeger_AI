@@ -7,6 +7,10 @@ DREHBUCH
 
 Hier steht alles Sprachliche und die Reihenfolge der Schritte. Der Programmteil darunter spielt es nur ab.
 
+BEWEGUNG
+Die Bilder bewegen sich immer, auch wenn das Gerät „weniger Bewegung“ meldet. Nur zum Prüfen: mit ?still an der Adresse (index.html?still)
+stehen sie still, jeder Ablauf steht dann sofort am Ende.
+
 EINS NACH DEM ANDEREN
 Der Blick folgt der Bewegung. Deshalb passiert in jedem Schritt nur eine Sache zur selben Zeit:
 erst erscheint der Text, dann folgt eine Lesepause (je länger der Text, desto länger), dann erst bewegt sich die Bühne,
@@ -297,6 +301,10 @@ die auch auf den Zeitlinien der Bühne „zwei“ stehen, jedes mit data-name al
 Was passt (data-passt), trägt einen gelben Punkt. data-ladung="−": seine Ladung fliegt von selbst zu dir, dein Bauch färbt sich kurz. data-ladung="+" mit data-passt:
 sein Plus kommt erst bei dir an, wenn die Aufmerksamkeit ausgerichtet ist. Nichts wird blasser. Mit data-rest an einem .ding erscheint .satz data-id="rest" erst,
 wenn dieses Zeichen vorbeikommt.
+data-uebergang="ring" am <section>: der Schritt beginnt mit dem Ring der Bindung, so wie der Schritt davor ihn verlässt (nur wenn man direkt von dort kommt).
+Eins nach dem anderen: Hüllen und Fäden treten zurück, es bleiben du und .satz data-id="vorher" unter der Bühne · unter dir erscheint .satz data-id="vorbei" ·
+der Satz wird flach und zu einem Stück Zeitlinie unter deinen Füßen · die Zeitlinie wächst über die ganze Breite · du gehst mit ihr an deinen Platz ·
+Zähler und Zeichen erscheinen. Erst danach kommen der Text des Schritts, die Lesepause und der Hinweis. Der Knopf ist so lange gesperrt.
 
 BÜHNE „FILM“ (data-szene="film" am <section>): links oben du, darunter dein gerahmter Satz (.satz data-id="satz"). Ablauf, eins nach dem anderen:
 rechts oben erscheint ein Bild im Rahmen, der Film · deine Blicklinie geht hin · unter dem Rahmen erscheint der Satz im Film (.satz data-id="film") ·

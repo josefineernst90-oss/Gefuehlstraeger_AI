@@ -83,7 +83,7 @@ function enterStep(s,prev){
   if(s.scene==='zwei')zweiStart(s);else S.zw=null;
   if(s.scene==='arbeit')arbeitStart(s);else S.ar=null;
   if(s.scene==='grob')grobStart(s);else S.gb=null;
-  if(s.scene==='strom')stromStart(s);else S.sr=null;
+  if(s.scene==='strom')stromStart(s,prev);else S.sr=null;
   if(s.scene==='film')filmStart(s);else S.fi=null;
   if(s.scene==='spitze')spitzeStart(s);else S.sp=null;
   if(s.scene==='schloss')schlossStart(s);else S.sk=null;
@@ -157,6 +157,8 @@ function done(s){const st=stOf(s),eg=EIGEN[s.id];
 }
 // Schritt verlassen: was noch läuft oder fehlt, wird sofort gesetzt. So stimmen die folgenden Schritte immer.
 function finish(s){const st=stOf(s);
+  // der Ring, wie er beim Verlassen stand: damit beginnt ein Schritt mit data-uebergang="ring"
+  if(s.eigeneHuellen)S.ringEnde=Object.values(S.h).filter(h=>!h.fort&&!h.spaet&&h.a>0.02).map(kopie);
   // ein Gedanke, der noch unterwegs ist, gilt als zu Ende gedacht
   if(s.neu&&S.sg&&S.sg.neu&&S.sg.neu.ziel){st.aus=S.sg.neu.ziel.an?'an':'frei';st.gesehen=true}
   if(s.hinaus)alleHinaus();

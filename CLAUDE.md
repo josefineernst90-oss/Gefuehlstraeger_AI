@@ -7,7 +7,7 @@ Das Buch „Gefühlsträger“ als interaktive Seite. Dieses Repository ist die 
 - Nie alles lesen. Für eine Änderung reichen meist der betroffene `<section>`-Block in `index.html` (per Suche nach `id="…"`) und die eine Bühnen-Datei in `js/`.
 - Erst prüfen, ob das Gewünschte allein im Drehbuch geht (Attribute in `docs/DREHBUCH.md`). Nur neue Mechanik braucht Code.
 - Wünsche sammeln, einmal bauen, einmal prüfen, einmal committen.
-- Prüfen: alle Schritte einmal mit Playwright durchklicken und auf Konsolenfehler achten (`reducedMotion: 'reduce'` reicht dafür, Google-Fonts-Anfragen abbrechen). Bildschirmfotos nur für neue Bilder. Das Bild selbst beurteilt die Autorin auf der Seite.
+- Prüfen: alle Schritte einmal mit Playwright durchklicken und auf Konsolenfehler achten (die Seite dafür mit `?still` an der Adresse öffnen, dann steht jeder Ablauf sofort am Ende; Google-Fonts-Anfragen abbrechen). Bildschirmfotos nur für neue Bilder. Das Bild selbst beurteilt die Autorin auf der Seite.
 - Das Claude-Artefakt „Gefühlsträger interaktiv“ wird nur auf Wunsch aktualisiert (`node bauen.js`, dann `dist/artefakt.html` veröffentlichen).
 
 ## Regeln für Inhalt und Bild
@@ -26,5 +26,5 @@ Das Buch „Gefühlsträger“ als interaktive Seite. Dieses Repository ist die 
 ## Technik
 
 - Kein Build nötig: `index.html` lädt `css/seite.css` und die Dateien in `js/` der Reihe nach. Die Skripte teilen sich den globalen Namensraum (kein Modulsystem), die Reihenfolge der `<script>`-Zeilen zählt.
-- Jede Bühne: eine Start-Funktion baut einen Plan aus `{dur, run(k), start}`, `ablauf()` arbeitet ihn ab, eine Zeichen-Funktion malt pro Frame auf das `<canvas>`. Bei reduzierter Bewegung läuft jeder Plan sofort durch.
+- Jede Bühne: eine Start-Funktion baut einen Plan aus `{dur, run(k), start}`, `ablauf()` arbeitet ihn ab, eine Zeichen-Funktion malt pro Frame auf das `<canvas>`. Die Bilder bewegen sich immer, die Einstellung „weniger Bewegung“ am Gerät wird nicht beachtet. Nur mit `?still` an der Adresse läuft jeder Plan sofort durch.
 - Farben nur über die Tokens `--bg --paper --ink --muted --line --plus --minus --gelb` (hell und dunkel).

@@ -1,9 +1,8 @@
 const $=id=>document.getElementById(id);
 const cv=$('c'),ctx=cv.getContext('2d'),stage=$('stage');
-// „weniger Bewegung“ am Gerät: die Bilder stehen still, bis man die Bewegung hier einschaltet (wird gemerkt)
-const geraetRuhig=matchMedia('(prefers-reduced-motion: reduce)').matches;
-let wunsch=null;try{wunsch=localStorage.getItem('gt-bewegung')}catch(e){}
-let reduce=geraetRuhig&&wunsch!=='an';
+// Die Bilder bewegen sich immer, auch wenn das Gerät „weniger Bewegung“ meldet. Nur zum Prüfen: mit ?still an der Adresse stehen sie still,
+// jeder Ablauf steht dann sofort am Ende.
+let reduce=/[?&]still\b/.test(location.search);
 const rnd=(a,b)=>a+Math.random()*(b-a);
 
 /* ================= Farben aus den Tokens ================= */
@@ -38,7 +37,7 @@ const bahnKey=v=>({oben:'passiv',unten:'aktiv'})[v]||v;
 const SLIDES=[...buch.querySelectorAll(':scope > section:not([data-aus])')].map(sec=>{const d=sec.dataset;
   sec.querySelectorAll('.moment').forEach(el=>{const sp=parseMoment(el);MOM[sp.id]=sp});
   return {id:sec.id,sec,chap:d.kapitel?KAPITEL.indexOf(d.kapitel):null,anchor:d.anker,scene:d.szene||'speicher',
-    leer:d.start==='leer',vorher:d.start==='vorher',fold:d.uebergang==='dreieck',figur:d.uebergang==='figur',hinaus:d.uebergang==='hinaus',alleHuellen:d.huellen==='alle',eigeneHuellen:d.huellen==='eigene',frei:'frei' in d,vorfuehren:+d.vorfuehren||0,ich:'ich' in d,mann:'mann' in d,ein:d.uebergang==='hinein'?1:d.uebergang==='heraus'?-1:0,zumSteg:d.uebergang==='steg',
+    leer:d.start==='leer',vorher:d.start==='vorher',fold:d.uebergang==='dreieck',figur:d.uebergang==='figur',hinaus:d.uebergang==='hinaus',alleHuellen:d.huellen==='alle',eigeneHuellen:d.huellen==='eigene',vomRing:d.uebergang==='ring',frei:'frei' in d,vorfuehren:+d.vorfuehren||0,ich:'ich' in d,mann:'mann' in d,ein:d.uebergang==='hinein'?1:d.uebergang==='heraus'?-1:0,zumSteg:d.uebergang==='steg',
     glieder:[...sec.querySelectorAll(':scope > .glied:not([data-neu])')].map(g=>({id:g.dataset.id,label:g.dataset.name||'',lad:g.dataset.ladung||''})),
     ereignisse:[...sec.querySelectorAll(':scope > .ereignis')].map(e=>({id:e.dataset.id,art:e.dataset.art||'tuer',label:e.dataset.name||'',schild:e.dataset.kommt||e.dataset.name||'',lad:e.dataset.ladung||'',sicht:'sicht' in e.dataset,ruft:e.dataset.ruft||'',bleibt:'bleibt' in e.dataset,geht:'geht' in e.dataset,innen:'innen' in e.dataset,knopf:e.dataset.knopf||'',
       ged:Object.fromEntries([...e.querySelectorAll('p')].map(p=>[bahnKey(p.dataset.bahn),{text:p.textContent.trim(),verbindet:'verbindet' in p.dataset,verpufft:'verpufft' in p.dataset,

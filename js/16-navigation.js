@@ -8,10 +8,11 @@ function go(i,force){
   if(started)finish(SLIDES[cur]);started=true;
   cur=i;const s=SLIDES[i];layout();say('');SEL=null;enterStep(s,prev);cv.setAttribute('aria-label',T('buehne-'+s.scene));
   renderText();
-  // der neue Text blendet ein, danach Lesepause. Beim Klappen wartet der Text, bis die Linie steht.
+  // der neue Text blendet ein, danach Lesepause. Beim Klappen wartet der Text, bis die Linie steht, beim Übergang aus dem Ring, bis die Zeitlinie steht.
   const tx=$('text');tx.style.transition='none';tx.classList.add('warte');void tx.offsetWidth;tx.style.transition='';
-  if(reduce||!s.klappen)tx.classList.remove('warte');
-  S.lese=s.klappen?0:lesezeit();
+  const nachher=s.klappen||!!(S.sr&&S.sr.ue);   // der Text kommt erst nach dem Übergang
+  if(reduce||!nachher)tx.classList.remove('warte');
+  S.lese=nachher?0:lesezeit();
   const inChap=SLIDES.filter(x=>x.chap===s.chap),n=inChap.indexOf(s)+1;
   $('chap').textContent=s.chap==null?T('theorie'):KAPITEL[s.chap]+' · '+n+'/'+inChap.length;
   renderRow();renderChapters();syncNav();try{scrollTo(0,0)}catch(e){}
@@ -58,7 +59,7 @@ function renderRow(){
   if(s.scene==='schloss')s.schluessel.forEach((q,i)=>{btn(s.id+'-schluessel'+i,'„'+q.text+'“',()=>schlossTipp(s,i),()=>!S.sk||!S.sk.fertig||S.sk.drin===i,'still').dataset.nodemo='1'});
   if(s.scene==='sicht'&&!s.reihe&&!s.aussen)btn('act-'+s.id,s.knopf||'',()=>sichtTipp(s),()=>!S.si||!S.si.fertig||!!S.si.laeuft||(s.rueck?S.si.gehoben:S.si.drift>0),'act').dataset.nodemo='1';
   if(s.scene==='drehen')btn('act-'+s.id,s.knopf||'drehen',()=>drehenTipp(s),()=>!S.dr||!S.dr.fertig||!!S.dr.laeuft,'act').dataset.nodemo='1';
-  if(s.scene==='strom')btn('act-'+s.id,s.knopf||'',()=>stromAn(s),()=>!S.sr||S.sr.an,'act').dataset.nodemo='1';
+  if(s.scene==='strom')btn('act-'+s.id,s.knopf||'',()=>stromAn(s),()=>!S.sr||S.sr.an||!!S.sr.ue,'act').dataset.nodemo='1';
   if(s.scene==='grob')s.nimmt.forEach(e=>{btn(s.id+'-nimmt-'+e.id,'„'+e.knopf+'“',()=>grobNimmt(s,e),()=>!S.gb||!S.gb.fertig||!!S.gb.laeuft).dataset.nodemo='1'});
   if(s.scene==='grob')s.eingriffe.forEach(e=>{btn(s.id+'-eing-'+e.id,e.knopf,()=>grobEingriff(s,e),()=>!S.gb||!S.gb.fertig||!!S.gb.laeuft).dataset.nodemo='1'});
   // Gedanken zum neuen Element: frei, solange es wartet · am Steg nur der, der es löst · ist es weg, nur der, der es andockt
@@ -100,7 +101,4 @@ $('auto').onclick=()=>{stopDemo();const s=SLIDES[cur];demoI=0;
     if(bs.length)bs[demoI++%bs.length].click()};
   tick();demoT=setInterval(tick,s.knoepfe.length?2700:s.scene==='bindung'?1300:700)};
 $('brand').textContent=T('marke');$('back').textContent=T('zurueck');$('auto').textContent=T('zuschauen');
-function ruheZeigen(){$('ruhe').hidden=!geraetRuhig;document.querySelector('.app').classList.toggle('ruhig',reduce);
-  $('ruhe-text').textContent=T(reduce?'ruhe-still':'ruhe-bewegt');$('motion').textContent=T(reduce?'bewegung-an':'bewegung-aus')}
-$('motion').onclick=()=>{reduce=!reduce;try{localStorage.setItem('gt-bewegung',reduce?'aus':'an')}catch(e){}ruheZeigen();go(cur,true)};
-ruheZeigen();
+document.querySelector('.app').classList.toggle('ruhig',reduce);

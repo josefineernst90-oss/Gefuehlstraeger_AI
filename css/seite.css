@@ -34,9 +34,6 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17p
 .text{transition:opacity .45s ease}
 .text.warte{opacity:0}
 .app.ruhig .text{transition:none}
-/* meldet das Gerät „weniger Bewegung“, stehen die Bilder still. Hier lässt sich die Bewegung trotzdem einschalten. */
-.ruhe{margin:0;font-size:.85rem;color:var(--muted);flex-shrink:0}
-.ruhe button{background:transparent;border:0;border-bottom:1px solid var(--plus);padding:2px 0;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--plus)}
 /* passt der Text nicht neben die Bühne (ausführliche Fassung, kleines Fenster), scrollt die Seite wie ein Artikel */
 .app.flow{height:auto;min-height:100%}
 .app.flow .text{gap:9px;overflow:visible}
