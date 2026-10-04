@@ -332,6 +332,29 @@ die Ladung daneben wird mit jeder Zeile deutlicher (bei einer einzigen Zeile ble
 die Platten schließen sich um die Ladung · sie fällt in den Speicher: ohne data-adresse lose, mit data-adresse an ihren Träger (gibt es ihn noch nicht, erscheint er) ·
 dann steht der Satz aus <p class="fall"> unter der Bühne. Sind alle Knöpfe getippt, kommt nach einer Lesezeit .satz data-id="alle".
 
+DER STAU (Bühne „fokus“, Kapitel Überschuss und Namensgebung). Unter deinen Füßen kann immer nur ein Moment offen sein. data-akt am <section> wählt den Ablauf:
+  data-akt="stau"     der Stau entsteht. Im Block stehen zwei <div class="moment"> (jeder mit einer Zeile, data-ladung, data-adresse und data-name):
+                      der erste gehört zum Zeichen aus data-kommt (z.B. Anruf), der zweite zum Zeichen aus data-dahinter (z.B. Nachricht).
+                      Kommt man direkt aus dem Schritt davor, gehen zuerst die Platten noch einmal auf und bleiben offen, erst dann kommt der Text.
+                      Dann: das erste Zeichen kommt · der Moment nimmt es auf und bleibt belegt · das zweite kommt und muss warten ·
+                      aus den Strichen der Zeitlinie werden Punkte · sie schieben sich vor dir zusammen. Danach .satz data-id="an".
+  data-akt="hebel"    der Stau steht (data-stand zeigt auf den Schritt mit data-akt="stau"). Je <p class="weg" data-id data-knopf data-sagt> ein Knopf,
+                      jeder Tipp beginnt wieder beim Stau:
+                        drosseln  die Punkte rücken auseinander und werden wieder Striche · der Moment wird fertig, seine Ladung fällt an ihre Adresse · das wartende Zeichen ist dran
+                        schlaf    data-sagt steht über der Zeitlinie · der Moment wird fertig · das wartende Zeichen ist dran und wird auch fertig ·
+                                  die Punkte werden einer nach dem anderen abgearbeitet
+                        druck     alles verpufft, im Speicher kommt nichts an · data-sagt steht über der Zeitlinie · derselbe Stau steht wieder da
+                      Der Text des .weg steht danach unter der Bühne, nach allen dreien kommt .satz data-id="alle" dazu. Erledigt nach dem ersten.
+  data-akt="rutscht"  der Stau steht. Der Moment bricht ab, seine Ladung fällt ohne Adresse lose in den Speicher · das wartende Zeichen ist dran,
+                      seine Ladung fällt an ihre Adresse · die Punkte werden wieder Striche, du gehst weiter ·
+                      die lose Ladung rutscht zu demselben Träger: dem nächstbesten. Danach .satz data-id="an".
+  data-akt="name"     mit data-von="kollege": je <p class="name"> ein Knopf. Der erste Tipp: unten im Speicher erscheint ein neuer Träger mit diesem Namen,
+                      die letzte Ladung des Trägers aus data-von wandert zu ihm hinüber, dann .satz data-id="an". Jeder weitere Tipp gibt ihm einen anderen Namen,
+                      dann .satz data-id="mehr". Für die folgenden Schritte gilt der zuletzt gewählte Name (ohne Wahl der erste im Block).
+  data-akt="wieder"   dieselben zwei Zeichen kommen noch einmal. Die Platten schließen sich jedes Mal gleich um die Ladung, ohne Zeilen, und sie fällt an ihre Adresse
+                      (die erste an den Träger mit dem neuen Namen). Die Zeitlinie läuft weiter, nichts staut sich. Danach .satz data-id="an".
+Liegen mehr als sieben Träger im Speicher, werden sie kleiner gezeichnet.
+
 BÜHNE „FILM“ (data-szene="film" am <section>): links oben du, darunter dein gerahmter Satz (.satz data-id="satz"). Ablauf, eins nach dem anderen:
 rechts oben erscheint ein Bild im Rahmen, der Film · deine Blicklinie geht hin · unter dem Rahmen erscheint der Satz im Film (.satz data-id="film") ·
 im Film bekommt eine Figur von der anderen ein Minus · neben dir erscheint die erste .blase · die Figur im Film lacht, ihr Minus wird zum Plus ·

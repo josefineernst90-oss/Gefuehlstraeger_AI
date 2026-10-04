@@ -1,6 +1,6 @@
 # Stand
 
-Version 66, 4. Oktober 2026. 61 aktive Schritte, 10 ausgeschaltet.
+Version 67, 4. Oktober 2026. 66 aktive Schritte, 10 ausgeschaltet.
 
 ## Schritte nach dem Kapitel Bindung
 
@@ -20,10 +20,17 @@ Version 66, 4. Oktober 2026. 61 aktive Schritte, 10 ausgeschaltet.
 
 **Aufmerksamkeit & Focus** (auf der Seite nach Positiv Indexieren): `a1` Abendessen, die Avocado nebenbei oder mit hochgedrehter Auflösung, davor der Übergang aus den zwei Bahnen in den Speicher · `a2` Referenzabgleich mit Pommes
 
+**Überschuss**: `u1` der Stau: die Platten bleiben offen, der Anruf belegt den Moment, die Nachricht wartet, aus den Strichen der Zeitlinie werden Punkte · `u2` drei Knöpfe am selben Stau: Zufluss drosseln, Kapazität erhöhen, Hauptsache Druck raus · `u3` die Ladung ohne Adresse rutscht zum nächstbesten Träger (Kollege)
+
+**Namensgebung**: `n1` ein Name als neuer Eintrag: Freundin, ihre Sorge, nicht meins · `n2` Anruf und Nachricht kommen noch einmal und fallen gleich an ihre Adresse
+
 ## Offen
 
+- Neu in Version 67: die Kapitel Überschuss und Namensgebung, alle auf der Bühne `fokus`. Urteil steht aus. Von der Autorin: Aufmerksamkeit ohne Focus, alles ist relevant (gepunkteter Fußboden) · einsortieren ist nur schwierig, wenn erst geprüft werden muss, wo etwas hingehört. Weggelassen, mit ihr abgestimmt: der einzelne zu große Impuls und das Spiegelbild.
+- Zu prüfen: der Arbeitskonflikt ist eine Nachricht vom Kollegen (nicht vom Chef, damit die Adresse schon im Speicher liegt) · die drei Namen in `n1` · im Buch ist das Beispiel der Namensgebung der Träger Kompetenz, hier die Ladung vom Anruf · acht Träger im Speicher auf dem Handy (sie werden dann kleiner gezeichnet) · Dauer von `u3` (etwa 13 Sekunden).
+- Offen aus dem Buchkapitel Namensgebung: der Wolf im Schafspelz, die Lehrer mit derselben Formel, „Der Name ist nicht die Wahrheit, er ist die Brücke“. Die Autorin nannte danach „die Panik“ (im Buch der Steg mit dem Namen Panik, Kapitel Stegbildung).
+
 - Neu in Version 66: das Kapitel Aufmerksamkeit & Focus (`a1`, `a2`), neue Bühne `fokus`. Urteil steht aus. Weggelassen, mit der Autorin abgestimmt: der Wald und die Routine mit dem Akkord. Zu prüfen: der Übergang aus dem Aufräum-Schritt (etwa 7,5 Sekunden), sieben Träger im Speicher auf dem Handy, die Texte oben.
-- Geplante Brücke zum Überschuss: die Auflösung bleibt hochgedreht, die Zeitlinie läuft weiter, jedes Zeichen geht so weit auf wie die Avocado, es kommt mehr an, als sich einsortieren lässt.
 
 - Neu in Version 64: Übergang von Stegbildung 4/4 zu Potentialausgleich 1/3 (der Tag läuft zurück, „passiv“ wird „du“, der Kollege kommt). Urteil steht aus.
 - Neu in Version 65: Papierkram im Aufräum-Schritt. Urteil steht aus (auf dem Handy wandern Türrahmen und Kollege dabei links aus dem Bild).
@@ -33,6 +40,6 @@ Version 66, 4. Oktober 2026. 61 aktive Schritte, 10 ausgeschaltet.
 - Die erste Seite erklärt das Dreieck nicht mehr im Text (Metaphorik steht nur noch auf der Bühne und im Knopf).
 - Urteil zu den Knöpfen in `sf2` und zu `x2` steht noch aus. Zu prüfen in `x2`: Namen der Bahnen, Text oben, ob „Pflicht“ oben einzeln bleibt oder am Scheißtag andockt.
 - Vorgeschlagen: Mitdenken, Sport als weitere Beispiele in `x2`; Wald und Avocado als Beispiele für Aufmerksamkeit & Focus.
-- Noch nicht auf der Seite: Überschuss, Namensgebung, Potential.
+- Noch nicht auf der Seite: Potential.
 - In niedrigen Fenstern (unter etwa 700 px Höhe) scrollt die Seite, die Kapitelpunkte liegen dann unterhalb des sichtbaren Bereichs.
 - Alte Textstellen in den Schritten `kb` und `k5`. Schriften kommen noch von Google Fonts.

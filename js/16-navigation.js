@@ -10,7 +10,7 @@ function go(i,force){
   renderText();
   // der neue Text blendet ein, danach Lesepause. Beim Klappen wartet der Text, bis die Linie steht, beim Übergang aus dem Ring, bis die Zeitlinie steht, beim Zurücklaufen des Tages, bis die Bahnen leer sind.
   const tx=$('text');tx.style.transition='none';tx.classList.add('warte');void tx.offsetWidth;tx.style.transition='';
-  const nachher=s.klappen||!!(S.sr&&S.sr.ue)||!!(S.zw&&S.zw.ue&&s.scene==='zwei')||!!(S.fk&&S.fk.ue);   // der Text kommt erst nach dem Übergang
+  const nachher=s.klappen||!!(S.sr&&S.sr.ue)||!!(S.zw&&S.zw.ue&&s.scene==='zwei')||!!(S.fk&&(S.fk.ue||S.fk.textSpaeter));   // der Text kommt erst nach dem Übergang
   if(reduce||!nachher)tx.classList.remove('warte');
   S.lese=nachher?0:lesezeit();
   const inChap=SLIDES.filter(x=>x.chap===s.chap),n=inChap.indexOf(s)+1;
@@ -53,7 +53,8 @@ function renderRow(){
   if(s.scene==='steg'&&!s.neu)s.glieder.forEach((g,i)=>btn(s.id+'-glied'+i,g.label,()=>stegTippen(s,i)));
   if(s.scene==='zwei'&&satzVon(s,'tippen'))s.ereignisse.forEach((e,i)=>{btn(s.id+'-el'+i,e.label,()=>zweiTippen(s,i),()=>!S.zw||!S.zw.fertig).dataset.nodemo='1'});
   if(s.scene==='zwei')s.ereignisse.filter(e=>e.knopf).forEach(e=>{btn(s.id+'-bsp-'+e.id,e.knopf,()=>zweiBeispiel(s,e),()=>!S.zw||!S.zw.fertig||!!S.zw.laeuft||!!(st.bsp||{})[e.id]).dataset.nodemo='1'});
-  s.wege.forEach(w=>{(s.scene==='sicht'?btn(s.id+'-weg-'+w.id,w.knopf,()=>ketteWahl(s,w),()=>!S.si||!S.si.fertig||!!S.si.laeuft)
+  if(s.scene==='fokus')s.namen.forEach((nm,i)=>btn(s.id+'-name'+i,nm,()=>fokusName(s,i),()=>!S.fk||!S.fk.fertig||!!S.fk.laeuft).dataset.nodemo='1');
+  s.wege.forEach(w=>{(s.scene==='fokus'?btn(s.id+'-weg-'+w.id,w.knopf,()=>fokusWeg(s,w),()=>!S.fk||!S.fk.fertig||!!S.fk.laeuft):s.scene==='sicht'?btn(s.id+'-weg-'+w.id,w.knopf,()=>ketteWahl(s,w),()=>!S.si||!S.si.fertig||!!S.si.laeuft)
     :btn(s.id+'-weg-'+w.id,w.knopf,()=>kanalWahl(s,w),()=>!S.zw||!S.zw.fertig||!!S.zw.laeuft)).dataset.nodemo='1'});
   if(s.scene==='grob'&&s.wechsel)btn('act-'+s.id,s.knopf||s.wechsel,()=>grobWechsel(s),()=>!S.gb||!S.gb.fertig||!!S.gb.laeuft,'act').dataset.nodemo='1';
   if(s.scene==='grob'&&s.ebenen.length){let b=null;b=btn('act-'+s.id,s.ebenen[0].frage,()=>{indexTipp(s)},()=>{const G=S.gb,X=G&&G.ix;

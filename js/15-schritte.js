@@ -128,7 +128,7 @@ function done(s){const st=stOf(s),eg=EIGEN[s.id];
   if(s.zumSteg)return !!S.zs&&S.zs.said;
   if(s.scene==='arbeit')return !!S.ar&&S.ar.fertig;
   if(s.scene==='strom')return !!st.gerichtet;
-  if(s.scene==='fokus')return !!S.fk&&S.fk.fertig&&s.momente.filter(id=>MOM[id].knopf).every(id=>(st.fk||{})[id]);
+  if(s.scene==='fokus')return !!S.fk&&S.fk.fertig&&s.momente.filter(id=>MOM[id].knopf).every(id=>(st.fk||{})[id])&&(!s.wege.length||Object.keys(st.wege||{}).length>0)&&(!s.namen.length||!!st.name);
   if(s.scene==='film')return !!S.fi&&S.fi.fertig;
   if(s.scene==='spitze')return !!S.sp&&S.sp.fertig;
   if(s.scene==='schloss')return !!st.offen;

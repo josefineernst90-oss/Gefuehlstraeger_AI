@@ -9,26 +9,128 @@ function fokusWirkt(q,sp){if(!sp||!sp.sign)return;const ch={s:sp.sign,big:sp.big
 function fokusStand(s){const v=SLIDES.find(x=>x.id===s.stand&&x!==s),q={c:[],lose:[],schild:''};
   if(v&&v.scene==='zwei'){const Z=zweiBau(v);Z.plan.forEach(p=>{if(p.ende)return;if(p.start)p.start();if(p.run)p.run(1)});
     q.c=Z.B.aktiv.els.filter(Boolean).map(e=>({id:e.id,label:e.label,charges:e.charges.map(ch=>({s:ch.s,big:ch.big}))}))}
-  else if(v&&v.scene==='fokus'){const p=fokusStand(v);q.c=p.c;q.lose=p.lose;
-    v.alte.forEach(a=>q.c.push({id:a.id,label:a.label,charges:zeichen(a.lad)}));
-    v.momente.forEach(id=>fokusWirkt(q,MOM[id]));q.schild=v.zeichenText||p.schild}
+  else if(v&&v.scene==='fokus'){const p=fokusStand(v);q.c=p.c;q.lose=p.lose;q.kette=p.kette;q.schild=v.geht?'':v.zeichenText||p.schild;
+    const K=q.kette,tr=id=>q.c.find(x=>x.id===id);
+    // data-akt: was der Schritt am Ende im Speicher bewirkt hat (siehe die Abläufe weiter unten)
+    if(v.akt==='stau'){q.kette={mom:v.momente[0],dann:v.momente[1],schild:v.zeichenText,schild2:v.dahinter};q.stauAn=true}
+    else if(v.akt==='hebel')q.stauAn=true;
+    else if(v.akt==='rutscht'&&K){const c=tr(MOM[K.dann].addr);if(c)c.charges.push({s:MOM[K.dann].sign},{s:MOM[K.mom].sign});q.schild=''}
+    else if(v.akt==='name'){const c=tr(v.ausTraeger);if(c&&c.charges.length)q.c.push({id:'neu',label:v.namen[(S.st[v.id]||{}).nameI||0],charges:[c.charges.pop()]});q.schild=''}
+    else if(v.akt==='wieder'&&K){const a=tr('neu'),b=tr(MOM[K.dann].addr);if(a)a.charges.push({s:MOM[K.mom].sign});if(b)b.charges.push({s:MOM[K.dann].sign});q.schild=''}
+    else{v.alte.forEach(a=>q.c.push({id:a.id,label:a.label,charges:zeichen(a.lad)}));v.momente.forEach(id=>fokusWirkt(q,MOM[id]))}}
   return q}
 function fokusPegel(F){let p=0,n=0;const z=ch=>{const w=ch.big?2:1;ch.s>0?p+=w:n+=w};F.c.forEach(c=>c.charges.forEach(z));F.lose.forEach(z);return (p-n)/(p+n+5)}
-function fokusStart(s,prev){const st=stOf(s),q=fokusStand(s),i=SLIDES.indexOf(s),v=SLIDES[i-1];st.fk={};
+const fkX0=()=>cx+RM*1.9+3,FK_AB=62;   // hier bleibt ein Zeichen neben dir stehen · so weit dahinter wartet das nächste
+function fokusStart(s,prev){const st=stOf(s),q=fokusStand(s),i=SLIDES.indexOf(s),v=SLIDES[i-1];st.fk={};st.wege={};st.name=0;
   const F=S.fk={c:q.c.map(c=>({id:c.id,label:c.label,charges:c.charges,a:1,y:null})),lose:q.lose,lv:0,M:null,fall:null,echo:null,gl:[],weg:0,w0:0,geht:false,
-    plan:[],i:0,t:0,fertig:false,laeuft:false,ue:null};
+    plan:[],i:0,t:0,fertig:false,laeuft:false,ue:null,pk:null,wort:null,puff:0,rutsch:null,zug:null,textSpaeter:false,cs:24,
+    kette:s.akt==='stau'?{mom:s.momente[0],dann:s.momente[1],schild:s.zeichenText,schild2:s.dahinter}:q.kette||null};
   F.lv=fokusPegel(F);
-  const add=(dur,run,start)=>F.plan.push({dur,run,start}),halt=()=>cx+RM*1.9+3;
+  const add=(dur,run,start)=>F.plan.push({dur,run,start});
   if(s.vomWasser&&!reduce&&prev===i-1&&v&&v.scene==='zwei')fokusUebergang(s,v,F,add);
-  else if(q.schild)F.gl.push({x:halt(),al:1,e:{art:'wort',schild:q.schild}});
-  // die Zeit läuft: das alte Zeichen wandert nach links hinaus, das Zeichen dieses Schritts (data-kommt) kommt von rechts
-  const lauf=neu=>add(1.5,k=>{const d=(W+30-halt())*k;F.gl.forEach(g=>{g.x=g.x0-d;if(g!==neu)g.al=1-ease(k/0.7)});F.weg=F.w0+d;if(k>=1){F.geht=false;F.gl=F.gl.filter(g=>g===neu)}},
-    ()=>{if(neu){neu.x=W+30;F.gl.push(neu)}F.gl.forEach(g=>g.x0=g.x);F.w0=F.weg;F.geht=true});
-  if(s.zeichenText)lauf({x:0,al:1,e:{art:'wort',schild:s.zeichenText}});else if(s.geht)lauf(null);
-  // was von früher im Speicher liegt (<p class="traeger">), erscheint dort
-  s.alte.forEach(a=>{let c=null;add(0.6,k=>c.a=k,()=>{c={id:a.id,label:a.label,charges:zeichen(a.lad),a:0,y:null};F.c.push(c)});add(0.7)});
-  s.momente.filter(id=>!MOM[id].knopf).forEach(id=>fokusMoment(F,MOM[id],add));
-  add(0,null,()=>{F.fertig=true;syncNav()})}
+  else if(q.stauAn&&F.kette)fkStau(F);
+  else if(q.schild)F.gl.push({x:fkX0(),al:1,e:{art:'wort',schild:q.schild}});
+  if(s.akt==='stau')fkAktStau(F,add,prev===i-1&&!reduce);
+  else if(s.akt==='rutscht')fkAktRutscht(F,add);
+  else if(s.akt==='wieder')fkAktWieder(F,add);
+  else if(!s.akt){
+    // die Zeit läuft: das alte Zeichen wandert nach links hinaus, das Zeichen dieses Schritts (data-kommt) kommt von rechts
+    if(s.zeichenText)fkGeh(F,add,1.5,()=>W+30-fkX0(),{x:0,al:1,e:{art:'wort',schild:s.zeichenText}});else if(s.geht)fkGeh(F,add,1.5,()=>W+30-fkX0(),null);
+    // was von früher im Speicher liegt (<p class="traeger">), erscheint dort
+    s.alte.forEach(a=>{let c=null;add(0.6,k=>c.a=k,()=>{c={id:a.id,label:a.label,charges:zeichen(a.lad),a:0,y:null};F.c.push(c)});add(0.7)});
+    s.momente.filter(id=>!MOM[id].knopf).forEach(id=>fokusMoment(F,MOM[id],add))}
+  add(0,null,()=>{F.fertig=true;F.c0=F.c.map(c=>({...c,charges:c.charges.slice()}));F.lose0=F.lose.slice();
+    if(s.akt&&s.akt!=='hebel'&&s.akt!=='name'&&satzVon(s,'an'))say(satzVon(s,'an'));syncNav()})}
+// du gehst weiter: alle Zeichen wandern um dist nach links, die Zeitlinie läuft unter dir durch. Was dabei an dir vorbeikommt, verblasst.
+// neu (optional) kommt so von rechts, dass es am Ende neben dir steht. Liegen Punkte auf der Zeitlinie, wandern sie mit.
+function fkGeh(F,add,dur,dist,neu){let D=0,s0=0;
+  add(dur,k=>{const d=D*k;F.gl.forEach(g=>{g.x=g.x0-d;if(g.x0-D<fkX0()-1)g.al=g.al0*(1-ease(k/0.7))});F.weg=F.w0+d;if(F.pk)F.pk.shift=s0+d;
+      if(k>=1){F.geht=false;F.gl=F.gl.filter(g=>g.al>0.01)}},
+    ()=>{D=dist();if(neu){neu.x=fkX0()+D;F.gl.push(neu)}F.gl.forEach(g=>{g.x0=g.x;g.al0=g.al});F.w0=F.weg;s0=F.pk?F.pk.shift:0;F.geht=true})}
+/* ---------- Überschuss: der Stau ----------
+   Unter deinen Füßen kann immer nur ein Moment offen sein. Der erste Moment des Blocks (z.B. der Anruf) belegt ihn, sein Zeichen steht neben dir.
+   Dahinter wartet das Zeichen aus data-dahinter (zu ihm gehört der zweite Moment des Blocks). Rechts davon sind aus den Strichen der Zeitlinie
+   Punkte geworden: jeder zählt wie ein eigenes Zeichen. Sie schieben sich vor dir zusammen.
+   F.pk: a = wie weit die Striche Punkte sind · k = wie weit sie sich gestaut haben · front = bis hierhin sind sie abgearbeitet · shift = so weit sind sie gewandert */
+function fkPunkte(k){const u0=fkX0()+10,xs=[];let c=fkX0()+7,ab=7;for(let i=0;i<70;i++){const u=u0+i*14;xs.push(lerp(u,c,k));c+=ab;ab=Math.min(15,ab*1.09)}return xs}
+function fkStau(F){const K=F.kette,sp=MOM[K.mom],ln=sp.lines[0],x0=fkX0();
+  F.gl=[{x:x0,al:1,e:{art:'wort',schild:K.schild}},{x:x0+FK_AB,al:1,e:{art:'wort',schild:K.schild2}}];
+  F.pk={a:1,k:1,front:0,shift:0};F.wort=null;F.puff=0;F.fall=null;F.rutsch=null;
+  F.M={w:halfWidth(ln.text),pa:1,text:ln.text,tag:ln.tag,ta:1,ds:0.8,dx:1,sign:sp.sign,big:false}}
+// data-akt="stau": der Stau entsteht. Kommt man direkt aus dem Schritt davor, gehen zuerst die Platten noch einmal auf und bleiben offen
+// (die Auflösung bleibt oben), erst dann kommt der Text. Dann: das Zeichen kommt · der Moment nimmt es auf · das nächste kommt und muss warten ·
+// aus den Strichen werden Punkte · sie schieben sich vor dir zusammen. Danach .satz data-id="an".
+function fkAktStau(F,add,weich){const K=F.kette,sp=MOM[K.mom],ln=sp.lines[0],leer=()=>({w:0,pa:0,text:'',tag:null,ta:0,ds:0,dx:1,sign:sp.sign,big:false});
+  if(weich){F.textSpaeter=true;add(0.4);add(0.9,k=>{F.M.pa=k;F.M.w=92*ease(k)},()=>{F.M=leer()});add(0.5);
+    add(0,null,()=>{F.textSpaeter=false;$('text').classList.remove('warte');S.lese=lesezeit()})}
+  else{F.M=leer();F.M.w=92;F.M.pa=1}
+  fkGeh(F,add,1.5,()=>W+30-fkX0(),{x:0,al:1,e:{art:'wort',schild:K.schild}});
+  let w0=0;add(0.45,k=>{F.M.w=lerp(w0,halfWidth(ln.text),k);F.M.ta=k;F.M.ds=0.8*k},()=>{w0=F.M.w;F.M.text=ln.text;F.M.tag=ln.tag});
+  add(0.9);
+  const n2={x:0,al:1,e:{art:'wort',schild:K.schild2}};
+  add(1.1,k=>n2.x=lerp(W+30,fkX0()+FK_AB,ease(k)),()=>{n2.x=W+30;F.gl.push(n2)});
+  add(0.9);
+  add(0.9,k=>F.pk.a=k,()=>{F.pk={a:0,k:0,front:0,shift:0}});
+  add(1.8,k=>F.pk.k=ease(k));
+  add(0.4)}
+// der offene Moment wird fertig: die Zeile geht, die Platten schließen sich um die Ladung, sie fällt (lose = ohne Adresse)
+function fkSchluss(F,sp,add,lose){let w1=0;
+  add(0.3,k=>{F.M.ta=Math.min(F.M.ta,1-k)});
+  add(0.55,k=>{F.M.w=lerp(w1,CLOSED,k);F.M.dx=1-k},()=>{w1=F.M.w;F.M.text=''});
+  add(0.25);fkFall(F,sp,add,lose)}
+function fkFall(F,sp,add,lose,adr){
+  add(0.9,k=>{F.fall.k=k;F.M.pa=1-ease(k/0.5);const c=F.fall.c;if(c&&c.a<1)c.a=Math.max(c.a,k)},
+    ()=>{const id=adr||sp.addr;let c=!lose&&id?F.c.find(x=>x.id===id):null;if(!lose&&id&&!c){c={id,label:sp.addrLabel||id,charges:[],a:0,y:null};F.c.push(c)}
+      F.fall={k:0,sign:sp.sign,big:sp.big,c,j:F.lose.length,s0:F.M.ds};F.M.ds=0});
+  add(0.2,null,()=>{const f=F.fall,ch={s:sp.sign,big:sp.big};if(f.c)f.c.charges.push(ch);else F.lose.push(ch);F.fall=null;F.M=null})}
+// das wartende Zeichen ist dran: du gehst das Stück weiter, der Moment öffnet sich mit seiner Zeile
+function fkNach(F,sp,add){const ln=sp.lines[0];fkGeh(F,add,0.9,()=>FK_AB,null);
+  add(0.35,k=>{F.M.pa=k;F.M.w=CLOSED*k},()=>{F.M={w:0,pa:0,text:'',tag:null,ta:0,ds:0,dx:1,sign:sp.sign,big:sp.big}});
+  add(0.4,k=>{F.M.w=lerp(CLOSED,halfWidth(ln.text),k);F.M.ta=k;F.M.ds=0.8*k},()=>{F.M.text=ln.text;F.M.tag=ln.tag})}
+// data-akt="hebel": der Stau steht. Je <p class="weg" data-id="drosseln|schlaf|druck" data-knopf data-sagt> ein Knopf, jeder Tipp beginnt wieder beim Stau.
+//   drosseln   die Punkte rücken auseinander und werden wieder Striche · der Moment wird fertig, seine Ladung fällt an ihre Adresse · das wartende Zeichen ist dran
+//   schlaf     data-sagt steht über der Zeitlinie · der Moment wird fertig · das wartende Zeichen ist dran und wird auch fertig · die Punkte werden einer nach dem anderen abgearbeitet
+//   druck      alles verpufft, im Speicher kommt nichts an · data-sagt steht über der Zeitlinie · derselbe Stau steht wieder da
+// Der Text des .weg steht danach unter der Bühne, nach allen dreien kommt .satz data-id="alle" dazu.
+function fokusWeg(s,w){const F=S.fk,st=stOf(s);if(!F||!F.fertig||F.laeuft)return;const K=F.kette;
+  F.c=F.c0.map(c=>({...c,charges:c.charges.slice()}));F.lose=F.lose0.slice();fkStau(F);say('');S.ev=[];
+  F.plan=[];F.i=0;F.t=0;F.laeuft=true;const add=(dur,run,start)=>F.plan.push({dur,run,start}),P=F.pk,M=F.M;
+  add(0.5);
+  if(w.id==='drosseln'){add(1.0,k=>P.k=1-ease(k));add(0.7,k=>P.a=1-k);add(0.3);fkSchluss(F,MOM[K.mom],add);add(0.3);fkNach(F,MOM[K.dann],add)}
+  else if(w.id==='schlaf'){add(0.5,k=>F.wort.a=k,()=>{F.wort={text:w.sagt,a:0}});add(0.4);fkSchluss(F,MOM[K.mom],add);add(0.2);
+    fkNach(F,MOM[K.dann],add);add(0.7);fkSchluss(F,MOM[K.dann],add);
+    add(1.4,k=>P.front=lerp(fkX0(),W+12,k));add(0.2,null,()=>{P.a=0})}
+  else{add(1.0,k=>{F.puff=k;P.a=1-k;F.gl.forEach(g=>g.al=1-k);M.ta=1-k;M.ds=0.8*(1-k);M.pa=1-k});
+    add(0.9,null,()=>{F.puff=0});
+    add(0.5,k=>F.wort.a=k,()=>{F.wort={text:w.sagt,a:0}});add(0.7);
+    add(1.2,k=>{P.a=k;F.gl.forEach(g=>g.al=k);M.pa=k;M.ta=k;M.ds=0.8*k})}
+  add(0.4);
+  add(0,null,()=>{F.laeuft=false;st.wege[w.id]=1;say(w.cap+(s.wege.every(x=>st.wege[x.id])&&satzVon(s,'alle')?' '+satzVon(s,'alle'):''));syncNav()})}
+// data-akt="rutscht": der Stau steht. Der Moment bricht ab, seine Ladung fällt ohne Adresse lose in den Speicher · das wartende Zeichen ist dran,
+// seine Ladung fällt an ihre Adresse · die Punkte werden wieder Striche, du gehst weiter · die lose Ladung rutscht zu demselben Träger: dem nächstbesten.
+function fkAktRutscht(F,add){const K=F.kette;let c=null;add(0.5);
+  fkSchluss(F,MOM[K.mom],add,true);add(0.4);
+  fkNach(F,MOM[K.dann],add);add(0.7);fkSchluss(F,MOM[K.dann],add);
+  add(0.8,k=>F.pk.a=1-k);
+  fkGeh(F,add,1.2,()=>W,null);add(0.5);
+  add(1.3,k=>F.rutsch.k=k,()=>{c=F.c.find(x=>x.id===MOM[K.dann].addr);F.rutsch={k:0,j:F.lose.length-1,c}});
+  add(0.2,null,()=>{const ch=F.lose.pop();if(c&&ch)c.charges.push(ch);F.rutsch=null});add(0.3)}
+// data-akt="name": je <p class="name"> ein Knopf. Der erste Tipp: unten im Speicher erscheint ein neuer Träger mit diesem Namen, die letzte Ladung
+// des Trägers aus data-von wandert zu ihm hinüber, dann .satz data-id="an". Jeder weitere Tipp gibt ihm einen anderen Namen, dann .satz data-id="mehr".
+function fokusName(s,i){const F=S.fk,st=stOf(s);if(!F||!F.fertig||F.laeuft)return;const nm=s.namen[i],alt=F.c.find(x=>x.id===s.ausTraeger);let c=F.c.find(x=>x.id==='neu');
+  F.plan=[];F.i=0;F.t=0;F.laeuft=true;const add=(dur,run,start)=>F.plan.push({dur,run,start});
+  if(!c){add(0.6,k=>c.a=k,()=>{say('');c={id:'neu',label:nm,charges:[],a:0,y:null};F.c.push(c)});add(0.5);
+    if(alt&&alt.charges.length){add(1.1,k=>F.zug.k=k,()=>{F.zug={k:0,von:alt,zu:c,ch:alt.charges.pop()}});add(0.2,null,()=>{c.charges.push(F.zug.ch);F.zug=null})}
+    add(0.3);add(0,null,()=>say(satzVon(s,'an')))}
+  else if(c.label!==nm){add(0.25,k=>c.a=1-k);add(0.3,k=>c.a=k,()=>{c.label=nm});add(0,null,()=>{if(satzVon(s,'mehr'))say(satzVon(s,'mehr'))})}
+  add(0,null,()=>{F.laeuft=false;st.name=1;st.nameI=i;syncNav()})}
+// data-akt="wieder": dieselben zwei Zeichen kommen noch einmal. Jedes Mal schließen sich die Platten gleich um die Ladung, ohne Zeilen,
+// und sie fällt an ihre Adresse (die erste an den neuen Träger mit Namen). Die Zeitlinie läuft weiter, nichts staut sich. Danach .satz data-id="an".
+function fkAktWieder(F,add){const K=F.kette;
+  const direkt=(sp,adr)=>{add(0.35,k=>{F.M.pa=k;F.M.ds=0.8*k},()=>{F.M={w:CLOSED,pa:0,text:'',tag:null,ta:0,ds:0,dx:0,sign:sp.sign,big:false}});add(0.3);fkFall(F,sp,add,false,adr);add(0.2)};
+  fkGeh(F,add,1.4,()=>W+30-fkX0(),{x:0,al:1,e:{art:'wort',schild:K.schild}});direkt(MOM[K.mom],'neu');
+  fkGeh(F,add,1.4,()=>W+30-fkX0(),{x:0,al:1,e:{art:'wort',schild:K.schild2}});direkt(MOM[K.dann]);
+  fkGeh(F,add,1.3,()=>W,null)}
 /* Ein Moment: die Platten öffnen sich unter deinen Füßen · Zeile für Zeile, die Ladung daneben wird mit jeder Zeile deutlicher ·
    eine Zeile mit data-ruft: erst schickt der gerufene Träger sein Echo hoch · die Platten schließen sich um die Ladung ·
    sie fällt in den Speicher, lose oder an ihre Adresse (ein neuer Träger erscheint dabei) · dann der Satz aus <p class="fall">. */
@@ -76,7 +178,8 @@ function fokusUebergang(s,v,F,add){const Z=zweiBau(v);Z.plan.forEach(p=>{if(p.en
   add(0.2,null,()=>{F.ue=null;$('text').classList.remove('warte');S.lese=lesezeit();const how=s.sec.querySelector(':scope > .hinweis');if(how)say(how.textContent,true)})}
 // so weit rückt die untere Bahn nach oben, bis ihre Zeitlinie deine ist
 const fokusHub=()=>{const h=H/2;return h+Math.max(0,(h-178)/2)+60-(yL-22)};
-function fokusTakt(s,dt,liest){const F=S.fk,n=F.c.length,cs=Math.min(24,1.36*R0/Math.max(1,n-1));
+function fokusTakt(s,dt,liest){const F=S.fk,n=F.c.length,cs=F.cs=Math.min(24,1.36*R0/Math.max(1,n-1)),zz=Math.min(1,cs/20);
+  F.zs=reduce||F.zs===undefined?zz:F.zs+(zz-F.zs)*Math.min(1,dt*5);   // liegen viele Träger im Speicher, werden sie kleiner gezeichnet
   F.c.forEach((c,i)=>{const ty=cy0+(i-(n-1)/2)*cs;c.y=c.y==null||reduce?ty:c.y+(ty-c.y)*Math.min(1,dt*6)});
   const z=fokusPegel(F);F.lv=reduce?z:F.lv+(z-F.lv)*Math.min(1,dt*3);
   if(!liest)ablauf(F,dt)}
@@ -87,7 +190,15 @@ function drawFokus(){const s=SLIDES[cur],F=S.fk;if(!F)return;const U=F.ue,yT=yL-
   // die Zeitlinie läuft unter deinen Füßen durch
   ctx.strokeStyle=C.muted;ctx.lineWidth=1.5;ctx.setLineDash([6,8]);ctx.lineDashOffset=F.weg;ctx.beginPath();ctx.moveTo(0,yT);ctx.lineTo(W,yT);ctx.stroke();ctx.setLineDash([]);
   if(kE>0.01){ctx.globalAlpha=kE;label(T('zeit').toUpperCase(),W-2,yT-9,10,C.muted,'right',1.5);ctx.globalAlpha=1}
+  // der Stau: rechts von dir sind aus den Strichen Punkte geworden
+  const P=F.pk;
+  if(P&&P.a>0.01){const von=Math.max(fkX0()+2,P.front);ctx.globalAlpha=P.a;ctx.fillStyle=C.bg;ctx.fillRect(von,yT-3,W,6);ctx.fillStyle=C.ink;
+    fkPunkte(P.k).forEach(x=>{x-=P.shift;if(x<von+1||x>W+3)return;ctx.beginPath();ctx.arc(x,yT,2.8,0,6.283);ctx.fill()});ctx.globalAlpha=1}
   F.gl.forEach(q=>zeichenMalen(q,yT,true,F.geht&&!reduce,0));
+  // ein Wort über der Zeitlinie (Schlaf, am nächsten Morgen)
+  if(F.wort&&F.wort.a>0.01){ctx.globalAlpha=F.wort.a;label(F.wort.text.toUpperCase(),W-4,yT-40,9.5,C.ink,'right',1.5);ctx.globalAlpha=1}
+  // verpufft: was sich gestaut hat, vergeht, ohne irgendwo anzukommen
+  if(F.puff>0.01&&F.puff<1){ctx.strokeStyle=C.muted;ctx.lineWidth=1.3;[0,0.25].forEach(o=>{const q=F.puff-o;if(q<=0)return;ctx.globalAlpha=0.7*(1-q);ctx.beginPath();ctx.ellipse(fkX0()+30,yT,14+70*q,4+9*q,0,0,6.283);ctx.stroke()});ctx.globalAlpha=1}
   // der Speicher ist dein Bauch, groß gezeichnet: solange er wächst, führen zwei feine Linien vom Bauch zu ihm
   if(kD>0.01){
     if(kD<1){ctx.globalAlpha=Math.sin(Math.PI*kD)*0.75;ctx.strokeStyle=C.muted;ctx.lineWidth=1;ctx.setLineDash([3,5]);ctx.beginPath();
@@ -107,10 +218,17 @@ function drawFokus(){const s=SLIDES[cur],F=S.fk;if(!F)return;const U=F.ue,yT=yL-
     const zu=mood(F.lv).toUpperCase();let zeile=T('speicher').toUpperCase()+' · '+zu;ctx.font='10.5px '+C.sans;if(ctx.measureText(zeile).width+1.5*zeile.length>W-6)zeile=zu;
     label(zeile,cx,y+23,10.5,C.muted,'center',1.5);ctx.globalAlpha=1}
   // Ladungsträger im Speicher. Im Übergang kommen sie vom Wasser: der Rahmen des Schwimmelements geht dabei.
+  const zs=F.zs||1;
   F.c.forEach((c,i)=>{gliedMass(c);if(c.y==null)return;const f=U&&U.fly?U.fly[i]:null;
     if(f){const k=ease(f.k),bob=reduce?0:stegBob(i+2)*(1-k);ctx.save();ctx.translate(lerp(f.x,cx,k),lerp(f.y+bob,c.y,k));const z=lerp(f.z,1,k);ctx.scale(z,z);gliedMalen(c,0,0,1-k,1);ctx.restore()}
+    else if(zs<1){ctx.save();ctx.translate(cx,c.y);ctx.scale(zs,zs);gliedMalen(c,0,0,0,c.a);ctx.restore()}
     else gliedMalen(c,cx,c.y,0,c.a)});
-  F.lose.forEach((q,j)=>{const p=FK_LOSE[j%FK_LOSE.length];chargeDot(cx+p[0]*R0,cy0+p[1]*R0,q.s,q.big?1.1:0.85)});
+  const ende=c=>[cx+c.tot*zs/2+(c.charges.length?8:-6),c.y];   // hier kommt bei einem Träger die nächste Ladung an
+  F.lose.forEach((q,j)=>{const p=FK_LOSE[j%FK_LOSE.length];let x=cx+p[0]*R0,y=cy0+p[1]*R0;
+    if(F.rutsch&&F.rutsch.j===j&&F.rutsch.c){const e=ende(F.rutsch.c),k=ease(F.rutsch.k);x=lerp(x,e[0],k);y=lerp(y,e[1],k)}
+    chargeDot(x,y,q.s,q.big?1.1:0.85)});
+  // eine Ladung wandert von einem Träger zu dem mit dem neuen Namen
+  if(F.zug){const Z=F.zug,a=ende(Z.von),b=ende(Z.zu),k=ease(Z.k);chargeDot(lerp(a[0],b[0],k)+Math.sin(Math.PI*k)*22,lerp(a[1],b[1],k),Z.ch.s,0.85)}
   // der Moment unter deinen Füßen
   const M=F.M;
   if(M){plates(cx,yL,M.w,M.pa);
@@ -119,7 +237,7 @@ function drawFokus(){const s=SLIDES[cur],F=S.fk;if(!F)return;const U=F.ue,yT=yL-
   // das Echo: der gerufene Träger schickt seine Ladung zu dir hoch
   if(F.echo){const E=F.echo,k=ease(E.k);chargeDot(lerp(cx+E.c.tot/2-6,cx,k),lerp(E.c.y,yL,k),E.sign,0.9,0.75)}
   // die Ladung fällt in den Speicher: an ihre Adresse oder lose an einen freien Platz
-  if(F.fall){const f=F.fall,k=f.k,p=FK_LOSE[f.j%FK_LOSE.length],tx=f.c?cx+f.c.tot/2+(f.c.charges.length?8:-6):cx+p[0]*R0,ty=f.c?f.c.y:cy0+p[1]*R0;
+  if(F.fall){const f=F.fall,k=f.k,p=FK_LOSE[f.j%FK_LOSE.length],tx=f.c?cx+f.c.tot*zs/2+(f.c.charges.length?8:-6):cx+p[0]*R0,ty=f.c?f.c.y:cy0+p[1]*R0;
     chargeDot(lerp(cx,tx,ease(k)),lerp(yL,ty,k*k),f.sign,lerp(f.s0,f.big?1.1:0.85,k))}
   // du
   ctx.beginPath();ctx.arc(cx,fy,r,0,6.283);ctx.fillStyle=C.paper;ctx.fill();
