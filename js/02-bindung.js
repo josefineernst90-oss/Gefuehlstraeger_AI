@@ -12,8 +12,21 @@ function spinnen(s,x){const h=S.h[x.huelle],st=stOf(s);if(!h)return;
 const FEST=4,lebt=h=>h.threads.filter(f=>!f.weg).length;
 function festMachen(h){h.fest=true;h.pulse=1}
 // Antippen, während die Zeit vergeht: ein neuer Faden, die Hülle ist kurz geschützt. Auch eine Hülle, die gerade verblasst, bleibt so.
-function naehren(s,h){const st=stOf(s);h.weg=false;faden(h);h.genaehrt=time;st.taps++;
-  if(!h.fest&&lebt(h)>=FEST){festMachen(h);say(satzVon(s,'fest-tipp')||satzVon(s,'fest'))}else say(satzVon(s,'faden'))}
+function naehren(s,h){const st=stOf(s);if(h.spaet||(st.bereit===false&&s.huellen.some(x=>x.n)))return;
+  const minus=h.charges.length&&h.charges.every(ch=>ch.s<0);h.weg=false;faden(h);h.genaehrt=time;st.taps++;
+  if(!h.fest&&lebt(h)>=FEST){festMachen(h);say(satzVon(s,'fest-tipp')||satzVon(s,'fest'))}else say((minus&&satzVon(s,'faden-minus'))||satzVon(s,'faden'))}
+/* Von selbst (Hüllen mit data-faeden): sie kommen eine nach der anderen. Erst die Hülle, dann ihre Fäden, alle auf einmal. Ab FEST Fäden wird sie fest.
+   Nach der letzten Hülle, die so fest wird: .satz data-id="alarm", dann Lesezeit. Stehen alle: .satz data-id="zuerst", danach .satz data-id="tippen"
+   als Hinweis. Erst dann vergeht die Zeit (data-verblassen), und erst dann wirkt das Antippen. */
+function selbstStart(s){const st=stOf(s);st.bereit=false;const hs=s.huellen.filter(x=>x.n).map(x=>({h:S.h[x.id],n:x.n})).filter(x=>x.h);
+  hs.forEach((x,i)=>{const h=x.h,fest=x.n>=FEST,nach=hs[i+1];h.spaet=true;
+    spaeter(i?0.45:0.3,()=>{h.spaet=false});
+    spaeter(0.75,()=>{for(let j=0;j<x.n;j++)faden(h)});
+    if(fest)spaeter(1.0,()=>festMachen(h));
+    if(fest&&!(nach&&nach.n>=FEST)&&satzVon(s,'alarm')){spaeter(1.2,()=>say(satzVon(s,'alarm')));spaeter(2.9,()=>{})}
+    else spaeter(fest?0.75:0.6,()=>{})});
+  const z=satzVon(s,'zuerst');if(z)spaeter(0.4,()=>say(z));
+  spaeter(z?2.7:0.3,()=>{st.bereit=true;const t=satzVon(s,'tippen');if(t)say(t,true);syncNav()})}
 // die Zeit vergeht: genau eine Sache pro Takt
 function verblassenTakt(s){const st=stOf(s),alle=huellenListe(s).filter(h=>!h.weg),hs=alle.filter(h=>!h.fest&&time-(h.genaehrt||-99)>3);
   let h=hs.find(h=>!h.threads.length);
@@ -24,7 +37,11 @@ function verblassenTakt(s){const st=stOf(s),alle=huellenListe(s).filter(h=>!h.we
   if(h){festMachen(h);say(satzVon(s,'fest'));syncNav()}}                        // zuletzt: was genug Fäden hat, wird fest
 // eine Hülle ist ganz verschwunden
 function hinweg(h){const s=SLIDES[cur],st=stOf(s);st.fort=(st.fort||0)+1;
-  if(st.fort===1&&!st.taps){const c=satzVon(s,'weg');if(c)say(c)}syncNav()}
+  if(st.fort===1&&!st.taps){const c=satzVon(s,'weg');if(c)say(c)}
+  // von allem, was sich nicht von selbst gemeldet hat, ist nichts geblieben
+  const leise=s.huellen.filter(x=>x.n&&x.n<FEST),c=satzVon(s,'leer');
+  if(c&&leise.length&&leise.every(x=>S.h[x.id]&&S.h[x.id].fort))spaeter(st.fort===1?2.6:0.5,()=>say(c));
+  syncNav()}
 // das Ende ohne Animation: was genug Fäden hat, ist fest, alles andere ist weg
 function verblassenFertig(s){huellenListe(s).forEach(h=>{h.threads=h.threads.filter(f=>!f.weg);
   if(h.fest||(!h.weg&&h.threads.length>=FEST)){h.fest=true;h.festK=1;h.weg=false;h.a=1}

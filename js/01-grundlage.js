@@ -38,7 +38,7 @@ const bahnKey=v=>({oben:'passiv',unten:'aktiv'})[v]||v;
 const SLIDES=[...buch.querySelectorAll(':scope > section:not([data-aus])')].map(sec=>{const d=sec.dataset;
   sec.querySelectorAll('.moment').forEach(el=>{const sp=parseMoment(el);MOM[sp.id]=sp});
   return {id:sec.id,sec,chap:d.kapitel?KAPITEL.indexOf(d.kapitel):null,anchor:d.anker,scene:d.szene||'speicher',
-    leer:d.start==='leer',vorher:d.start==='vorher',fold:d.uebergang==='dreieck',figur:d.uebergang==='figur',hinaus:d.uebergang==='hinaus',alleHuellen:d.huellen==='alle',frei:'frei' in d,vorfuehren:+d.vorfuehren||0,ich:'ich' in d,mann:'mann' in d,ein:d.uebergang==='hinein'?1:d.uebergang==='heraus'?-1:0,zumSteg:d.uebergang==='steg',
+    leer:d.start==='leer',vorher:d.start==='vorher',fold:d.uebergang==='dreieck',figur:d.uebergang==='figur',hinaus:d.uebergang==='hinaus',alleHuellen:d.huellen==='alle',eigeneHuellen:d.huellen==='eigene',frei:'frei' in d,vorfuehren:+d.vorfuehren||0,ich:'ich' in d,mann:'mann' in d,ein:d.uebergang==='hinein'?1:d.uebergang==='heraus'?-1:0,zumSteg:d.uebergang==='steg',
     glieder:[...sec.querySelectorAll(':scope > .glied:not([data-neu])')].map(g=>({id:g.dataset.id,label:g.dataset.name||'',lad:g.dataset.ladung||''})),
     ereignisse:[...sec.querySelectorAll(':scope > .ereignis')].map(e=>({id:e.dataset.id,art:e.dataset.art||'tuer',label:e.dataset.name||'',schild:e.dataset.kommt||e.dataset.name||'',lad:e.dataset.ladung||'',sicht:'sicht' in e.dataset,ruft:e.dataset.ruft||'',bleibt:'bleibt' in e.dataset,geht:'geht' in e.dataset,innen:'innen' in e.dataset,knopf:e.dataset.knopf||'',
       ged:Object.fromEntries([...e.querySelectorAll('p')].map(p=>[bahnKey(p.dataset.bahn),{text:p.textContent.trim(),verbindet:'verbindet' in p.dataset,verpufft:'verpufft' in p.dataset,
@@ -48,7 +48,7 @@ const SLIDES=[...buch.querySelectorAll(':scope > section:not([data-aus])')].map(
     inselListe:[...sec.querySelectorAll(':scope > .insel')].map(q=>({id:q.dataset.id,label:q.dataset.name||'',winkel:+q.dataset.winkel||0,geladen:+q.dataset.geladen||0,
       schickt:q.dataset.schickt||'',da:'da' in q.dataset,hat:q.dataset.hat||'',hatLad:q.dataset.hatLadung||''})),
     stufen:[...sec.querySelectorAll(':scope > .stufe')].map(q=>({teil:q.dataset.teil||'',name:q.dataset.name||'',lad:q.dataset.ladung||'−',ende:'ende' in q.dataset})),
-    dinge:[...sec.querySelectorAll(':scope > .ding')].map(q=>({art:q.dataset.art||'auto',name:q.dataset.name||'',passt:'passt' in q.dataset,text:q.textContent.trim(),sign:(q.dataset.ladung||'').includes('+')?1:(q.dataset.ladung||'').trim()?-1:0})),
+    dinge:[...sec.querySelectorAll(':scope > .ding')].map(q=>({art:q.dataset.art||'auto',name:q.dataset.name||'',passt:'passt' in q.dataset,rest:'rest' in q.dataset,text:q.textContent.trim(),sign:(q.dataset.ladung||'').includes('+')?1:(q.dataset.ladung||'').trim()?-1:0})),
     zaehlt:d.zaehlt||'',gesehen:d.gesehen||'',traeger:d.traeger||'',
     wurzel:d.wurzel||'',
     genau:[...sec.querySelectorAll(':scope > .genau')].map(q=>({von:q.dataset.von||'',label:q.dataset.name||'',lad:q.dataset.ladung||''}))[0]||null,
@@ -81,7 +81,7 @@ const SLIDES=[...buch.querySelectorAll(':scope > section:not([data-aus])')].map(
     schluessel:[...sec.querySelectorAll(':scope > .schluessel')].map(q=>({text:q.textContent.trim(),art:q.dataset.art||'zu',wort:q.dataset.wort||'',fuehlt:q.dataset.fuehlt||'',bart:(q.dataset.bart||'5,3,5').split(',').map(Number)})),
     blasen:[...sec.querySelectorAll(':scope > .blase')].map(p=>({tag:(p.dataset.wer||'').toUpperCase(),text:p.textContent.trim()})),
     teile:[...sec.querySelectorAll('.teil')].map(t=>({id:t.dataset.id,label:t.dataset.knopf,say:t.textContent.trim()})),
-    huellen:[...sec.querySelectorAll(':scope > .huelle')].map(h=>({id:h.dataset.id,label:h.dataset.name||'',lad:h.dataset.ladung||'',zw:h.hasAttribute('data-fluechtig')})),
+    huellen:[...sec.querySelectorAll(':scope > .huelle')].map(h=>({id:h.dataset.id,label:h.dataset.name||'',lad:h.dataset.ladung||'',zw:h.hasAttribute('data-fluechtig'),n:+h.dataset.faeden||0,platz:h.dataset.platz||''})),
     schrift:[...sec.querySelectorAll(':scope > .schrift')].map((p,i)=>({key:'schrift'+i,huelle:p.dataset.huelle,knopf:p.dataset.knopf,label:p.dataset.name||'',lad:p.dataset.ladung||'',cap:p.textContent.trim()})),
     faden:[...sec.querySelectorAll(':scope > .faden')].map((p,i)=>({key:'faden'+i,huelle:p.dataset.huelle,knopf:p.dataset.knopf,sinne:ids(p.dataset.sinne),cap:p.textContent.trim()}))}});
 const satzVon=(s,id)=>{const e=s.sec.querySelector('.satz[data-id="'+id+'"]');return e?e.textContent.trim():''};
@@ -100,7 +100,7 @@ let SEL=null,G=null;   // gewählter Teil der Karte und ihre Geometrie
 const S={steg:[],ev:[],p:[],m:[],c:[],e:[],q:[],h:{},g:null,lese:0,st:{},level:0,kick:0,frozen:false,freezeAt:0,intro:0,introLive:false,capId:null,knotL:0,knotR:0,aus:null,vor:null,du:{x:0,y:0,vx:0,vy:0,tint:0},vb:0,vbI:0,fotoP:0,fotoName:'',fotoSaid:true,geloest:false,losT:0};
 const ptr={x:-999,y:-999};
 const stOf=s=>S.st[s.id]||(S.st[s.id]={played:{},taps:0,chosen:false});
-function resetAll(){S.steg=[];S.ev=[];S.p=[];S.m=[];S.c=[];S.e=[];S.q=[];S.h={};S.st={};S.level=0;S.kick=0;S.frozen=false;S.intro=0;S.introLive=false;S.capId=null;S.fig=0;S.figSaid=false;S.fotoP=0}
+function resetAll(){S.hAlt=null;S.steg=[];S.ev=[];S.p=[];S.m=[];S.c=[];S.e=[];S.q=[];S.h={};S.st={};S.level=0;S.kick=0;S.frozen=false;S.intro=0;S.introLive=false;S.capId=null;S.fig=0;S.figSaid=false;S.fotoP=0}
 
 const landed=()=>S.p.every(q=>q.t>=1);
 const busy=()=>S.m.some(m=>!m.out&&!m.hold);                       // ein Moment läuft gerade

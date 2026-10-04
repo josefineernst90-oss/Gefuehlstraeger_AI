@@ -170,7 +170,7 @@ function zeichenMalen(q,yT,zeigt,geht,auf){const x=q.x,fy=yT-2.3*RZ;if(x>W+40||x
   // nur ein Wort: ein Punkt auf der Zeitlinie, darüber die Beschriftung
   else if(q.e.art==='wort'){ctx.beginPath();ctx.arc(x+4,yT,2.8,0,6.283);ctx.fillStyle=C.ink;ctx.fill();lx=x}
   else{ctx.beginPath();ctx.moveTo(x,yT);ctx.lineTo(x,yT-27);ctx.lineTo(x+14,yT-27);ctx.lineTo(x+14,yT);ctx.stroke();lx=x+19}
-  if(zeigt)label(q.e.schild.toUpperCase(),lx,yT-22,9,C.muted,'left',1.4);ctx.globalAlpha=1}
+  if(zeigt)label(q.e.schild.toUpperCase(),lx,yT-22,9,C.muted,'left',1.4);ctx.globalAlpha=1;return lx}
 function drawZwei(){const s=SLIDES[cur],Z=S.zw;if(!Z)return;const h=H/2,I=Z.ins,letzt=Z.gl[Z.gl.length-1];
   const aT=I?1-ease(I.k0):1;                                                  // was zum Tag gehört
   const RI=Math.max(72,Math.min(104,W*0.226)),DI=Math.max(RI+8,Math.min(W*0.25,190)),yI=Math.max(0,(h-178)/2)+76+RI;   // die Inseln: auf der Höhe der oberen Bahn

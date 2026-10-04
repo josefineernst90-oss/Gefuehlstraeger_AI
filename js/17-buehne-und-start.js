@@ -60,8 +60,8 @@ function step(dt){
   // was als Nächstes dran ist (Sätze und Festwerden nach dem Üben), eins nach dem anderen
   if(S.ev.length&&!liest){const e=S.ev[0];e.t-=dt;if(e.t<=0){S.ev.shift();e.fn()}}
   // Verblassen: nach der Lesepause vergeht die Zeit, pro Takt passiert genau eine Sache. Steht ein Satz davor, kommt erst er.
-  if(s.verblassen&&!liest&&!reduce){const st=stOf(s);
-    if(!st.los){st.los=true;const z=satzVon(s,'zuerst');if(z){say(z);S.vb=-2.6}}
+  if(s.verblassen&&!liest&&!reduce&&stOf(s).bereit!==false){const st=stOf(s);
+    if(!st.los){st.los=true;const z=st.bereit?'':satzVon(s,'zuerst');if(z){say(z);S.vb=-2.6}}
     S.vb+=dt;if(S.vb>=s.verblassen){S.vb=0;verblassenTakt(s);syncNav()}}
   // Vorführen: nach der Lesepause ziehen sich ein paar Fäden von selbst, einer nach dem anderen, dann kommt der Hinweis
   if(s.vorfuehren&&S.vor&&S.vor.aktiv){const V=S.vor,hs=huellenListe(s),n=Math.min(s.vorfuehren,hs.length);if(!reduce&&!liest)V.t+=dt;
@@ -129,7 +129,7 @@ function step(dt){
   Object.values(S.h).forEach(h=>{if(h.fort||h.drin)return;const still=h.wartet&&liest;
     // eine Hülle verblasst und ist dann weg · eine neue erscheint erst nach der Lesepause
     if(h.weg){h.a=Math.max(0,h.a-dt/1.1);if(h.a<=0){h.fort=true;h.threads=[];hinweg(h);return}}
-    else if(!still){h.a=Math.min(1,h.a+dt/0.45);if(h.a>=1)h.wartet=false}
+    else if(!still&&!h.spaet){h.a=Math.min(1,h.a+dt/0.45);if(h.a>=1)h.wartet=false}
     h.pulse=Math.max(0,h.pulse-dt/1.4);
     if(h.fest)h.festK=Math.min(1,(h.festK||0)+dt/0.9);
     // neu: erst die Hülle, dann „Zwischenspeicher“ daneben, dann der Satz

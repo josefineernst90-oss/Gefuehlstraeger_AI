@@ -65,6 +65,8 @@ function enterStep(s,prev){
   if(s.leer)resetAll();
   else if(s.vorher&&prev!==SLIDES.indexOf(s)-1)vorher(s);
   else if(s.scene==='speicher'&&!s.figur&&!s.mann&&Object.keys(S.h).length)zurueckHinein();
+  // data-huellen="eigene": nur die Hüllen dieses Blocks stehen im Ring. Was vorher dort stand, liegt so lange beiseite (finish holt es zurück).
+  if(s.eigeneHuellen){S.hAlt=S.hAlt||S.h;S.h={};Object.assign(stOf(s),{taps:0,fort:0,los:false,bereit:false})}
   standMerken(s,prev);S.ev=[];S.vbI=0;
   S.ich=s.ich?{t:reduce?9:0,said:false}:null;S.warte=0;
   // du auf der Zeitlinie: die Bühne beginnt ohne Momente. Der Türrahmen kommt von rechts.
@@ -102,7 +104,7 @@ function enterStep(s,prev){
   if(s.rahmen){S.fotoName=s.rahmen;S.fotoP=s.rahmenAnim&&!reduce?0:1;S.fotoSaid=!s.rahmenAnim;
     if(s.rahmenAnim&&reduce){S.fotoSaid=true;say(satzVon(s,'an'))}}
   // eine neue Hülle erscheint erst nach der Lesepause
-  s.huellen.forEach((h,i)=>{if(!S.h[h.id]){const slot=s.alleHuellen?freierPlatz():i,p=ringPlatz(slot);
+  s.huellen.forEach((h,i)=>{if(!S.h[h.id]){const slot=s.alleHuellen?freierPlatz():h.platz!==''?+h.platz:i,p=ringPlatz(slot);
     S.h[h.id]={id:h.id,label:h.label,charges:zeichen(h.lad),threads:[],a:reduce?1:0,pulse:0,tap:0,x:p[0],y:p[1],slot,zw:h.zw,wartet:true,neuT:0}}});
   // data-wieder: die Hülle steht wieder da, so wie sie vor dem vorigen Schritt stand
   if(s.wieder){let sn=null;for(let j=SLIDES.indexOf(s)-1;j>=0&&!sn;j--){const v=S.st[SLIDES[j].id],k=v&&v.stand&&v.stand[s.wieder];if(k&&!k.fort)sn=k}
@@ -110,7 +112,9 @@ function enterStep(s,prev){
   // data-zeigen: nach der Lesepause leuchtet die Hülle kurz auf, dann kommt der Satz
   if(s.zeigen){st.gezeigt=false;spaeter(0.4,()=>{const h=S.h[s.zeigen];if(h)h.pulse=1});
     spaeter(1.5,()=>{const c=satzVon(s,'an');if(c)say(c);st.gezeigt=true;syncNav()})}
-  if(s.verblassen&&reduce)verblassenFertig(s);
+  // Hüllen mit data-faeden: sie kommen eine nach der anderen, ihre Fäden ziehen sich von selbst
+  const selbst=s.huellen.some(h=>h.n);if(selbst)selbstStart(s);
+  if(s.verblassen&&reduce&&!selbst)verblassenFertig(s);
   if(s.fold||s.vonlinie){S.intro=reduce?s.dauer:0;S.introLive=false}          // der Moment startet nach dem Übergang
   else if(s.wahl.length){if(!S.m.some(m=>m.hold)&&!(st.chosen&&s.wahl.length===1)){st.played[s.auto[0]]=1;S.q.push(s.auto[0])}}
   else s.auto.forEach(id=>{if(!st.played[id]){st.played[id]=1;S.q.push(id)}});
@@ -189,6 +193,7 @@ function finish(s){const st=stOf(s);
   if(s.wahl.length&&!st.chosen&&!st.picked){const m=MOM[s.auto[0]],w=s.wahl[0];
     if(m&&m.sign){ensureCarrier(w.id,w.carrier).charges.push({s:m.sign,big:m.big});st.chosen=true}}
   settle();if(s.steg.length===2)stegFertig(s);S.level=target();
+  if(s.eigeneHuellen&&S.hAlt){S.h=S.hAlt;S.hAlt=null}
 }
 function tapMoment(s,id){const st=stOf(s);st.played[id]=1;st.taps++;openMoment(MOM[id])}
 function nextInFolge(s){const st=stOf(s);

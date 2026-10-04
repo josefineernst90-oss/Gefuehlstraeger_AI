@@ -141,11 +141,22 @@ Antippen geht über die Knöpfe oder direkt auf der Hülle.
   data-vorfuehren="2"   am <section>: nach der Lesepause werden so viele Fäden von selbst gezogen (je einer zu den ersten Hüllen),
                         danach erscheint .satz data-id="danach" als Hinweis. Unter der Bühne stehen „Zurücksetzen“ und „Nochmal ansehen“.
 
+  data-huellen="eigene" am <section>: im Ring stehen nur die Hüllen dieses Blocks. Was aus dem Kapitel Bindung im Ring stand, liegt so lange beiseite
+                        und ist nach dem Schritt wieder da. Der Schritt beginnt jedes Mal von vorn.
+  VON SELBST (Hüllen mit data-faeden): nach der Lesepause kommen sie eine nach der anderen, in der Reihenfolge im Block. Erst die Hülle, dann ihre Fäden,
+                        alle auf einmal. Ab vier Fäden wird sie gleich fest. Nach der letzten Hülle, die so fest wird: .satz data-id="alarm", dann Lesezeit.
+                        Stehen alle: .satz data-id="zuerst", danach .satz data-id="tippen" als Hinweis. Erst dann vergeht die Zeit (data-verblassen),
+                        und erst dann wirkt das Antippen. Sätze dabei: "weg", "faden", "fest-tipp" wie oben · "faden-minus" beim Antippen einer rein negativen Hülle ·
+                        "leer", wenn von den Hüllen mit weniger als vier Fäden keine geblieben ist. Ohne Bewegung stehen alle Hüllen mit ihren Fäden da.
+
 <div class="huelle">     eine Hülle auf der Bühne, von links nach rechts in der Reihenfolge im Block
   data-id        Name der Hülle. Dieselbe data-id in einem späteren Schritt ist dieselbe Hülle, mit ihren Fäden.
   data-name      Beschriftung (fehlt sie, ist die Hülle leer)
   data-ladung    ihre Ladung in den Klammern: +   −   oder mehrere, z.B. "+ + −"
   data-fluechtig die Hülle liegt im Zwischenspeicher: gestrichelte Platten, daneben steht „Zwischenspeicher“.
+  data-faeden    so viele Fäden zieht die Hülle von selbst, sobald sie erschienen ist (siehe VON SELBST)
+  data-platz     ihr Platz im Ring, statt der Reihenfolge im Block: 0 oben links · 1 oben rechts · 2 unten links · 3 unten rechts · 4 links · 5 rechts ·
+                 6 links oben · 7 rechts oben · 8 links unten · 9 rechts unten
   Eine Hülle, die es noch nicht gibt, erscheint nach der Lesepause. Danach kommt .satz data-id="an".
 
 <p class="tag">          ein Tag Üben (bei data-ueben), in der Reihenfolge im Block
@@ -281,6 +292,11 @@ geht hin, und beide Zähler laufen gleich. Was nicht passt, wird blasser.
 Bei data-art="mensch" erscheint sein Satz (der Text des .ding) unter der Zeitlinie, solange er vorbeigeht. Ist die Aufmerksamkeit ausgerichtet,
 fällt aus jedem passenden Satz ein Minus in den Träger data-traeger unten. Davor kommt nur an, was ein Satz von sich aus trägt (data-ladung="+").
 .satz data-id="an" erscheint, sobald zwei bemerkt wurden. .satz data-id="rest", sobald danach etwas vorbeikommt, das nicht passt.
+DIE ZEICHEN DES TAGES: hat ein .ding data-art="tuer|bus|tonne|wort" (ein .ding data-art="mensch" darf dabei sein), ziehen statt Autos die Zeichen vorbei,
+die auch auf den Zeitlinien der Bühne „zwei“ stehen, jedes mit data-name als Beschriftung. Sie stehen schon auf der Zeitlinie, wenn der Schritt beginnt.
+Was passt (data-passt), trägt einen gelben Punkt. data-ladung="−": seine Ladung fliegt von selbst zu dir, dein Bauch färbt sich kurz. data-ladung="+" mit data-passt:
+sein Plus kommt erst bei dir an, wenn die Aufmerksamkeit ausgerichtet ist. Nichts wird blasser. Mit data-rest an einem .ding erscheint .satz data-id="rest" erst,
+wenn dieses Zeichen vorbeikommt.
 
 BÜHNE „FILM“ (data-szene="film" am <section>): links oben du, darunter dein gerahmter Satz (.satz data-id="satz"). Ablauf, eins nach dem anderen:
 rechts oben erscheint ein Bild im Rahmen, der Film · deine Blicklinie geht hin · unter dem Rahmen erscheint der Satz im Film (.satz data-id="film") ·
