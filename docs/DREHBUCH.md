@@ -338,16 +338,23 @@ DER STAU (Bühne „fokus“, Kapitel Überschuss und Namensgebung). Unter deine
                       Kommt man direkt aus dem Schritt davor, gehen zuerst die Platten noch einmal auf und bleiben offen, erst dann kommt der Text.
                       Dann: das erste Zeichen kommt · der Moment nimmt es auf und bleibt belegt · das zweite kommt und muss warten ·
                       aus den Strichen der Zeitlinie werden Punkte · sie schieben sich vor dir zusammen. Danach .satz data-id="an".
-  data-akt="hebel"    der Stau steht (data-stand zeigt auf den Schritt mit data-akt="stau"). Je <p class="weg" data-id data-knopf data-sagt> ein Knopf,
+  data-akt="hebel"    der Stau steht (data-stand zeigt auf einen Schritt mit Stau). Je <p class="weg" data-id data-knopf data-sagt data-wer> ein Knopf,
                       jeder Tipp beginnt wieder beim Stau:
-                        drosseln  die Punkte rücken auseinander und werden wieder Striche · der Moment wird fertig, seine Ladung fällt an ihre Adresse · das wartende Zeichen ist dran
-                        schlaf    data-sagt steht über der Zeitlinie · der Moment wird fertig · das wartende Zeichen ist dran und wird auch fertig ·
-                                  die Punkte werden einer nach dem anderen abgearbeitet
-                        druck     alles verpufft, im Speicher kommt nichts an · data-sagt steht über der Zeitlinie · derselbe Stau steht wieder da
-                      Der Text des .weg steht danach unter der Bühne, nach allen dreien kommt .satz data-id="alle" dazu. Erledigt nach dem ersten.
+                        bedeutung  die Punkte rücken auseinander und werden wieder Striche: nicht allem Bedeutung schenken
+                        lose       das wartende Zeichen kommt zu dir, kein Moment geht für es auf: seine Ladung fällt ohne Adresse in den Speicher und bleibt liegen
+                        dicht      die Platten unter deinen Füßen schließen sich · Zeichen und Punkte ziehen blass an dir vorbei, im Speicher kommt nichts an
+                        weiter     von links kommt ein Mensch (data-wer ist seine Beschriftung) · deine Ladung springt aus dem Moment zu ihm,
+                                   von Männchen zu Männchen · er geht geladen weiter
+                        sport      die Ladung im Moment verpufft, ohne irgendwo anzukommen
+                      Nach weiter und sport steht data-sagt über der Zeitlinie (am nächsten Morgen), und der Moment ist wieder so belegt wie vorher.
+                      Der Text des .weg steht danach unter der Bühne, nach allen Knöpfen des Schritts kommt .satz data-id="alle" dazu. Erledigt nach dem ersten.
+  data-akt="ueben"    der Stau steht. Ein Knopf (data-knopf), jeder Tipp ist eine Runde: <p class="runde" data-zeilen>, ihr Text steht danach unter der Bühne.
+                      Der <div class="moment"> des Blocks hat mehrere Zeilen (die erste ist die, die im Stau schon dasteht). Runde für Runde braucht er weniger davon
+                      (data-zeilen: so viele wie der Moment hat = alle · 2 = die erste und die letzte · 0 = keine), seine Ladung fällt jedes Mal an ihre Adresse,
+                      und der Stau wird lockerer. Nach der letzten Runde sind die Punkte wieder Striche, und auch das wartende Zeichen fällt ohne Zeilen an seine Adresse.
   data-akt="rutscht"  der Stau steht. Der Moment bricht ab, seine Ladung fällt ohne Adresse lose in den Speicher · das wartende Zeichen ist dran,
-                      seine Ladung fällt an ihre Adresse · die Punkte werden wieder Striche, du gehst weiter ·
-                      die lose Ladung rutscht zu demselben Träger: dem nächstbesten. Danach .satz data-id="an".
+                      seine Ladung fällt an ihre Adresse · die Punkte werden wieder Striche, du gehst weiter · unter deinen Füßen steht .satz data-id="frage" ·
+                      erst jetzt rutscht die lose Ladung zu demselben Träger: dem nächstbesten. Danach .satz data-id="an".
   data-akt="name"     mit data-von="kollege": je <p class="name"> ein Knopf. Der erste Tipp: unten im Speicher erscheint ein neuer Träger mit diesem Namen,
                       die letzte Ladung des Trägers aus data-von wandert zu ihm hinüber, dann .satz data-id="an". Jeder weitere Tipp gibt ihm einen anderen Namen,
                       dann .satz data-id="mehr". Für die folgenden Schritte gilt der zuletzt gewählte Name (ohne Wahl der erste im Block).

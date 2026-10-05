@@ -53,6 +53,7 @@ function renderRow(){
   if(s.scene==='steg'&&!s.neu)s.glieder.forEach((g,i)=>btn(s.id+'-glied'+i,g.label,()=>stegTippen(s,i)));
   if(s.scene==='zwei'&&satzVon(s,'tippen'))s.ereignisse.forEach((e,i)=>{btn(s.id+'-el'+i,e.label,()=>zweiTippen(s,i),()=>!S.zw||!S.zw.fertig).dataset.nodemo='1'});
   if(s.scene==='zwei')s.ereignisse.filter(e=>e.knopf).forEach(e=>{btn(s.id+'-bsp-'+e.id,e.knopf,()=>zweiBeispiel(s,e),()=>!S.zw||!S.zw.fertig||!!S.zw.laeuft||!!(st.bsp||{})[e.id]).dataset.nodemo='1'});
+  if(s.scene==='fokus'&&s.runden.length)btn(s.id+'-ueben',s.knopf||'üben',()=>fokusUeben(s),()=>!S.fk||!S.fk.fertig||!!S.fk.laeuft||(st.runde||0)>=s.runden.length,'act').dataset.nodemo='1';
   if(s.scene==='fokus')s.namen.forEach((nm,i)=>btn(s.id+'-name'+i,nm,()=>fokusName(s,i),()=>!S.fk||!S.fk.fertig||!!S.fk.laeuft).dataset.nodemo='1');
   s.wege.forEach(w=>{(s.scene==='fokus'?btn(s.id+'-weg-'+w.id,w.knopf,()=>fokusWeg(s,w),()=>!S.fk||!S.fk.fertig||!!S.fk.laeuft):s.scene==='sicht'?btn(s.id+'-weg-'+w.id,w.knopf,()=>ketteWahl(s,w),()=>!S.si||!S.si.fertig||!!S.si.laeuft)
     :btn(s.id+'-weg-'+w.id,w.knopf,()=>kanalWahl(s,w),()=>!S.zw||!S.zw.fertig||!!S.zw.laeuft)).dataset.nodemo='1'});

@@ -1,6 +1,6 @@
 # Stand
 
-Version 67, 4. Oktober 2026. 66 aktive Schritte, 10 ausgeschaltet.
+Version 68, 5. Oktober 2026. 67 aktive Schritte, 11 ausgeschaltet.
 
 ## Schritte nach dem Kapitel Bindung
 
@@ -20,13 +20,15 @@ Version 67, 4. Oktober 2026. 66 aktive Schritte, 10 ausgeschaltet.
 
 **Aufmerksamkeit & Focus** (auf der Seite nach Positiv Indexieren): `a1` Abendessen, die Avocado nebenbei oder mit hochgedrehter Auflösung, davor der Übergang aus den zwei Bahnen in den Speicher · `a2` Referenzabgleich mit Pommes
 
-**Überschuss**: `u1` der Stau: die Platten bleiben offen, der Anruf belegt den Moment, die Nachricht wartet, aus den Strichen der Zeitlinie werden Punkte · `u2` drei Knöpfe am selben Stau: Zufluss drosseln, Kapazität erhöhen, Hauptsache Druck raus · `u3` die Ladung ohne Adresse rutscht zum nächstbesten Träger (Kollege)
+**Überschuss**: `u1` der Stau: die Platten bleiben offen, der Anruf belegt den Moment, die Nachricht wartet, aus den Strichen der Zeitlinie werden Punkte · `u2` Zufluss drosseln: keine Bedeutung geben, unbenannt lassen, dicht machen · `uk` Kapazität erhöhen: dreimal üben, vier Zeilen, zwei, keine · `ud` Hauptsache Druck raus: weitergeben, in Sport stecken, am nächsten Morgen ist alles wie vorher · `u3` du suchst einen Grund, die lose Ladung rutscht zum nächstbesten Träger (Kollege)
 
-**Namensgebung**: `n1` ein Name als neuer Eintrag: Freundin, ihre Sorge, nicht meins · `n2` Anruf und Nachricht kommen noch einmal und fallen gleich an ihre Adresse
+**Namensgebung**: `n1` ein Name als neuer Eintrag: ihre Sorge, nicht meins, Freundin · `n2` ausgeschaltet (sein Bild steht jetzt bei `uk`)
 
 ## Offen
 
-- Neu in Version 67: die Kapitel Überschuss und Namensgebung, alle auf der Bühne `fokus`. Urteil steht aus. Von der Autorin: Aufmerksamkeit ohne Focus, alles ist relevant (gepunkteter Fußboden) · einsortieren ist nur schwierig, wenn erst geprüft werden muss, wo etwas hingehört. Weggelassen, mit ihr abgestimmt: der einzelne zu große Impuls und das Spiegelbild.
+- Neu in Version 68: die drei Knöpfe der alten Überschuss-Seite sind auf drei Seiten aufgeteilt, mit der Deutung der Autorin (`u2`, `uk`, `ud`). Die alte Fassung erklärte mit Worten mehr als mit dem Bild. In `u3` kommt vor dem Rutschen die Frage „warum bin ich so gereizt?“. Urteil steht aus.
+- Verworfen (nur als Standbilder gezeigt, nie gebaut): eine Seite, auf der sich im Überschuss der Steg „Scheißtag“ wieder bildet.
+- Aus Version 67: die Kapitel Überschuss und Namensgebung, alle auf der Bühne `fokus`. Urteil steht aus. Von der Autorin: Aufmerksamkeit ohne Focus, alles ist relevant (gepunkteter Fußboden) · einsortieren ist nur schwierig, wenn erst geprüft werden muss, wo etwas hingehört. Weggelassen, mit ihr abgestimmt: der einzelne zu große Impuls und das Spiegelbild.
 - Zu prüfen: der Arbeitskonflikt ist eine Nachricht vom Kollegen (nicht vom Chef, damit die Adresse schon im Speicher liegt) · die drei Namen in `n1` · im Buch ist das Beispiel der Namensgebung der Träger Kompetenz, hier die Ladung vom Anruf · acht Träger im Speicher auf dem Handy (sie werden dann kleiner gezeichnet) · Dauer von `u3` (etwa 13 Sekunden).
 - Offen aus dem Buchkapitel Namensgebung: der Wolf im Schafspelz, die Lehrer mit derselben Formel, „Der Name ist nicht die Wahrheit, er ist die Brücke“. Die Autorin nannte danach „die Panik“ (im Buch der Steg mit dem Namen Panik, Kapitel Stegbildung).
 
