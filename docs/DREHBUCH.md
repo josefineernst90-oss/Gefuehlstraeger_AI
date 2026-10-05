@@ -426,11 +426,22 @@ am <section>:
                              Der Text des Schritts erscheint erst danach.
   data-ort         wohin das Männchen in diesem Schritt geht: denken   metaphorik   gefuehl
   data-trifft      eine Ladung kommt von außen und trifft das Männchen: +  oder  −
+                   Steht der Kollege daneben, kommt sie aus seinem Bauch, von Männchen zu Männchen. Sonst kommt sie von rechts außen.
+  data-klein       mit data-trifft: die Ladung ist klein (die Stimmung, noch ohne Worte)
+  data-kollege     kommt   der Kollege kommt von rechts herein, ein Minus im Bauch, und bleibt neben dir stehen (rechts vom Gefühl).
+                           Mit data-trifft geht danach eine Ladung von ihm zu dir, seine eigene behält er.
+                   sagt    der Kollege steht schon da und gibt sein Minus mit data-trifft ganz an dich ab, sein Bauch ist danach leer
+                   geht    der Kollege geht nach rechts hinaus, erst danach gehst du los
+                   Auf schmalen Bühnen ist der Kollege kleiner gezeichnet als du, weil rechts vom Gefühl wenig Platz ist.
   data-wird        die Ladung im Männchen wird zu: +  oder  −
   data-gruebeln    das Männchen läuft auf der Stelle hin und her, seine .blase-Zeilen wechseln im Kreis
   data-geschichte  neben dem Männchen erscheint eine Geschichte (ein Bild im Rahmen)
 im <section>:
   .kommt           was von außen kommt, steht kurz am rechten Rand (bei data-trifft)
   .blase           Zeile unter dem Männchen; data-wer ist das Wort darüber (fühlen, denken, Geschichte)
-  .satz data-id="an"   Satz unter der Bühne, sobald das Männchen angekommen ist
+                   Mehrere Zeilen ohne data-gruebeln kommen nacheinander und bleiben stehen, jede unter ihrer Station
+                   (denken links, fühlen rechts). Steht das Männchen noch an derselben Station wie im Schritt davor,
+                   bleibt dessen Zeile stehen, bis die neue kommt.
+  .satz data-id="an"   Satz unter der Bühne, sobald das Männchen angekommen ist (kann fehlen)
+Der Übergang zur Zeitlinie (data-uebergang="linie" am ersten Schritt des Kapitels Ladung) beginnt dort, wo das Männchen zuletzt stand.
 ```

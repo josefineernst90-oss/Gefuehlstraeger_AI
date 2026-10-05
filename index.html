@@ -128,36 +128,49 @@
 
   <!-- ================================ ERÖFFNUNG ================================ -->
 
-  <!-- ENTWURF: ein Gang über die Linie, hin und zurück. Rechts trifft ihn etwas, links bleibt er im Denken hängen,
-       der Weg zurück zum Gefühl führt über eine Geschichte. Beispiel: der Satz des Kollegen (Indexierung,
-       Orientierungsarbeit) und der Film (Perspektiven).
+  <!-- Was im System passiert, bevor und während ein Satz fällt (Kapitel Taktversatz, dort am Telefonat mit der Freundin):
+       die Stimmung kommt ohne Worte beim Gefühl an, der Satz danach beim Denken. Die Eröffnung löst nichts auf:
+       sie endet mit dem Grübeln auf dem Heimweg. Die Station Metaphorik bleibt unbetreten.
+       Für die Seite gesetzt: der Kollege als zweites Männchen, die Zeilen unter dem Männchen, die Sätze unter der Bühne.
        Arbeitsnotiz: Metaphorik steht für die Geschichte selbst, nicht für einzelne Metaphern. -->
-  <section id="e1" data-anker="linie" data-szene="linie" data-uebergang="klappen" data-dauer="4" data-ort="gefuehl" data-trifft="−" data-nochmal>
+  <section id="e1" data-anker="linie" data-szene="linie" data-uebergang="klappen" data-dauer="4" data-ort="gefuehl" data-kollege="kommt" data-trifft="−" data-klein data-nochmal>
     <div class="kurz">
-      <!-- erster Absatz zusammengezogen aus Indexierung und Orientierungsarbeit; der Satz des Kollegen und der letzte Absatz sind von der Autorin -->
-      <p>Ein einzelner Satz vom Kollegen, beiläufig hingeworfen. Du gehst nach Hause, fühlst dich schwer, ohne genau zu wissen, warum.</p>
-      <p>„Das war so nicht richtig. Hättest du mal gefragt.“</p>
-      <p>Nach so einem Satz fühlen wir uns etwas unangenehm.</p>
+      <!-- Seitentext, nicht aus dem Buch -->
+      <p>Der Kollege kommt rein. Er hat noch nichts gesagt.</p>
     </div>
-    <p class="kommt">ein Satz</p>
-    <p class="blase" data-wer="fühlen">unangenehm</p>
+    <p class="blase" data-wer="fühlen">irgendwas stimmt nicht</p>
     <!-- Seitentext, nicht aus dem Buch -->
-    <p class="satz" data-id="an">Der Satz trifft dich im Gefühl.</p>
+    <p class="satz" data-id="an">Noch bevor ein Wort fällt.</p>
   </section>
 
-  <section id="e2" data-szene="linie" data-ort="denken" data-gruebeln data-nochmal>
+  <!-- Der Satz: der Kollege gibt sein Minus ganz ab (später, im Kapitel Potentialausgleich, ist der Spruch seine Entladung).
+       Erst wächst das Gefühl, dann kommen beim Denken die Worte an. -->
+  <section id="es" data-szene="linie" data-ort="gefuehl" data-kollege="sagt" data-trifft="−" data-nochmal>
     <div class="kurz">
-      <!-- „Du grübelst.“ ist Seitentext; der zweite Satz aus Sackgassen -->
-      <p>Du grübelst. Dieselbe Vermutung, immer wieder gegen sich selbst geprüft.</p>
+      <!-- der Satz des Kollegen ist von der Autorin -->
+      <p>„Das war so nicht richtig. Hättest du mal gefragt.“</p>
+    </div>
+    <p class="blase" data-wer="fühlen">unangenehm</p>
+    <p class="blase" data-wer="denken">„Hättest du mal gefragt.“</p>
+    <!-- Seitentext, nicht aus dem Buch -->
+    <p class="satz" data-id="an">Das Gefühl war vor dem Satz da.</p>
+  </section>
+
+  <!-- Der Heimweg: der Kollege geht, du gehst zum Denken und grübelst. Kein Satz unter der Bühne, die Eröffnung bleibt offen. -->
+  <section id="e2" data-szene="linie" data-ort="denken" data-kollege="geht" data-gruebeln data-nochmal>
+    <div class="kurz">
+      <!-- aus Orientierungsarbeit -->
+      <p>Du gehst nach Hause, fühlst dich schwer, ohne genau zu wissen, warum.</p>
     </div>
     <p class="blase" data-wer="denken">„Arbeit nervt mich“</p>
     <p class="blase" data-wer="denken">„die Kollegen sind blöd“</p>
     <!-- abgeleitet aus „die eigene Kompetenz“, nicht wörtlich -->
     <p class="blase" data-wer="denken">„kann ich das überhaupt?“</p>
-    <p class="satz" data-id="an">Zu viel Denken nimmt uns das Bild selbst.</p>
   </section>
 
-  <section id="e3" data-szene="linie" data-ort="metaphorik" data-geschichte data-nochmal>
+  <!-- Ausgeschaltet: die Auflösung über den Film und „leichter“. Sie kam an dieser Stelle zu früh.
+       Der Film kommt abends im Kapitel Bindung wieder. -->
+  <section id="e3" data-aus data-szene="linie" data-ort="metaphorik" data-geschichte data-nochmal>
     <div class="kurz">
       <!-- Seitentext nach der Formulierung der Autorin, nicht aus dem Buch. Im Rahmen läuft ein kleines Männchen, das genauso grübelt. -->
       <p>Abends ein Film. Du erkennst deine Situation darin wieder und kannst darüber lachen.</p>
@@ -167,7 +180,7 @@
     <p class="satz" data-id="an">Du schaust zu, und irgendwas in dir bleibt hängen.</p>
   </section>
 
-  <section id="e4" data-szene="linie" data-ort="gefuehl" data-wird="+" data-nochmal>
+  <section id="e4" data-aus data-szene="linie" data-ort="gefuehl" data-wird="+" data-nochmal>
     <div class="kurz">
       <!-- Formulierung der Autorin -->
       <p>Du fühlst dich leichter und hörst auf zu grübeln.</p>
@@ -184,7 +197,7 @@
        Wieder einschalten: data-uebergang="dreieck" data-dauer="7" am <section> ergänzen.
        Arbeitsnotiz, wird nicht angezeigt: Das aufgestellte Dreieck symbolisiert das Sinnieren. -->
   <!-- Übergang von der beschrifteten Linie zur Zeitlinie: die Platten ziehen sich um die Ladung zusammen,
-       der ganze Gang wird ein Moment unter vielen. Ladung und Körper trennen sich: die Ladung steht als |+| auf der Linie,
+       der ganze Gang wird ein Moment unter vielen. Ladung und Körper trennen sich: die Ladung steht als |−| auf der Linie,
        das Männchen wird zum Stimmungsspeicher. Hinein fällt sie erst im nächsten Schritt. -->
   <section id="lz" data-kapitel="Ladung" data-anker="ladung" data-start="leer" data-uebergang="linie" data-dauer="5" data-auto="gang" data-nochmal>
     <div class="kurz">
@@ -192,30 +205,31 @@
       <p>Wir trennen uns für einen Moment von dem Gefühl und schauen uns an, was da passiert. Beginnen wir mit dem einfachsten Baustein: der Ladung.</p>
     </div>
     <!-- ein Moment ohne Zeilen: nur seine Ladung. Er bleibt stehen, der nächste Schritt öffnet ihn wieder. -->
-    <div class="moment" data-id="gang" data-ladung="+" data-bleibt>
+    <div class="moment" data-id="gang" data-ladung="−" data-bleibt>
       <p class="zu">Ein Moment, mit seiner eigenen Ladung.</p>
     </div>
   </section>
 
   <!-- Dieselbe Situation noch einmal, jetzt in der Zeit. Jedes Gefühl ist ein eigener Moment, und jede Ladung fällt
-       in den Stimmungsspeicher, sobald ihr Moment sich schließt: erst das Minus, dann das Plus.
-       Der stehende Moment |+| öffnet sich für den ersten, der zweite schließt sich daneben an. -->
-  <section id="lw" data-kapitel="Ladung" data-auto="wieder film">
+       in den Stimmungsspeicher, sobald ihr Moment sich schließt: erst die Stimmung beim Kollegen, dann sein Satz.
+       Der stehende Moment |−| öffnet sich für den ersten, der zweite schließt sich daneben an.
+       Die Stimmung bekommt später keine Adresse, ihr Minus bleibt lose im Speicher. -->
+  <section id="lw" data-kapitel="Ladung" data-auto="stimmung wieder">
     <div class="kurz">
       <!-- die ersten beiden Sätze sind Seitentext (der erste nach der Formulierung der Autorin), der dritte ist angelehnt an das Kapitel Ladung -->
       <p>Neue Perspektive, gleiche Situation. Die Linie ist jetzt die Zeit. Jedes Gefühl darauf wirkt wie ein Ladeimpuls für unseren Stimmungsspeicher.</p>
     </div>
-    <div class="moment" data-id="wieder" data-ladung="−" data-tempo="2.6" data-fall="2.4" data-oeffnet>
+    <div class="moment" data-id="stimmung" data-ladung="−" data-tempo="2.6" data-fall="2.4" data-oeffnet>
+      <p>der Kollege kommt rein</p>
+      <p data-wer="fühlen">irgendwas stimmt nicht</p>
+      <!-- Seitentext -->
+      <p class="fall">Ein negativer Impuls, noch ohne Worte.</p>
+    </div>
+    <div class="moment" data-id="wieder" data-ladung="−" data-tempo="2.6" data-fall="2.4">
       <p>Kommentar des Kollegen</p>
       <p data-wer="fühlen">unangenehm</p>
       <p data-wer="denken">„Arbeit nervt mich“</p>
       <p class="fall">Ein negativer Impuls.</p>
-    </div>
-    <div class="moment" data-id="film" data-ladung="+" data-tempo="2.6" data-fall="2.4">
-      <p>abends ein Film</p>
-      <p data-wer="Geschichte">„das bin ja ich“</p>
-      <p data-wer="fühlen">leichter</p>
-      <p class="fall">Ein positiver Impuls.</p>
     </div>
   </section>
 
@@ -673,8 +687,8 @@
     <p class="satz" data-id="steg">Deine Aufmerksamkeit läuft einmal los und pickt unterwegs mit, was passt.</p>
   </section>
 
-  <!-- Auf dieselbe Art dockt das Gute an (Autorin): abends der Film aus der Eröffnung. Du erkennst deine Situation wieder, das Plus fällt
-       zum neuen Ladungsträger Film, er rückt unter den Kollegen und hängt sich an dieselbe Kette. Text und Zeilen aus der Eröffnung. -->
+  <!-- Auf dieselbe Art dockt das Gute an (Autorin): abends der Film (stand früher auch in der Eröffnung, dort ausgeschaltet: e3, e4). Du erkennst deine Situation wieder, das Plus fällt
+       zum neuen Ladungsträger Film, er rückt unter den Kollegen und hängt sich an dieselbe Kette. Text und Zeilen aus den Schritten e3 und e4. -->
   <section id="br" data-kapitel="Bindung" data-mann data-tuer="film2" data-kommt="film" data-steg="kollege film" data-merken data-nochmal>
     <div class="kurz">
       <p>Abends ein Film. Du erkennst deine Situation darin wieder und kannst darüber lachen.</p>
@@ -1058,8 +1072,8 @@
     <p class="satz" data-id="alle">Keine dieser drei Reaktionen ist falsch.</p>
   </section>
 
-  <!-- Entwurf: der Film aus der Eröffnung. Text und der Satz unter der Bühne aus dem Kapitel Perspektiven (der erste Satz ist der aus der Eröffnung).
-       „das bin ja ich“ und „leichter“ sind die Zeilen aus der Eröffnung. „vielleicht habe ich es falsch verstanden“ ist von der Autorin.
+  <!-- Entwurf: der Film vom Abend (Kapitel Bindung). Text und der Satz unter der Bühne aus dem Kapitel Perspektiven (der erste Satz ist der aus dem Kapitel Bindung).
+       „das bin ja ich“ und „leichter“ sind die Zeilen aus dem Kapitel Bindung. „vielleicht habe ich es falsch verstanden“ ist von der Autorin.
        Vorgabe der Autorin: nicht den Träger Kompetenz benennen, sondern nur die Stimmung. Deshalb geht das Plus hier direkt zu dir, und der Satz behält sein Minus.
        Für die Seite gesetzt: dass im Film derselbe Satz fällt und dass die Figur lacht. -->
   <section id="f1" data-kapitel="Perspektiven" data-anker="film" data-szene="film" data-nochmal>

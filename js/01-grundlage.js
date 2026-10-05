@@ -74,7 +74,7 @@ const SLIDES=[...buch.querySelectorAll(':scope > section:not([data-aus])')].map(
     wahl:[...sec.querySelectorAll('.wahl')].map(w=>({id:w.dataset.id,label:w.dataset.knopf,carrier:w.dataset.name,line:w.dataset.zeile,cap:w.textContent.trim()})),
     rueck:'rueck' in d,reihe:'reihe' in d,aussen:'aussen' in d,
     impulse:[...sec.querySelectorAll(':scope > .impuls')].map(q=>({art:q.dataset.art||'tuer',label:q.dataset.name||'',text:q.textContent.trim(),sign:(q.dataset.ladung||'').includes('+')?1:-1})),
-    ort:d.ort,klappen:d.uebergang==='klappen',gruebeln:'gruebeln' in d,geschichte:'geschichte' in d,
+    ort:d.ort,klappen:d.uebergang==='klappen',gruebeln:'gruebeln' in d,geschichte:'geschichte' in d,kollege:d.kollege||'',klein:'klein' in d,
     trifft:d.trifft?(d.trifft.includes('+')?1:-1):0,wird:d.wird?(d.wird.includes('+')?1:-1):0,
     kommt:((sec.querySelector(':scope > .kommt')||{}).textContent||'').trim(),
     seiten:[...sec.querySelectorAll(':scope > .seite')].map(q=>({label:q.dataset.name||'',lad:q.dataset.ladung||'',text:q.textContent.trim()})),

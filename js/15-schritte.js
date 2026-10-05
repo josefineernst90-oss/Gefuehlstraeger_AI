@@ -52,14 +52,19 @@ const introK=s=>{const tA=s.dauer*0.25;return ease((S.intro-tA)/(s.dauer-0.4-tA)
 
 /* ---------- Linie: der Gang des Männchens ----------
    Wo es herkommt und was es in sich trägt, ergibt sich aus den Linien-Schritten davor. So stimmt jeder Schritt, auch nach einem Sprung. */
-function linieVor(s){let ch=0,ort=null,story=false;
-  for(const x of SLIDES){if(x===s)break;if(x.scene!=='linie')continue;if(x.trifft)ch=x.trifft;if(x.wird)ch=x.wird;ort=x.ort;if(x.geschichte)story=true}
-  return {ch,ort,story}}
-function linieStart(s){const v=linieVor(s),tF=s.klappen?s.dauer:0,walk=v.ort&&v.ort!==s.ort?1.9:0,ta=tF+(v.ort?0.2:0.8)+walk;
-  // tF: Klappen fertig (danach Text und Lesepause) · ta: angekommen · tb: die Zeile unter dem Männchen erscheint
-  // tc: der Satz unter der Bühne · td: Schritt erledigt. Nichts davon fällt zusammen.
-  const tb=ta+(s.trifft?2.6:s.wird?1.8:s.geschichte?1.2:0.3),tc=tb+(s.gruebeln?1.9*s.blasen.length+0.95:1.3);
-  S.g={t:reduce?1e3:0,from:v.ort||s.ort,ch0:v.ch,neu:!v.ort,story0:v.story,tF,walk,ta,tb,tc,td:tc+0.5,said:false,text:false}}
+// gr: wie groß die Ladung im Bauch ist (Anteil des Bauchs) · kol: der Kollege steht daneben (1 mit seinem Minus, 2 ohne) · bl: die letzte Zeile unter dem Männchen
+function linieVor(s){let ch=0,ort=null,story=false,gr=0.5,kol=0,bl=null;
+  for(const x of SLIDES){if(x===s)break;if(x.scene!=='linie')continue;if(x.trifft){ch=x.trifft;gr=x.klein?0.3:0.5}if(x.wird){ch=x.wird;gr=0.5}ort=x.ort;if(x.geschichte)story=true;
+    if(x.kollege==='kommt')kol=1;else if(x.kollege==='sagt')kol=2;else if(x.kollege==='geht')kol=0;
+    bl=x.blasen.length&&!x.gruebeln?x.blasen[0]:null}
+  return {ch,ort,story,gr,kol,bl}}
+const LK_KOMMT=1.6,LK_GEHT=1.3,L_FLUG=1.2,L_ZEILE=1.6;   // der Kollege kommt · er geht · eine Ladung ist unterwegs · Abstand zwischen zwei Zeilen
+function linieStart(s){const v=linieVor(s),tF=s.klappen?s.dauer:0,walk=v.ort&&v.ort!==s.ort?1.9:0,weg=s.kollege==='geht'&&v.kol?LK_GEHT+0.2:0,ta=tF+(v.ort?0.2:0.8)+weg+walk;
+  // tF: Klappen fertig (danach Text und Lesepause) · ta: angekommen · tk: der Kollege kommt herein · tw: die Ladung fliegt los
+  // tb: die Zeile unter dem Männchen erscheint · tc: der Satz unter der Bühne · td: Schritt erledigt. Nichts davon fällt zusammen.
+  const tk=ta+0.3,tw=s.kollege==='kommt'?tk+LK_KOMMT+0.6:ta+(v.kol?0.6:1);
+  const tb=s.trifft?tw+L_FLUG+0.4:ta+(s.wird?1.8:s.geschichte?1.2:0.3),n=s.blasen.length,tc=tb+(s.gruebeln?1.9*n+0.95:Math.max(0,n-1)*L_ZEILE+1.3);
+  S.g={t:reduce?1e3:0,from:v.ort||s.ort,ch0:v.ch,gr0:v.gr,kol0:v.kol,bl0:v.ort===s.ort?v.bl:null,neu:!v.ort,story0:v.story,tF,walk,weg,ta,tk,tw,tb,tc,td:tc+0.5,said:false,text:false}}
 
 function enterStep(s,prev){
   if(s.leer)resetAll();

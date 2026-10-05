@@ -1,6 +1,6 @@
 # Gefühlsträger interaktiv
 
-Das Buch „Gefühlsträger“ als interaktive Seite. Stand: Version 70.
+Das Buch „Gefühlsträger“ als interaktive Seite. Stand: Version 71.
 
 ## Ansehen und bearbeiten
 

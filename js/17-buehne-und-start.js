@@ -44,7 +44,7 @@ function step(dt){
   // Der Speicher hat seinen festen Platz. Nur bei der Verwandlung zur Figur wandert und schrumpft er.
   R=R0;cy=cy0;sx=0;
   // von der Linie: der Bauch des Männchens wandert an den Platz des Speichers und wächst
-  if(s.vonlinie&&!S.introLive){const k=introK(s),q=linieGeo();R=lerp(q.r,R0,k);cy=lerp(q.yF,cy0,k);sx=lerp(q.st.gefuehl-cx,0,k)}
+  if(s.vonlinie&&!S.introLive){const k=introK(s),q=linieGeo();R=lerp(q.r,R0,k);cy=lerp(q.yF,cy0,k);sx=lerp(linieEndeX(q)-cx,0,k)}
   const liest=S.lese>0;if(liest)S.lese-=dt;
   if(s.scene==='linie'&&S.g){const g=S.g;
     if(reduce){}
@@ -255,6 +255,12 @@ function duLabel(x,y,r,a){if(a<=0.01)return;ctx.globalAlpha=a;label(T('du').toUp
    die Platten der Lücke fahren an die Enden: |----Denken----Metaphorik----Gefühl----|  Darunter läuft das Männchen. */
 function linieGeo(){const half=Math.min(W/2-12,330),r=Math.max(14,Math.min(20,H*0.05)),y=Math.max(46,(H-(118+4.4*r))/2+28);
   return {half,xL:cx-half,xR:cx+half,y,r,yF:y+46+2.1*r,st:{denken:cx-0.62*half,metaphorik:cx,gefuehl:cx+0.62*half}}}
+// der Kollege neben dir, rechts vom Gefühl: so groß, wie dort Platz ist (auf schmalen Bühnen kleiner als du)
+function linieKollege(q){const xG=q.st.gefuehl,r=q.r,rk=Math.max(10,Math.min(r,(W-(xG+1.8*r)-8)/3.6));
+  return {r:rk,x:Math.min(W-1.8*rk-3,xG+1.8*r+1.8*rk+14),y:q.yF+2.3*r-2.3*rk}}
+// wo das Männchen am Ende der Eröffnung steht: von dort beginnt der Übergang zur Zeitlinie
+let linieAb={i:-1,dx:0};
+function linieEndeX(q){const v=linieVor(SLIDES[cur]);return (q.st[v.ort]||q.st.gefuehl)+(linieAb.i===cur-1?linieAb.dx:0)}
 function ladungIn(x,y,sign,r,a){if(!sign||a<=0.01)return;const col=sign>0?C.plus:C.minus;ctx.globalAlpha=a;ctx.strokeStyle=col;ctx.lineWidth=1.6;
   ctx.beginPath();ctx.arc(x,y,r,0,6.283);ctx.stroke();ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(x-r*0.5,y);ctx.lineTo(x+r*0.5,y);
   if(sign>0){ctx.moveTo(x,y-r*0.5);ctx.lineTo(x,y+r*0.5)}ctx.stroke();ctx.globalAlpha=1}
@@ -280,10 +286,19 @@ function drawLinie(){
     label(T('taktversatz').toUpperCase(),cx,b<250?yb-40:yb+46,10.5,C.muted,'center',1.5);ctx.globalAlpha=1}
   if(t<g.tF)return;
   // das Männchen: geht von seiner letzten Station zur Station dieses Schritts
-  const r=q.r,x0=q.st[g.from],x1=q.st[s.ort],aF=g.neu?ease((t-g.tF)/0.7):1,w=g.walk?ease((t-g.tF-0.2)/g.walk):1,nach=t-g.ta;
+  const r=q.r,x0=q.st[g.from],x1=q.st[s.ort],aF=g.neu?ease((t-g.tF)/0.7):1,w=g.walk?ease((t-g.tF-0.2-g.weg)/g.walk):1,nach=t-g.ta;
   let xf=lerp(x0,x1,w),sw=g.walk&&w>0&&w<1?Math.sin(t*9):0;
   if(s.gruebeln&&nach>0&&!reduce){xf+=Math.sin(nach*1.3)*r*0.9;sw=Math.sin(nach*7)*Math.abs(Math.cos(nach*1.3))}
-  const fy=q.yF+2.3*r;
+  const fy=q.yF+2.3*r;linieAb={i:cur,dx:xf-x1};
+  // der Kollege: kommt von rechts herein und bleibt neben dir stehen · gibt sein Minus mit dem Satz ab · geht wieder
+  const uF=s.trifft?ease((t-g.tw)/L_FLUG):0;let K=null;
+  if(s.kollege==='kommt'||g.kol0){K=linieKollege(q);const aus=W+2.2*K.r;let kx=K.x,ksw=0,voll=g.kol0===1;
+    if(s.kollege==='kommt'){const u=ease((t-g.tk)/LK_KOMMT);kx=lerp(aus,K.x,u);ksw=u>0&&u<1?Math.sin(t*9):0;voll=true}
+    else if(s.kollege==='sagt')voll=voll&&uF<=0;
+    else if(s.kollege==='geht'){const u=ease((t-g.tF-0.2)/LK_GEHT);kx=lerp(K.x,aus,u);ksw=u>0&&u<1?Math.sin(t*9):0}
+    if(kx<aus-0.5){ctx.beginPath();ctx.arc(kx,K.y,K.r,0,6.283);ctx.fillStyle=C.paper;ctx.fill();ctx.strokeStyle=C.ink;ctx.lineWidth=1.5;ctx.stroke();figur(kx,K.y,K.r,1,ksw);
+      if(voll)ladungIn(kx,K.y,-1,K.r*0.55,1);const nm=T('kollege').toUpperCase();ctx.font='8.5px '+C.sans;const nw=ctx.measureText(nm).width/2+nm.length*0.65+2;
+      label(nm,kx>K.x?kx:Math.min(kx,W-nw),K.y-K.r*2.1-7,8.5,C.muted,'center',1.3)}}
   // wo es auf der Linie steht
   ctx.globalAlpha=0.55*aF;ctx.strokeStyle=C.plus;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(xf,q.y,10,0,6.283);ctx.stroke();
   ctx.strokeStyle=C.muted;ctx.lineWidth=1;ctx.setLineDash([3,5]);ctx.beginPath();ctx.moveTo(xf,q.y+13);ctx.lineTo(xf,q.yF-2.1*r-5);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;
@@ -297,20 +312,28 @@ function drawLinie(){
   ctx.globalAlpha=aF;ctx.beginPath();ctx.arc(xf,q.yF,r,0,6.283);ctx.fillStyle=C.paper;ctx.fill();ctx.strokeStyle=C.ink;ctx.lineWidth=1.5;ctx.stroke();
   figur(xf,q.yF,r,1,sw);ctx.globalAlpha=1;
   // was es in sich trägt
-  const rc=r*0.5;
-  if(s.trifft){const u=ease((nach-1)/1.2);
+  // Steht der Kollege neben dir, kommt die Ladung aus seinem Bauch, von Männchen zu Männchen. Sonst kommt sie von rechts außen.
+  const rc0=r*g.gr0,rc=r*(s.klein?0.3:0.5);
+  if(s.trifft){const u=uF;
     if(s.kommt){const a=ease((nach-0.1)/0.4)*(1-ease((nach-2)/0.5));if(a>0.01){ctx.globalAlpha=a;ctx.font='italic 15px '+C.serif;ctx.fillStyle=C.ink;ctx.textAlign='right';ctx.fillText(s.kommt,W-4,q.y+48);ctx.globalAlpha=1}}
-    if(u<=0)ladungIn(xf,q.yF,g.ch0,rc,aF);
-    else if(u<1)ladungIn(lerp(W+12,xf,u),lerp(q.y+40,q.yF,u),s.trifft,rc*lerp(1.5,1,u),1);
-    else ladungIn(xf,q.yF,s.trifft,rc,1)}
-  else if(s.wird){const u=ease((nach-0.4)/1);ladungIn(xf,q.yF,g.ch0,rc,1-u);ladungIn(xf,q.yF,s.wird,rc,u)}
-  else ladungIn(xf,q.yF,g.ch0,rc,aF);
-  // die Zeile unter dem Männchen: das Wort darüber, darunter was es fühlt, denkt oder sieht
-  const n=s.blasen.length;
-  if(n&&t>=g.tb){let i=0,a=ease((t-g.tb)/0.4);
-    if(s.gruebeln&&n>1&&!reduce){const u=(t-g.tb)/1.9,loc=(u%1)*1.9;i=Math.floor(u)%n;a=ease(loc/0.35)*(1-ease((loc-1.55)/0.3))}
-    const bl=s.blasen[i];ctx.font='italic 15px '+C.serif;const hw=ctx.measureText(bl.text).width/2,bx=Math.max(hw+4,Math.min(W-hw-4,x1));
-    ctx.globalAlpha=a;label(bl.tag,bx,fy+22,9.5,C.muted,'center',1.5);ctx.globalAlpha=1;momentText(bl.text,bx,fy+38,a)}
+    if(u<1)ladungIn(xf,q.yF,g.ch0,rc0,aF);
+    if(u>0&&u<1){if(K)ladungIn(lerp(K.x,xf,u),lerp(K.y,q.yF,u)-Math.sin(Math.PI*u)*14,s.trifft,lerp(K.r*0.55,rc,u),1);
+      else ladungIn(lerp(W+12,xf,u),lerp(q.y+40,q.yF,u),s.trifft,rc*lerp(1.5,1,u),1)}
+    if(u>=1)ladungIn(xf,q.yF,s.trifft,rc,1)}
+  else if(s.wird){const u=ease((nach-0.4)/1);ladungIn(xf,q.yF,g.ch0,rc0,1-u);ladungIn(xf,q.yF,s.wird,rc,u)}
+  else ladungIn(xf,q.yF,g.ch0,rc0,aF);
+  // die Zeile unter dem Männchen: das Wort darüber, darunter was es fühlt, denkt oder sieht.
+  // Mehrere Zeilen ohne Grübeln kommen nacheinander und bleiben stehen, jede unter ihrer Station (Denken links, Fühlen rechts).
+  const n=s.blasen.length,zeile=(bl,x,a)=>{if(a<=0.01)return;ctx.font='italic 15px '+C.serif;const hw=ctx.measureText(bl.text).width/2,bx=Math.max(hw+4,Math.min(W-hw-4,x));
+    ctx.globalAlpha=a;label(bl.tag,bx,fy+22,9.5,C.muted,'center',1.5);ctx.globalAlpha=1;momentText(bl.text,bx,fy+38,a)};
+  const ortVon=bl=>bl.tag==='DENKEN'?q.st.denken:bl.tag==='FÜHLEN'?q.st.gefuehl:x1;
+  // die Zeile vom Schritt davor steht noch, bis die neue kommt
+  if(g.bl0&&t<g.tb)zeile(g.bl0,ortVon(g.bl0),1-ease((t-g.tb+0.5)/0.4));
+  if(n&&t>=g.tb){
+    if(s.gruebeln){let i=0,a=ease((t-g.tb)/0.4);
+      if(n>1&&!reduce){const u=(t-g.tb)/1.9,loc=(u%1)*1.9;i=Math.floor(u)%n;a=ease(loc/0.35)*(1-ease((loc-1.55)/0.3))}
+      zeile(s.blasen[i],x1,a)}
+    else s.blasen.forEach((bl,i)=>zeile(bl,n>1?ortVon(bl):x1,ease((t-g.tb-i*L_ZEILE)/0.4)))}
 }
 
 /* Übergang von der beschrifteten Linie zur Zeitlinie (in drawSpeicher): die Platten ziehen sich um die Ladung zusammen,
@@ -327,7 +350,7 @@ function drawVonLinie(k,yN){const q=linieGeo(),pL=lerp(q.xL,cx-CLOSED,k),pR=lerp
   figur(cx+sx,cy,R,1-ease(k/0.7))}
 // die Ladung wandert aus dem Bauch hoch auf die Linie, zwischen die Platten
 function vlLadung(k,yN){const q=linieGeo(),u=ease((k-0.1)/0.75);
-  chargeDot(lerp(q.st.gefuehl,cx,u),lerp(q.yF,yN,u),MOM[SLIDES[cur].auto[0]].sign,lerp(q.r*0.5/8.5,1.25,u))}
+  chargeDot(lerp(linieEndeX(q),cx,u),lerp(q.yF,yN,u),MOM[SLIDES[cur].auto[0]].sign,lerp(q.r*0.5/8.5,1.25,u))}
 
 // liegt über drawSpeicher: Zeitlinie, Beschriftung und Pegel treten zurück, der Speicher bekommt Kopf, Arme und Beine
 function huelleMalen(h){huelleMass(h);ctx.font='italic 16px '+C.serif;

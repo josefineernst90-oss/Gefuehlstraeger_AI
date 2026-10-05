@@ -1,6 +1,12 @@
 # Stand
 
-Version 70, 5. Oktober 2026. 68 aktive Schritte, 11 ausgeschaltet.
+Version 71, 5. Oktober 2026. 67 aktive Schritte, 13 ausgeschaltet.
+
+## Eröffnung (nach der Karte, vor dem Kapitel Ladung)
+
+`e1` der Kollege kommt herein, ein Minus im Bauch, kein Wort; ein kleines Minus geht zu dir, „irgendwas stimmt nicht“ · `es` der Satz: er gibt sein Minus ganz ab, erst „unangenehm“ beim Fühlen, dann die Worte beim Denken · `e2` der Kollege geht, du grübelst auf dem Heimweg, kein Satz unter der Bühne · `e3` und `e4` ausgeschaltet (Film, „leichter“)
+
+Danach im Kapitel Ladung: `lz` die Linie zieht sich um ein Minus zusammen, der Übergang beginnt beim Denken · `lw` dieselbe Situation in der Zeit: erst die Stimmung beim Kollegen, dann sein Satz, zwei Minus fallen
 
 ## Schritte nach dem Kapitel Bindung
 
@@ -26,6 +32,8 @@ Version 70, 5. Oktober 2026. 68 aktive Schritte, 11 ausgeschaltet.
 
 ## Offen
 
+- Neu in Version 71: die Eröffnung zeigt, was im System passiert, wenn erst die Stimmung beim Kollegen ankommt und dann sein Satz (Kapitel Taktversatz). Vorher als Standbilder gezeigt und so bestellt. Sie wird nicht mehr aufgelöst: Film und „leichter“ (`e3`, `e4`) sind ausgeschaltet, der Film kommt erst abends im Kapitel Bindung. Der Satz „Zu viel Denken nimmt uns das Bild selbst.“ ist gestrichen, unter dem Grübeln steht nichts. Urteil zum bewegten Bild steht aus. Zu prüfen: die Dauer von `e1` (etwa 13 Sekunden mit dem Klappen) · der Kollege ist auf dem Handy kleiner als du · beim Denken stehen die Worte des Kollegen selbst · im Kapitel Ladung fällt in `lw` kein Plus mehr, das erste Plus bringt das Lächeln · das Minus der Stimmung bleibt im Kapitel Ladungsträger ohne Adresse lose im Speicher.
+- Verworfen (nur als Standbilder gezeigt, nie gebaut): ein Signal, das auf der Linie vom Gefühl zum Denken läuft, mit der Strecke dazwischen als Taktversatz.
 - Neu in Version 70: Namensgebung 2/2 (`n3`), vorher als Standbilder gezeigt und so bestellt. Urteil zum gebauten Bild steht aus. Zu prüfen: die Dauer (etwa 20 Sekunden bis zum ersten Satz, der letzte Satz kommt 5,5 Sekunden später von selbst) · die Insel treibt von selbst, im Kapitel Perspektiven tippt man dafür auf die eigene Insel · der erste Teil des Insel-Satzes steht schon in `p0`, hier steht nur der zweite Teil („Weil du es jetzt anders indexierst.“) · die Freundin liegt hinter dem Kollegen, wie in `p0` der Chef.
 - „in Sport stecken“ (Version 69) ist abgenommen.
 - Neu in Version 69: „in Sport stecken“ (`ud`) nach dem Bild der Autorin: das Männchen sitzt auf dem Rad, zwei Plus fallen lose in den Speicher, am nächsten Morgen sind sie verpufft und der Moment ist noch belegt. Urteil steht aus.
