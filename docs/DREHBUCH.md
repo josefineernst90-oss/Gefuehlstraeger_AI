@@ -345,8 +345,10 @@ DER STAU (Bühne „fokus“, Kapitel Überschuss und Namensgebung). Unter deine
                         dicht      die Platten unter deinen Füßen schließen sich · Zeichen und Punkte ziehen blass an dir vorbei, im Speicher kommt nichts an
                         weiter     von links kommt ein Mensch (data-wer ist seine Beschriftung) · deine Ladung springt aus dem Moment zu ihm,
                                    von Männchen zu Männchen · er geht geladen weiter
-                        sport      die Ladung im Moment verpufft, ohne irgendwo anzukommen
-                      Nach weiter und sport steht data-sagt über der Zeitlinie (am nächsten Morgen), und der Moment ist wieder so belegt wie vorher.
+                        sport      du steigst aufs Rad, Moment und Stau treten zurück · die Zeitlinie läuft, aus deinem Bauch fallen zwei Plus lose
+                                   in den Speicher, der Pegel steigt · du steigst ab · data-sagt steht über der Zeitlinie ·
+                                   die losen Plus verpuffen, Moment und Stau stehen wieder da wie vorher
+                      Nach weiter steht data-sagt über der Zeitlinie (am nächsten Morgen), und der Moment ist wieder so belegt wie vorher.
                       Der Text des .weg steht danach unter der Bühne, nach allen Knöpfen des Schritts kommt .satz data-id="alle" dazu. Erledigt nach dem ersten.
   data-akt="ueben"    der Stau steht. Ein Knopf (data-knopf), jeder Tipp ist eine Runde: <p class="runde" data-zeilen>, ihr Text steht danach unter der Bühne.
                       Der <div class="moment"> des Blocks hat mehrere Zeilen (die erste ist die, die im Stau schon dasteht). Runde für Runde braucht er weniger davon

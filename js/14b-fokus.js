@@ -2,7 +2,7 @@
    Das Bild vom Türrahmen im Kapitel Bindung, mit eigenem Stand: was im Speicher liegt, ergibt sich aus dem Schritt in data-stand
    (Bühne „zwei“: die Träger der unteren Bahn · Bühne „fokus“: sein Stand und alles, was seine Momente bewirken).
    Die Momente stehen als <div class="moment"> im Block, wie auf der Speicher-Bühne. Ohne data-knopf laufen sie von selbst, mit data-knopf nach dem Tipp. */
-const FK_LOSE=[[-0.66,-0.26],[0.68,-0.3],[-0.62,0.3],[0.64,0.28]];   // Plätze für lose Ladungen, in Speicher-Radien
+const FK_LOSE=[[-0.66,-0.26],[0.68,-0.3],[0,-0.86],[0,0.86]];   // Plätze für lose Ladungen, in Speicher-Radien
 function fokusWirkt(q,sp){if(!sp||!sp.sign)return;const ch={s:sp.sign,big:sp.big};
   if(!sp.addr){q.lose.push(ch);return}
   let c=q.c.find(x=>x.id===sp.addr);if(!c){c={id:sp.addr,label:sp.addrLabel||sp.addr,charges:[]};q.c.push(c)}c.charges.push(ch)}
@@ -19,7 +19,7 @@ function fokusStand(s){const v=SLIDES.find(x=>x.id===s.stand&&x!==s),q={c:[],los
     else if(v.akt==='wieder'&&K){const a=tr('neu'),b=tr(MOM[K.dann].addr);if(a)a.charges.push({s:MOM[K.mom].sign});if(b)b.charges.push({s:MOM[K.dann].sign});q.schild=''}
     else{v.alte.forEach(a=>q.c.push({id:a.id,label:a.label,charges:zeichen(a.lad)}));v.momente.forEach(id=>fokusWirkt(q,MOM[id]))}}
   return q}
-function fokusPegel(F){let p=0,n=0;const z=ch=>{const w=ch.big?2:1;ch.s>0?p+=w:n+=w};F.c.forEach(c=>c.charges.forEach(z));F.lose.forEach(z);return (p-n)/(p+n+5)}
+function fokusPegel(F){let p=0,n=0;const z=ch=>{const w=(ch.big?2:1)*(ch.a===undefined?1:ch.a);ch.s>0?p+=w:n+=w};F.c.forEach(c=>c.charges.forEach(z));F.lose.forEach(z);return (p-n)/(p+n+5)}
 const fkX0=()=>cx+RM*1.9+3,FK_AB=62;   // hier bleibt ein Zeichen neben dir stehen · so weit dahinter wartet das nächste
 function fokusStart(s,prev){const st=stOf(s),q=fokusStand(s),i=SLIDES.indexOf(s),v=SLIDES[i-1];st.fk={};st.wege={};st.name=0;st.runde=0;
   const F=S.fk={c:q.c.map(c=>({id:c.id,label:c.label,charges:c.charges,a:1,y:null})),lose:q.lose,lv:0,M:null,fall:null,echo:null,gl:[],weg:0,w0:0,geht:false,
@@ -55,7 +55,7 @@ function fkGeh(F,add,dur,dist,neu){let D=0,s0=0;
 function fkPunkte(k){const u0=fkX0()+10,xs=[];let c=fkX0()+7,ab=7;for(let i=0;i<70;i++){const u=u0+i*14;xs.push(lerp(u,c,k));c+=ab;ab=Math.min(15,ab*1.09)}return xs}
 function fkStau(F){const K=F.kette,sp=MOM[K.mom],ln=sp.lines[0],x0=fkX0();
   F.gl=[{x:x0,al:1,e:{art:'wort',schild:K.schild}},{x:x0+FK_AB,al:1,e:{art:'wort',schild:K.schild2}}];
-  F.pk={a:1,k:1,front:0,shift:0};F.wort=null;F.puff=0;F.fall=null;F.rutsch=null;F.gast=null;F.wurf=null;F.fall2=null;
+  F.pk={a:1,k:1,front:0,shift:0};F.wort=null;F.puff=0;F.fall=null;F.rutsch=null;F.gast=null;F.wurf=null;F.fall2=null;F.rad=0;F.rollt=false;F.geht=false;
   F.M={w:halfWidth(ln.text),pa:1,text:ln.text,tag:ln.tag,ta:1,ds:0.8,dx:1,sign:sp.sign,big:false}}
 // data-akt="stau": der Stau entsteht. Kommt man direkt aus dem Schritt davor, gehen zuerst die Platten noch einmal auf und bleiben offen
 // (die Auflösung bleibt oben), erst dann kommt der Text. Dann: das Zeichen kommt · der Moment nimmt es auf · das nächste kommt und muss warten ·
@@ -92,8 +92,9 @@ function fkNach(F,sp,add){const ln=sp.lines[0];fkGeh(F,add,0.9,()=>FK_AB,null);
 //   lose       das wartende Zeichen kommt zu dir, kein Moment geht für es auf: seine Ladung fällt ohne Adresse in den Speicher und bleibt dort liegen
 //   dicht      die Platten unter deinen Füßen schließen sich · Zeichen und Punkte ziehen blass an dir vorbei, im Speicher kommt nichts an
 //   weiter     von links kommt ein Mensch (data-wer) · deine Ladung springt aus dem Moment zu ihm, von Männchen zu Männchen · er geht geladen weiter
-//   sport      die Ladung im Moment verpufft, ohne irgendwo anzukommen
-// Nach weiter und sport steht data-sagt über der Zeitlinie (am nächsten Morgen), und der Moment ist wieder so belegt wie vorher.
+//   sport      du steigst aufs Rad, Moment und Stau treten zurück · die Zeitlinie läuft, aus deinem Bauch fallen zwei Plus lose in den Speicher, der Pegel steigt ·
+//              du steigst ab · data-sagt steht über der Zeitlinie · die losen Plus verpuffen, Moment und Stau stehen wieder da wie vorher
+// Nach weiter steht data-sagt über der Zeitlinie (am nächsten Morgen), und der Moment ist wieder so belegt wie vorher.
 // Der Text des .weg steht danach unter der Bühne, nach allen Knöpfen des Schritts kommt .satz data-id="alle" dazu.
 function fokusWeg(s,w){const F=S.fk,st=stOf(s);if(!F||!F.fertig||F.laeuft)return;const K=F.kette;
   F.c=F.c0.map(c=>({...c,charges:c.charges.slice()}));F.lose=F.lose0.slice();fkStau(F);say('');S.ev=[];
@@ -116,8 +117,17 @@ function fokusWeg(s,w){const F=S.fk,st=stOf(s);if(!F||!F.fertig||F.laeuft)return
     add(0.3,null,()=>{F.wurf=null;G.tint=1});
     add(0.5,k=>M.pa=1-k);add(0.3);
     add(1.3,k=>G.x=lerp(halt(),-40,k),()=>{G.geht=true})}
-  else if(w.id==='sport'){add(1.0,k=>{F.puff=k;M.ta=1-k;M.ds=0.8*(1-k);M.pa=1-k});add(0.6,null,()=>{F.puff=0})}
-  if(w.id==='weiter'||w.id==='sport'){let N=null;add(0.6);
+  else if(w.id==='sport'){   // aufs Rad: der Kopf tritt zurück, die Bewegung lädt ein paar Plus, lose. Am nächsten Morgen sind sie verpufft, der Moment ist noch belegt.
+    const blass=k=>{const a=lerp(1,0.3,k);M.pa=a;M.ta=a;P.al=a;F.gl.forEach(g=>g.al=a)};M.blass=true;
+    const plus=()=>{add(0.9,k=>F.fall2.k=k,()=>{F.fall2={k:0,sign:1,j:F.lose.length,bauch:true}});add(0.15,null,()=>{F.lose.push({s:1,a:1,sport:true});F.fall2=null})};
+    add(0.7,k=>{F.rad=k;blass(k)});add(0.2,null,()=>{F.rollt=true;F.geht=true});
+    add(1.0);plus();add(0.7);plus();add(0.9);
+    add(0.3,null,()=>{F.rollt=false;F.geht=false});
+    add(0.6,k=>F.rad=1-k);add(0.4);
+    add(0.5,k=>F.wort.a=k,()=>{F.wort={text:w.sagt||'',a:0}});add(0.7);
+    add(1.4,k=>{blass(1-k);F.lose.forEach(q=>{if(q.sport)q.a=1-k})});
+    add(0.1,null,()=>{F.lose=F.lose.filter(q=>!q.sport);M.blass=false})}
+  if(w.id==='weiter'){let N=null;add(0.6);
     add(0.5,k=>F.wort.a=k,()=>{F.wort={text:w.sagt||'',a:0};F.gast=null});add(0.8);
     add(1.1,k=>{N.pa=k;N.ta=k;N.ds=0.8*k},()=>{const g=F.gl,pk=F.pk;fkStau(F);F.gl=g;F.pk=pk;F.wort={text:w.sagt||'',a:1};N=F.M;N.pa=0;N.ta=0;N.ds=0})}
   add(0.4);
@@ -224,6 +234,7 @@ function fokusTakt(s,dt,liest){const F=S.fk,n=F.c.length,cs=F.cs=Math.min(24,1.3
   F.zs=reduce||F.zs===undefined?zz:F.zs+(zz-F.zs)*Math.min(1,dt*5);   // liegen viele Träger im Speicher, werden sie kleiner gezeichnet
   F.c.forEach((c,i)=>{const ty=cy0+(i-(n-1)/2)*cs;c.y=c.y==null||reduce?ty:c.y+(ty-c.y)*Math.min(1,dt*6)});
   const z=fokusPegel(F);F.lv=reduce?z:F.lv+(z-F.lv)*Math.min(1,dt*3);
+  if(F.rollt&&!reduce)F.weg+=150*dt;   // auf dem Rad läuft die Zeitlinie unter dir durch
   if(!liest)ablauf(F,dt)}
 function drawFokus(){const s=SLIDES[cur],F=S.fk;if(!F)return;const U=F.ue,yT=yL-22;
   // die zwei Bahnen des Schritts davor: die obere tritt zurück, die untere rückt nach oben
@@ -236,7 +247,7 @@ function drawFokus(){const s=SLIDES[cur],F=S.fk;if(!F)return;const U=F.ue,yT=yL-
   const P=F.pk;
   if(P&&P.a>0.01&&P.durch){   // dicht gemacht: die Punkte ziehen blass an dir vorbei
     ctx.globalAlpha=0.4*P.a;ctx.fillStyle=C.ink;fkPunkte(P.k).forEach(x=>{x-=P.shift;if(x<-3||x>W+3)return;ctx.beginPath();ctx.arc(x,yT,2.8,0,6.283);ctx.fill()});ctx.globalAlpha=1}
-  else if(P&&P.a>0.01){const von=Math.max(fkX0()+2,P.front);ctx.globalAlpha=P.a;ctx.fillStyle=C.bg;ctx.fillRect(von,yT-3,W,6);ctx.fillStyle=C.ink;
+  else if(P&&P.a>0.01){const von=Math.max(fkX0()+2,P.front);ctx.globalAlpha=P.a;ctx.fillStyle=C.bg;ctx.fillRect(von,yT-3,W,6);ctx.fillStyle=C.ink;ctx.globalAlpha=P.a*(P.al===undefined?1:P.al);
     fkPunkte(P.k).forEach(x=>{x-=P.shift;if(x<von+1||x>W+3)return;ctx.beginPath();ctx.arc(x,yT,2.8,0,6.283);ctx.fill()});ctx.globalAlpha=1}
   F.gl.forEach(q=>zeichenMalen(q,yT,true,F.geht&&!reduce,0));
   // ein Wort über der Zeitlinie (Schlaf, am nächsten Morgen)
@@ -270,28 +281,34 @@ function drawFokus(){const s=SLIDES[cur],F=S.fk;if(!F)return;const U=F.ue,yT=yL-
   const ende=c=>[cx+c.tot*zs/2+(c.charges.length?8:-6),c.y];   // hier kommt bei einem Träger die nächste Ladung an
   F.lose.forEach((q,j)=>{const p=FK_LOSE[j%FK_LOSE.length];let x=cx+p[0]*R0,y=cy0+p[1]*R0;
     if(F.rutsch&&F.rutsch.j===j&&F.rutsch.c){const e=ende(F.rutsch.c),k=ease(F.rutsch.k);x=lerp(x,e[0],k);y=lerp(y,e[1],k)}
-    chargeDot(x,y,q.s,q.big?1.1:0.85)});
+    chargeDot(x,y,q.s,q.big?1.1:0.85,q.a)});
   // eine Ladung wandert von einem Träger zu dem mit dem neuen Namen
   if(F.zug){const Z=F.zug,a=ende(Z.von),b=ende(Z.zu),k=ease(Z.k);chargeDot(lerp(a[0],b[0],k)+Math.sin(Math.PI*k)*22,lerp(a[1],b[1],k),Z.ch.s,0.85)}
   // der Moment unter deinen Füßen
   const M=F.M;
   if(M){plates(cx,yL,M.w,M.pa);
     if(M.text){if(M.tag){ctx.globalAlpha=M.ta;label(M.tag,cx,yL-8,9.5,C.muted,'center',1.5);ctx.globalAlpha=1;momentText(M.text,cx,yL+8,M.ta)}else momentText(M.text,cx,yL,M.ta)}
-    if(M.ds>0.01)chargeDot(cx+(M.w+15)*M.dx,yL,M.sign,M.ds*(M.big?1.3:1))}
+    if(M.ds>0.01)chargeDot(cx+(M.w+15)*M.dx,yL,M.sign,M.ds*(M.big?1.3:1),M.blass?M.pa:undefined)}
   // das Echo: der gerufene Träger schickt seine Ladung zu dir hoch
   if(F.echo){const E=F.echo,k=ease(E.k);chargeDot(lerp(cx+E.c.tot/2-6,cx,k),lerp(E.c.y,yL,k),E.sign,0.9,0.75)}
   // die Ladung fällt in den Speicher: an ihre Adresse oder lose an einen freien Platz
   if(F.fall){const f=F.fall,k=f.k,p=FK_LOSE[f.j%FK_LOSE.length],tx=f.c?cx+f.c.tot*zs/2+(f.c.charges.length?8:-6):cx+p[0]*R0,ty=f.c?f.c.y:cy0+p[1]*R0;
     chargeDot(lerp(cx,tx,ease(k)),lerp(yL,ty,k*k),f.sign,lerp(f.s0,f.big?1.1:0.85,k))}
   // eine Ladung fällt von der Zeitlinie lose in den Speicher, ohne dass ein Moment für sie aufgeht
-  if(F.fall2){const f=F.fall2,p=FK_LOSE[f.j%FK_LOSE.length];chargeDot(lerp(cx,cx+p[0]*R0,ease(f.k)),lerp(yT,cy0+p[1]*R0,f.k*f.k),f.sign,0.85)}
+  const hoch=8*(F.rad||0),fyD=fy-hoch;   // auf dem Rad sitzt du ein Stück höher
+  if(F.fall2){const f=F.fall2,p=FK_LOSE[f.j%FK_LOSE.length];chargeDot(lerp(cx,cx+p[0]*R0,ease(f.k)),lerp(f.bauch?fyD:yT,cy0+p[1]*R0,f.k*f.k),f.sign,0.85)}
   // ein anderer Mensch auf deiner Zeitlinie: deine Ladung springt zu ihm hinüber, von Männchen zu Männchen
   const G=F.gast;
   if(G){ctx.beginPath();ctx.arc(G.x,fy,RM,0,6.283);ctx.fillStyle=C.paper;ctx.fill();if(G.tint>0.01){ctx.globalAlpha=0.6*G.tint;ctx.fillStyle=C.minus;ctx.fill();ctx.globalAlpha=1}
     ctx.strokeStyle=C.ink;ctx.lineWidth=1.5;ctx.stroke();figur(G.x,fy,RM,1,G.geht&&!reduce?Math.sin(time*8):0);
     if(G.name)label(G.name.toUpperCase(),G.x,fy-RM*2.1-7,8.5,C.muted,'center',1.3)}
   if(F.wurf&&G){const k=F.wurf.k;chargeDot(lerp(F.wurf.x,G.x,ease(k)),lerp(yL,fy,k)-Math.sin(Math.PI*k)*30,F.wurf.sign,0.9)}
+  // das Rad: zwei Räder auf der Zeitlinie, Rahmen und Lenker
+  if(F.rad>0.01){const yN=yT-7,rw=7,w=reduce||!F.rollt?0.7:time*9;ctx.globalAlpha=F.rad;ctx.strokeStyle=C.ink;ctx.lineWidth=1.4;ctx.lineJoin='round';
+    [-12,12].forEach(d=>{ctx.beginPath();ctx.arc(cx+d,yN,rw,0,6.283);ctx.fillStyle=C.bg;ctx.fill();ctx.stroke();
+      ctx.beginPath();ctx.moveTo(cx+d-Math.cos(w)*rw,yN-Math.sin(w)*rw);ctx.lineTo(cx+d+Math.cos(w)*rw,yN+Math.sin(w)*rw);ctx.stroke()});
+    ctx.beginPath();ctx.moveTo(cx-12,yN);ctx.lineTo(cx-3,yN-9);ctx.lineTo(cx+9,yN-9);ctx.lineTo(cx+12,yN);ctx.moveTo(cx+9,yN-9);ctx.lineTo(cx+11,yN-15);ctx.lineTo(cx+16,yN-15);ctx.stroke();ctx.globalAlpha=1}
   // du
-  ctx.beginPath();ctx.arc(cx,fy,r,0,6.283);ctx.fillStyle=C.paper;ctx.fill();
+  ctx.beginPath();ctx.arc(cx,fyD,r,0,6.283);ctx.fillStyle=C.paper;ctx.fill();
   ctx.globalAlpha=Math.min(0.28,Math.abs(F.lv)*0.4);ctx.fillStyle=F.lv>0?C.plus:C.minus;ctx.fill();ctx.globalAlpha=1;
-  ctx.strokeStyle=C.ink;ctx.lineWidth=1.5;ctx.stroke();figur(cx,fy,r,1,F.geht&&!reduce?Math.sin(time*8):0)}
+  ctx.strokeStyle=C.ink;ctx.lineWidth=1.5;ctx.stroke();figur(cx,fyD,r,1,F.geht&&!reduce?Math.sin(time*8):0)}

@@ -1,6 +1,6 @@
 # Stand
 
-Version 68, 5. Oktober 2026. 67 aktive Schritte, 11 ausgeschaltet.
+Version 69, 5. Oktober 2026. 67 aktive Schritte, 11 ausgeschaltet.
 
 ## Schritte nach dem Kapitel Bindung
 
@@ -26,6 +26,7 @@ Version 68, 5. Oktober 2026. 67 aktive Schritte, 11 ausgeschaltet.
 
 ## Offen
 
+- Neu in Version 69: „in Sport stecken“ (`ud`) nach dem Bild der Autorin: das Männchen sitzt auf dem Rad, zwei Plus fallen lose in den Speicher, am nächsten Morgen sind sie verpufft und der Moment ist noch belegt. Urteil steht aus.
 - Neu in Version 68: die drei Knöpfe der alten Überschuss-Seite sind auf drei Seiten aufgeteilt, mit der Deutung der Autorin (`u2`, `uk`, `ud`). Die alte Fassung erklärte mit Worten mehr als mit dem Bild. In `u3` kommt vor dem Rutschen die Frage „warum bin ich so gereizt?“. Urteil steht aus.
 - Verworfen (nur als Standbilder gezeigt, nie gebaut): eine Seite, auf der sich im Überschuss der Steg „Scheißtag“ wieder bildet.
 - Aus Version 67: die Kapitel Überschuss und Namensgebung, alle auf der Bühne `fokus`. Urteil steht aus. Von der Autorin: Aufmerksamkeit ohne Focus, alles ist relevant (gepunkteter Fußboden) · einsortieren ist nur schwierig, wenn erst geprüft werden muss, wo etwas hingehört. Weggelassen, mit ihr abgestimmt: der einzelne zu große Impuls und das Spiegelbild.
