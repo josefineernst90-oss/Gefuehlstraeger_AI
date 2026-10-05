@@ -362,6 +362,11 @@ DER STAU (Bühne „fokus“, Kapitel Überschuss und Namensgebung). Unter deine
                       dann .satz data-id="mehr". Für die folgenden Schritte gilt der zuletzt gewählte Name (ohne Wahl der erste im Block).
   data-akt="wieder"   dieselben zwei Zeichen kommen noch einmal. Die Platten schließen sich jedes Mal gleich um die Ladung, ohne Zeilen, und sie fällt an ihre Adresse
                       (die erste an den Träger mit dem neuen Namen). Die Zeitlinie läuft weiter, nichts staut sich. Danach .satz data-id="an".
+  data-akt="insel"    was der neue Name bewirkt, von oben auf das Wasser wie auf der Bühne „sicht“. data-stand zeigt auf den Schritt mit data-akt="name".
+                      Eins nach dem anderen: Pegel und Zeitlinie gehen · der Speicher wird zu deiner Insel, der Träger mit dem gewählten Namen bleibt bei ihr liegen ·
+                      die Insel des Kollegen (.satz data-id="kollege") und der Kanal zu ihm · dein Blick geht an ihm vorbei, dahinter der Schatten (.satz data-id="verdeckt") ·
+                      dein Gedanke (.satz data-id="denken") · deine Insel treibt von selbst, hinter dem Kollegen kommt die Insel aus .satz data-id="freundin" zum Vorschein ·
+                      ihr Kanal zu dir, ihre Zeile (.satz data-id="stimme") · .satz data-id="anders", 5,5 Sekunden später .satz data-id="an".
 Liegen mehr als sieben Träger im Speicher, werden sie kleiner gezeichnet.
 
 BÜHNE „FILM“ (data-szene="film" am <section>): links oben du, darunter dein gerahmter Satz (.satz data-id="satz"). Ablauf, eins nach dem anderen:

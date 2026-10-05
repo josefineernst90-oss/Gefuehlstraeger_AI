@@ -1,6 +1,6 @@
 # Stand
 
-Version 69, 5. Oktober 2026. 67 aktive Schritte, 11 ausgeschaltet.
+Version 70, 5. Oktober 2026. 68 aktive Schritte, 11 ausgeschaltet.
 
 ## Schritte nach dem Kapitel Bindung
 
@@ -22,16 +22,18 @@ Version 69, 5. Oktober 2026. 67 aktive Schritte, 11 ausgeschaltet.
 
 **Überschuss**: `u1` der Stau: die Platten bleiben offen, der Anruf belegt den Moment, die Nachricht wartet, aus den Strichen der Zeitlinie werden Punkte · `u2` Zufluss drosseln: keine Bedeutung geben, unbenannt lassen, dicht machen · `uk` Kapazität erhöhen: dreimal üben, vier Zeilen, zwei, keine · `ud` Hauptsache Druck raus: weitergeben, in Sport stecken, am nächsten Morgen ist alles wie vorher · `u3` du suchst einen Grund, die lose Ladung rutscht zum nächstbesten Träger (Kollege)
 
-**Namensgebung**: `n1` ein Name als neuer Eintrag: ihre Sorge, nicht meins, Freundin · `n2` ausgeschaltet (sein Bild steht jetzt bei `uk`)
+**Namensgebung**: `n1` ein Name als neuer Eintrag: ihre Sorge, nicht meins, Freundin · `n3` was der Name bewirkt: der Speicher wird zu deiner Insel, sie treibt, hinter dem Kollegen kommt die Freundin zum Vorschein, zum Schluss „Der Name ist nicht die Wahrheit, er ist die Brücke“ · `n2` ausgeschaltet (sein Bild steht jetzt bei `uk`)
 
 ## Offen
 
+- Neu in Version 70: Namensgebung 2/2 (`n3`), vorher als Standbilder gezeigt und so bestellt. Urteil zum gebauten Bild steht aus. Zu prüfen: die Dauer (etwa 20 Sekunden bis zum ersten Satz, der letzte Satz kommt 5,5 Sekunden später von selbst) · die Insel treibt von selbst, im Kapitel Perspektiven tippt man dafür auf die eigene Insel · der erste Teil des Insel-Satzes steht schon in `p0`, hier steht nur der zweite Teil („Weil du es jetzt anders indexierst.“) · die Freundin liegt hinter dem Kollegen, wie in `p0` der Chef.
+- „in Sport stecken“ (Version 69) ist abgenommen.
 - Neu in Version 69: „in Sport stecken“ (`ud`) nach dem Bild der Autorin: das Männchen sitzt auf dem Rad, zwei Plus fallen lose in den Speicher, am nächsten Morgen sind sie verpufft und der Moment ist noch belegt. Urteil steht aus.
 - Neu in Version 68: die drei Knöpfe der alten Überschuss-Seite sind auf drei Seiten aufgeteilt, mit der Deutung der Autorin (`u2`, `uk`, `ud`). Die alte Fassung erklärte mit Worten mehr als mit dem Bild. In `u3` kommt vor dem Rutschen die Frage „warum bin ich so gereizt?“. Urteil steht aus.
 - Verworfen (nur als Standbilder gezeigt, nie gebaut): eine Seite, auf der sich im Überschuss der Steg „Scheißtag“ wieder bildet.
 - Aus Version 67: die Kapitel Überschuss und Namensgebung, alle auf der Bühne `fokus`. Urteil steht aus. Von der Autorin: Aufmerksamkeit ohne Focus, alles ist relevant (gepunkteter Fußboden) · einsortieren ist nur schwierig, wenn erst geprüft werden muss, wo etwas hingehört. Weggelassen, mit ihr abgestimmt: der einzelne zu große Impuls und das Spiegelbild.
 - Zu prüfen: der Arbeitskonflikt ist eine Nachricht vom Kollegen (nicht vom Chef, damit die Adresse schon im Speicher liegt) · die drei Namen in `n1` · im Buch ist das Beispiel der Namensgebung der Träger Kompetenz, hier die Ladung vom Anruf · acht Träger im Speicher auf dem Handy (sie werden dann kleiner gezeichnet) · Dauer von `u3` (etwa 13 Sekunden).
-- Offen aus dem Buchkapitel Namensgebung: der Wolf im Schafspelz, die Lehrer mit derselben Formel, „Der Name ist nicht die Wahrheit, er ist die Brücke“. Die Autorin nannte danach „die Panik“ (im Buch der Steg mit dem Namen Panik, Kapitel Stegbildung).
+- Aus dem Buchkapitel Namensgebung bewusst nicht auf der Seite: der Wolf im Schafspelz (steckt im Bild von `n1`), die Trends unter neuem Namen und die Lehrer mit derselben Formel (Beispiele für dasselbe). Noch ungeklärt: die Autorin nannte nach der Namensgebung „die Panik“ (im Buch der Steg mit dem Namen Panik, Kapitel Stegbildung).
 
 - Neu in Version 66: das Kapitel Aufmerksamkeit & Focus (`a1`, `a2`), neue Bühne `fokus`. Urteil steht aus. Weggelassen, mit der Autorin abgestimmt: der Wald und die Routine mit dem Akkord. Zu prüfen: der Übergang aus dem Aufräum-Schritt (etwa 7,5 Sekunden), sieben Träger im Speicher auf dem Handy, die Texte oben.
 

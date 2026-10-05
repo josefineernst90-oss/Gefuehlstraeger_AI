@@ -33,6 +33,7 @@ function fokusStart(s,prev){const st=stOf(s),q=fokusStand(s),i=SLIDES.indexOf(s)
   if(s.akt==='stau')fkAktStau(F,add,prev===i-1&&!reduce);
   else if(s.akt==='rutscht')fkAktRutscht(F,add,satzVon(s,'frage'));
   else if(s.akt==='wieder')fkAktWieder(F,add);
+  else if(s.akt==='insel')fkAktInsel(F,add,s);
   else if(!s.akt){
     // die Zeit läuft: das alte Zeichen wandert nach links hinaus, das Zeichen dieses Schritts (data-kommt) kommt von rechts
     if(s.zeichenText)fkGeh(F,add,1.5,()=>W+30-fkX0(),{x:0,al:1,e:{art:'wort',schild:s.zeichenText}});else if(s.geht)fkGeh(F,add,1.5,()=>W+30-fkX0(),null);
@@ -183,6 +184,78 @@ function fkAktWieder(F,add){const K=F.kette;
   fkGeh(F,add,1.4,()=>W+30-fkX0(),{x:0,al:1,e:{art:'wort',schild:K.schild}});direkt(MOM[K.mom],'neu');
   fkGeh(F,add,1.4,()=>W+30-fkX0(),{x:0,al:1,e:{art:'wort',schild:K.schild2}});direkt(MOM[K.dann]);
   fkGeh(F,add,1.3,()=>W,null)}
+/* data-akt="insel": was der neue Name bewirkt, von oben auf das Wasser wie im Kapitel Perspektiven. Beginnt mit dem Speicher des Schritts davor.
+   Eins nach dem anderen: Pegel und Zeitlinie gehen · der Speicher wird zu deiner Insel, der Träger mit dem neuen Namen bleibt bei ihr auf dem Wasser liegen ·
+   die Insel des Kollegen und der Kanal zu ihm · dein Blick geht an ihm vorbei, dahinter liegt der Schatten (.satz data-id="verdeckt") ·
+   dein Gedanke (.satz data-id="denken") · deine Insel treibt, hinter dem Kollegen kommt die Insel aus .satz data-id="freundin" zum Vorschein ·
+   ihr Kanal zu dir, ihre Zeile (.satz data-id="stimme") · .satz data-id="anders", nach der Lesezeit .satz data-id="an".
+   F.ins: k = wie weit der Speicher schon Insel ist · drift = wie weit die Insel getrieben ist (dieselbe Bahn wie auf der Bühne „sicht“) */
+function fkAktInsel(F,add,s){const I=F.ins={on:false,k:0,du:0,ka:0,kk:0,blick:0,nebel:0,da:false,ga:0,drift:0,fk:0,wort:0};
+  add(0.5);
+  add(0.5,k=>F.ue.kE=1-k,()=>{F.ue={zwei:false,kA:0,kB:0,kD:1,kW:0,kE:1,fly:null}});
+  add(0.1,null,()=>{F.ue=null;I.on=true});
+  add(1.7,k=>I.k=ease(k));add(0.3,k=>I.du=k);add(0.3);
+  add(0.5,k=>I.ka=k);add(0.5,k=>I.kk=k);add(0.3);
+  add(0.7,k=>I.blick=k);add(0.6,k=>I.nebel=k);add(0.2,null,()=>{I.da=true});
+  add(0.45,k=>I.ga=k);add(2.2);add(0.3,k=>I.ga=1-k);
+  add(2.6,k=>I.drift=Math.max(0.001,ease(k)));add(0.5);
+  add(0.5,k=>I.fk=k);add(0.5,k=>I.wort=k);add(0.6);
+  if(satzVon(s,'anders')){add(0,null,()=>say(satzVon(s,'anders')));add(5.5)}}
+function fkInselBild(F,s){const I=F.ins,k=I.k,dr=I.drift,yT=yL-22,rm=6.5,f=Math.max(0.9,Math.min(1.3,W/332,H/300)),ox=cx-196*f,oy=Math.max(-50*f,H/2-186*f),
+    bob=q=>reduce?0:Math.sin(time*1.1+q)*1.5,zs=F.zs||1;
+  const K={x:189,y:122+bob(1),r:22},Fr={x:310,y:150+bob(2.3),r:19},wA=lerp(Math.PI,2.049,dr),rA=lerp(125,149.8,dr),D={x:189+Math.cos(wA)*rA,y:122+Math.sin(wA)*rA+bob(4)*k,r:22};
+  [K,Fr,D].forEach(o=>o.my=o.y-o.r-2.3*rm);
+  // die Zeitlinie geht
+  if(k<0.99){ctx.globalAlpha=1-k;ctx.strokeStyle=C.muted;ctx.lineWidth=1.5;ctx.setLineDash([6,8]);ctx.lineDashOffset=F.weg;ctx.beginPath();ctx.moveTo(0,yT);ctx.lineTo(W,yT);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1}
+  ctx.save();ctx.translate(ox,oy);ctx.scale(f,f);
+  const kanal=(a,b,q)=>{if(q<=0.01)return;const dx=b.x-a.x,dy=b.my-a.my,L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L,a0=rm*2.2,l=(L-2*a0)*q;ctx.strokeStyle=C.muted;ctx.lineWidth=1.2;
+    [1,-1].forEach(v=>{ctx.beginPath();ctx.moveTo(a.x+ux*a0-uy*3.2*v,a.my+uy*a0+ux*3.2*v);ctx.lineTo(a.x+ux*(a0+l)-uy*3.2*v,a.my+uy*(a0+l)+ux*3.2*v);ctx.stroke()})};
+  const insel=(o,al)=>{ctx.globalAlpha=al;ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,6.283);ctx.fillStyle=C.paper;ctx.fill();ctx.strokeStyle=C.ink;ctx.lineWidth=1.5;ctx.stroke();ctx.globalAlpha=1};
+  const mann=(o,t,al)=>{ctx.globalAlpha=al;ctx.beginPath();ctx.arc(o.x,o.my,rm,0,6.283);ctx.fillStyle=C.paper;ctx.fill();
+    if(t>0.01){ctx.globalAlpha=al*Math.min(0.85,0.32*t);ctx.fillStyle=C.minus;ctx.fill();ctx.globalAlpha=al}
+    ctx.strokeStyle=C.ink;ctx.lineWidth=1.5;ctx.stroke();figur(o.x,o.my,rm,1,0);ctx.globalAlpha=1};
+  // das Wasser
+  ctx.strokeStyle=C.minus;ctx.lineWidth=1.3;ctx.globalAlpha=0.45*k;ctx.lineCap='round';
+  [[38,62],[322,44],[30,214],[262,262],[330,290],[190,318],[22,282],[336,112]].forEach(([x,y],i)=>{ctx.beginPath();
+    for(let q=0;q<=14;q+=2){const yy=y+Math.sin(q*0.9+(reduce?0:time*1.2)+i)*1.8;q?ctx.lineTo(x+q,yy):ctx.moveTo(x,yy)}ctx.stroke()});ctx.globalAlpha=1;ctx.lineCap='butt';
+  // wer hinter dem Kollegen liegt: ihre Insel, ihr Kanal zu dir, ihre Zeile
+  if(I.da){kanal(Fr,D,I.fk);insel(Fr,1);mann(Fr,1,1);label(satzVon(s,'freundin').toUpperCase(),Fr.x,Fr.y+Fr.r+13,8.5,C.muted,'center',1.3);
+    if(I.wort>0.01){ctx.globalAlpha=I.wort;ctx.font='italic 13px '+C.serif;ctx.fillStyle=C.ink;ctx.textAlign='right';ctx.fillText(satzVon(s,'stimme'),350,Fr.y+Fr.r+31);ctx.globalAlpha=1}}
+  // dein Blick: am Kollegen vorbei. Dahinter der Schatten.
+  const E={x:D.x,y:D.my-rm*1.65},O={x:K.x,y:K.y-13},dE=Math.hypot(O.x-E.x,O.y-E.y),th=Math.atan2(O.y-E.y,O.x-E.x),half=Math.asin(Math.min(0.99,31/dE)),lT=Math.sqrt(Math.max(1,dE*dE-961));
+  const rand=v=>{const w=th+v*half,T={x:E.x+Math.cos(w)*lT,y:E.y+Math.sin(w)*lT};return [T,{x:T.x+Math.cos(w)*900,y:T.y+Math.sin(w)*900}]},ra=rand(-1),rb=rand(1);
+  if(I.nebel>0.01){ctx.beginPath();ctx.moveTo(ra[0].x,ra[0].y);ctx.lineTo(ra[1].x,ra[1].y);ctx.lineTo(rb[1].x,rb[1].y);ctx.lineTo(rb[0].x,rb[0].y);ctx.closePath();
+    ctx.globalAlpha=I.nebel;ctx.fillStyle=C.bg;ctx.fill();ctx.globalAlpha=0.15*I.nebel;ctx.fillStyle=C.muted;ctx.fill();ctx.globalAlpha=1;
+    const wa=I.nebel*Math.max(0,1-dr*4);if(wa>0.01){ctx.globalAlpha=wa;label(satzVon(s,'verdeckt').toUpperCase(),O.x+Math.cos(th)*90,O.y+Math.sin(th)*90+3,8.5,C.muted,'center',1.6);ctx.globalAlpha=1}}
+  if(I.blick>0.01){ctx.strokeStyle=C.ink;ctx.lineWidth=1.2;ctx.setLineDash([2,4]);
+    [ra,rb].forEach(([T,G])=>{const q=I.blick*1.5;ctx.beginPath();ctx.moveTo(E.x,E.y);ctx.lineTo(lerp(E.x,T.x,Math.min(1,q)),lerp(E.y,T.y,Math.min(1,q)));
+      if(q>1)ctx.lineTo(lerp(T.x,G.x,(q-1)*0.3),lerp(T.y,G.y,(q-1)*0.3));ctx.stroke()});ctx.setLineDash([])}
+  // die Spur deiner Insel
+  if(dr>0.001){ctx.strokeStyle=C.muted;ctx.lineWidth=1.2;ctx.setLineDash([3,5]);ctx.beginPath();
+    for(let q=0;q<=20;q++){const kk=dr*q/20,w=lerp(Math.PI,2.049,kk),rr=lerp(125,149.8,kk),x=189+Math.cos(w)*rr,y=122+Math.sin(w)*rr;q?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.stroke();ctx.setLineDash([])}
+  // der Kanal zwischen euch, der Kollege
+  kanal(D,K,I.kk);
+  if(I.ka>0.01){insel(K,I.ka);mann(K,0,I.ka);ctx.globalAlpha=I.ka;label(satzVon(s,'kollege').toUpperCase(),K.x,K.y+K.r+13,8.5,C.muted,'center',1.3);ctx.globalAlpha=1}
+  ctx.restore();
+  // du: der Speicher wird zu deiner Insel. Was in ihm liegt, tritt zurück.
+  const g=lerp(1,f,k),X=lerp(cx,ox+D.x*f,k),Y=lerp(cy0,oy+D.y*f,k),sr=lerp(R0,D.r,k),YM=lerp(yT-2.3*RM,oy+D.my*f,k),mr=lerp(RM,rm,k),z=sr/R0,tint=Math.min(0.28,Math.abs(F.lv)*0.4)*(1-k);
+  ctx.save();ctx.translate(X,Y);ctx.scale(g,g);
+  ctx.beginPath();for(let i=0;i<=72;i++){const a=i/72*6.283,tt=reduce?0:time,rr=sr*(1+(1-k)*(0.012*Math.sin(a*3+tt*0.8)+0.01*Math.sin(a*5-tt*0.6)));i?ctx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr):ctx.moveTo(rr,0)}
+  ctx.closePath();ctx.fillStyle=C.paper;ctx.fill();ctx.globalAlpha=tint;ctx.fillStyle=F.lv>0?C.plus:C.minus;ctx.fill();ctx.globalAlpha=1;ctx.strokeStyle=C.ink;ctx.lineWidth=1.5;ctx.stroke();
+  const aus=1-Math.min(1,k*1.8);let neu=null;
+  F.c.forEach(c=>{gliedMass(c);if(c.y==null)return;if(c.id==='neu'){neu=c;return}if(aus<=0.01)return;ctx.save();ctx.translate(0,(c.y-cy0)*z);ctx.scale(z*zs,z*zs);gliedMalen(c,0,0,0,c.a*aus);ctx.restore()});
+  if(I.du>0.01){ctx.globalAlpha=I.du;label(T('du').toUpperCase(),1,4,9.5,C.ink,'center',1.6);ctx.globalAlpha=1}
+  ctx.restore();
+  ctx.save();ctx.translate(X,YM);ctx.scale(g,g);ctx.beginPath();ctx.arc(0,0,mr,0,6.283);ctx.fillStyle=C.paper;ctx.fill();ctx.globalAlpha=tint;ctx.fillStyle=F.lv>0?C.plus:C.minus;ctx.fill();ctx.globalAlpha=1;
+  ctx.strokeStyle=C.ink;ctx.lineWidth=1.5;ctx.stroke();figur(0,0,mr,1,0);ctx.restore();
+  // der Träger mit dem neuen Namen bleibt: er liegt bei deiner Insel auf dem Wasser
+  const li=(6-ox)/f,re=(W-6-ox)/f;let tx=D.x;
+  if(neu&&neu.y!=null){const zn=0.68;tx=Math.max(li+neu.tot*zn/2+8,D.x);const sc=lerp(zs,zn*f,k);
+    ctx.save();ctx.translate(lerp(cx,ox+tx*f,k),lerp(neu.y,oy+(D.y+D.r+17)*f,k));ctx.scale(sc,sc);gliedMalen(neu,0,0,k,1);ctx.restore()}
+  // was du denkst
+  const ged=satzVon(s,'denken');
+  if(ged&&I.ga>0.01){ctx.save();ctx.translate(ox,oy);ctx.scale(f,f);ctx.font='italic 14px '+C.serif;const t='„'+ged+'“',hw=ctx.measureText(t).width/2,bx=Math.max(li+hw,Math.min(re-hw,tx)),by=D.y+D.r+45;
+    ctx.globalAlpha=I.ga;label(T('denken').toUpperCase(),bx,by,8.5,C.muted,'center',1.5);ctx.globalAlpha=I.ga;ctx.font='italic 14px '+C.serif;ctx.fillStyle=C.ink;ctx.textAlign='center';ctx.fillText(t,bx,by+18);ctx.restore();ctx.globalAlpha=1}}
 /* Ein Moment: die Platten öffnen sich unter deinen Füßen · Zeile für Zeile, die Ladung daneben wird mit jeder Zeile deutlicher ·
    eine Zeile mit data-ruft: erst schickt der gerufene Träger sein Echo hoch · die Platten schließen sich um die Ladung ·
    sie fällt in den Speicher, lose oder an ihre Adresse (ein neuer Träger erscheint dabei) · dann der Satz aus <p class="fall">. */
@@ -237,6 +310,7 @@ function fokusTakt(s,dt,liest){const F=S.fk,n=F.c.length,cs=F.cs=Math.min(24,1.3
   if(F.rollt&&!reduce)F.weg+=150*dt;   // auf dem Rad läuft die Zeitlinie unter dir durch
   if(!liest)ablauf(F,dt)}
 function drawFokus(){const s=SLIDES[cur],F=S.fk;if(!F)return;const U=F.ue,yT=yL-22;
+  if(F.ins&&F.ins.on){fkInselBild(F,s);return}
   // die zwei Bahnen des Schritts davor: die obere tritt zurück, die untere rückt nach oben
   if(U&&U.zwei){ctx.save();ctx.translate(0,-fokusHub()*ease(U.kB));drawZwei();ctx.globalAlpha=ease(U.kA);ctx.fillStyle=C.bg;ctx.fillRect(0,-H,W,H+H/2+0.5);ctx.restore();ctx.globalAlpha=1;return}
   const kD=U?ease(U.kD):1,kE=U?U.kE:1,kW=U?U.kW:0,r=lerp(RZ,RM,kD),fy=yT-2.3*r,sy=lerp(fy,cy0,kD),sr=lerp(r,R0,kD);
