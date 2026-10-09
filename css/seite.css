@@ -30,7 +30,10 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17p
 .top.eng{letter-spacing:.04em;white-space:nowrap}
 .top.eng .brand{min-width:0;overflow:hidden;text-overflow:ellipsis}
 .top,.cap,.row,.nav,.chapters{flex-shrink:0}
-.textwrap{display:flex;flex-direction:column;gap:2px;flex:0 1 auto;min-height:0}
+.textwrap{display:flex;flex-direction:column;gap:2px;flex:0 0 auto;min-height:0;transition:height .6s ease}
+/* die Höhe setzt js/16-navigation.js: so hoch wie der längste Text auf dieser Breite, damit die Bühne darunter nicht springt */
+.app.ruhig .textwrap{transition:none}
+.app.flow .textwrap{height:auto!important}
 .text{display:flex;flex-direction:column;gap:6px;overflow-y:auto;min-height:0}
 .text>*{flex-shrink:0}
 /* neuer Text blendet ein; bei „warte“ steht er schon an seinem Platz, ist aber noch nicht zu sehen */
@@ -47,9 +50,9 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17p
 @media (max-width:480px){body{font-size:16px;line-height:1.45}.row{gap:5px}.row button{padding:6px 9px;font-size:.9rem}}
 .text .begriff{font-size:.9rem;color:var(--muted)}
 .text .begriff b{font-weight:500;color:var(--ink)}
-#mode{align-self:flex-start;background:transparent;border:0;padding:6px 0;font-size:.72rem;letter-spacing:.14em;
+#mode,.modus{align-self:flex-start;background:transparent;border:0;padding:6px 0;font-size:.72rem;letter-spacing:.14em;
   text-transform:uppercase;color:var(--plus);border-bottom:1px solid transparent}
-#mode:hover{border-bottom-color:var(--plus)}
+#mode:hover,.modus:hover{border-bottom-color:var(--plus)}
 .text p{margin:0;max-width:62ch;text-wrap:pretty}
 .text h1{margin:0;font-family:var(--serif);font-weight:400;letter-spacing:.1em;line-height:1.1;
   font-size:clamp(1.5rem,7vw,2.5rem);text-wrap:balance}
@@ -57,7 +60,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17p
 /* die Bühne wird nicht höher, als das Bild braucht: so steht der Satz direkt unter dem Stimmungsspeicher */
 .stage{flex:1 1 0;min-height:290px;max-height:calc((92px + (min(760px,100vw) - 32px)*0.5)/0.78);position:relative;touch-action:none}
 canvas{position:absolute;inset:0;display:block;width:100%;height:100%}
-.cap{min-height:3.1em;display:flex;align-items:flex-start;justify-content:center;margin:0;text-align:center;font-family:var(--serif);font-style:italic;color:var(--ink);text-wrap:balance}
+.cap{min-height:3.3rem;display:flex;align-items:flex-start;justify-content:center;margin:0;text-align:center;font-family:var(--serif);font-style:italic;color:var(--ink);text-wrap:balance}
 .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;min-height:44px;align-items:center}
 button{font:inherit;color:var(--ink);cursor:pointer}
 button:focus-visible{outline:2px solid var(--plus);outline-offset:3px}

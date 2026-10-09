@@ -1,6 +1,8 @@
 # Stand
 
-Version 73, 9. Oktober 2026. 67 aktive Schritte, 13 ausgeschaltet.
+Version 74, 9. Oktober 2026. 67 aktive Schritte, 13 ausgeschaltet.
+
+Neu in Version 74: der Text oben hat einen festen Bereich (so hoch wie der längste Text auf der jeweiligen Breite, am Computer vier bis fünf Zeilen, die Karte hat einen höheren), die Bühne darunter springt nicht mehr. Auch die Zeile unter der Bühne hat eine feste Höhe. Beim „Los geht’s“ schrumpft der Bereich sanft, der Knopf „Ausführlich“ im ausblendenden Abbild sah falsch aus (behoben), und das Männchen löst sich als Punkt aus der Ecke Gefühl, statt einzublenden. Urteil steht aus. Offen, von der Autorin angeregt: alle Zeichnungen wie mit dem Bleistift entstehen und wieder wegradieren lassen.
 
 Neu in Version 73: nach „Los geht’s“ blenden Text, Hinweis und Knöpfe der Karte aus, während das Dreieck gleichzeitig zur Linie klappt (Beginn nach 0,15 statt 0,5 Sekunden). Was der Kollege sagt, steht bei ihm (SAGEN, unter seiner Figur) und kommt vor seinem Minus; oben steht nur „Dann sagt er etwas.“, beim Denken nur noch „Ich?“. „Weiter“ und „Nochmal ansehen“ sind erst zu sehen, wenn nichts mehr abläuft. Urteil steht aus.
 

@@ -3,6 +3,7 @@ let demoT=null,demoI=0;
 function stopDemo(){clearInterval(demoT);demoT=null}
 // Abbild eines Teils der Seite, das über seinem Platz stehen bleibt und ausblendet
 function geist(el){const r=el.getBoundingClientRect(),a=document.querySelector('.app').getBoundingClientRect(),g=el.cloneNode(true);
+  const mm=g.querySelector('#mode');if(mm)mm.classList.add('modus');
   g.removeAttribute('id');g.querySelectorAll('[id]').forEach(x=>x.removeAttribute('id'));g.setAttribute('aria-hidden','true');g.classList.add('geist');
   Object.assign(g.style,{position:'absolute',left:(r.left-a.left)+'px',top:(r.top-a.top)+'px',width:r.width+'px',height:r.height+'px',margin:'0',pointerEvents:'none',opacity:'1',transition:'opacity .7s ease'});
   document.querySelector('.app').appendChild(g);requestAnimationFrame(()=>requestAnimationFrame(()=>{g.style.opacity='0'}));setTimeout(()=>g.remove(),900)}
@@ -28,7 +29,21 @@ function go(i,force){
   S.stepT=0;S.folgeT=0;S.folgeOk=prev===i-1;   // data-folgt trägt nur weiter, wer vom Schritt davor kommt
   renderRow();renderChapters();syncNav();try{scrollTo(0,0)}catch(e){}
 }
+/* Fester Bereich für den Text oben: so hoch wie der längste Text auf dieser Breite (mit dem Knopf „Ausführlich“, wo es einen gibt).
+   Die Karte hat ihren eigenen, höheren Bereich. Beim Wechsel von der Karte schrumpft er sanft. */
+let textH=0,karteH=0;
+function textHoehe(){const tw=document.querySelector('.textwrap'),t=$('text');if(!tw||!t.clientWidth)return;
+  const m=document.createElement('div');m.className='text';m.setAttribute('aria-hidden','true');
+  m.style.cssText='position:absolute;visibility:hidden;left:0;top:0;height:auto;overflow:visible;width:'+t.clientWidth+'px';tw.appendChild(m);
+  let h=0,k=0;SLIDES.forEach(s=>{const kz=s.sec.querySelector(':scope > .kurz');if(!kz)return;m.innerHTML=kz.innerHTML;
+    const x=m.scrollHeight+(s.sec.querySelector(':scope > .lang')?34:0);if(s.scene==='dreieck')k=Math.max(k,x);else h=Math.max(h,x)});
+  m.remove();textH=Math.ceil(h);karteH=Math.max(textH,Math.ceil(k))}
+function textSetzen(){const tw=document.querySelector('.textwrap'),s=SLIDES[cur];if(!tw||!s)return;if(!textH)textHoehe();if(!textH)return;
+  tw.style.height=(s.scene==='dreieck'?karteH:textH)+'px'}
+addEventListener('resize',()=>{textHoehe();textSetzen()});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{textHoehe();textSetzen()});
 function renderText(){
+  textSetzen();
   const s=SLIDES[cur],lg=s.sec.querySelector(':scope > .lang'),on=!!(lg&&LONG[s.id]);
   $('text').innerHTML=(on?lg:s.sec.querySelector(':scope > .kurz')).innerHTML;
   // Bedienhinweis in der Zeile unter der Bühne, bis dort ein Satz erscheint
@@ -41,7 +56,7 @@ $('mode').onclick=()=>{const id=SLIDES[cur].id;LONG[id]=!LONG[id];renderText();t
 function fit(){
   const app=document.querySelector('.app'),t=$('text'),s=SLIDES[cur];
   if(s&&LONG[s.id]&&s.sec.querySelector(':scope > .lang')){app.classList.add('flow');return}
-  app.classList.remove('flow');if(t.scrollHeight>t.clientHeight+2)app.classList.add('flow');
+  app.classList.remove('flow');if(t.scrollHeight>(s&&s.scene==='dreieck'?karteH:textH||t.clientHeight)+2)app.classList.add('flow');
 }
 function pick(id){const k=SLIDES[cur].teile.find(x=>x.id===id);if(!k)return;SEL=id;say(k.say)}
 function renderRow(){

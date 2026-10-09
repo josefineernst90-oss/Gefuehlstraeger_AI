@@ -2,7 +2,7 @@
 function resize(){
   const rc=stage.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);
   W=rc.width;H=rc.height;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
-  layout();if(started)fit();
+  layout();if(started){fit();if(typeof zeichnen==='function'&&SLIDES[cur]&&S.g!==undefined)try{zeichnen()}catch(e){}}
 }
 // steht das Männchen auf der Zeitlinie, braucht es darüber Platz
 function layout(){const mann=started&&(SLIDES[cur].mann||SLIDES[cur].scene==='fokus');
@@ -287,9 +287,13 @@ function drawLinie(){
   label(T('metaphorik').toUpperCase(),cx,ay-16,fs,C.plus,'center',sp);
   if(k<0.5){ctx.globalAlpha=1-k*2;label(T('logik').toUpperCase(),Lx,yb+46,10.5,C.muted,'center',1.5);label(T('sinn').toUpperCase(),Rx,yb+46,10.5,C.muted,'center',1.5);
     label(T('taktversatz').toUpperCase(),cx,b<250?yb-40:yb+46,10.5,C.muted,'center',1.5);ctx.globalAlpha=1}
+  // Von der Karte: ein Punkt löst sich von der Ecke Gefühl, sinkt unter die Linie und wächst zu dir. Kopf, Arme und Beine kommen zuletzt.
+  if(s.klappen&&g.neu&&!reduce&&t<g.tF){const u=ease((t-1.8)/(g.tF-1.9));
+    if(u>0){const yy=lerp(yb,q.yF,u),rr=lerp(3,q.r,u);ctx.beginPath();ctx.arc(Rx,yy,rr,0,6.283);ctx.fillStyle=C.paper;ctx.fill();ctx.strokeStyle=C.ink;ctx.lineWidth=1.5;ctx.stroke();
+      const a=ease((u-0.45)/0.55);if(a>0.01)figur(Rx,yy,rr,a,0)}}
   if(t<g.tF)return;
   // das Männchen: geht von seiner letzten Station zur Station dieses Schritts
-  const r=q.r,x0=q.st[g.from],x1=q.st[s.ort],aF=g.neu?ease((t-g.tF)/0.7):1,w=g.walk?ease((t-g.tF-0.2-g.weg)/g.walk):1,nach=t-g.ta;
+  const r=q.r,x0=q.st[g.from],x1=q.st[s.ort],aF=g.neu&&!s.klappen?ease((t-g.tF)/0.7):1,w=g.walk?ease((t-g.tF-0.2-g.weg)/g.walk):1,nach=t-g.ta;
   let xf=lerp(x0,x1,w),sw=g.walk&&w>0&&w<1?Math.sin(t*9):0;
   if(s.gruebeln&&nach>0&&!reduce){xf+=Math.sin(nach*1.3)*r*0.9;sw=Math.sin(nach*7)*Math.abs(Math.cos(nach*1.3))}
   const fy=q.yF+2.3*r;linieAb={i:cur,dx:xf-x1};
@@ -614,11 +618,13 @@ function drawSpeicher(){
 }
 
 let last=performance.now();
-function loop(now){
-  const dt=Math.min(0.05,(now-last)/1000);last=now;step(dt);
+function zeichnen(){
   ctx.clearRect(0,0,W,H);
   const sc=SLIDES[cur].scene;
   if(sc==='dreieck')drawDreieck();else if(sc==='linie')drawLinie();else if(sc==='bindung')drawBindung();else if(sc==='steg')drawSteg();else if(sc==='zwei')drawZwei();else if(sc==='arbeit')drawArbeit();else if(sc==='grob')drawGrob();else if(sc==='strom')drawStrom();else if(sc==='fokus')drawFokus();else if(sc==='film')drawFilm();else if(sc==='spitze')drawSpitze();else if(sc==='schloss')drawSchloss();else if(sc==='drehen')drawDrehen();else if(sc==='sicht')drawSicht();else{drawSpeicher();if(SLIDES[cur].figur)drawFigur();if(SLIDES[cur].hinaus&&S.aus)drawHinaus();if(SLIDES[cur].ein&&S.ein)drawEin();if(SLIDES[cur].zumSteg&&S.zs)drawZumSteg()}
+}
+function loop(now){
+  const dt=Math.min(0.05,(now-last)/1000);last=now;step(dt);zeichnen();
   requestAnimationFrame(loop);
 }
 new ResizeObserver(resize).observe(stage);
