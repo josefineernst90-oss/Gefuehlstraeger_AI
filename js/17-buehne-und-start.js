@@ -41,7 +41,7 @@ cv.addEventListener('pointerleave',()=>{ptr.x=ptr.y=-999});cv.addEventListener('
 
 const FOLGE_PAUSE=2;   // Sekunden zwischen dem Ende eines Schritts und dem Anlaufen des nächsten (data-folgt)
 function step(dt){
-  time+=dt;const amp=reduce?0.25:1,s=SLIDES[cur];
+  time+=dt;S.stepT+=dt;const amp=reduce?0.25:1,s=SLIDES[cur];
   // Der Speicher hat seinen festen Platz. Nur bei der Verwandlung zur Figur wandert und schrumpft er.
   R=R0;cy=cy0;sx=0;
   // von der Linie: der Bauch des Männchens wandert an den Platz des Speichers und wächst
@@ -268,7 +268,7 @@ function ladungIn(x,y,sign,r,a){if(!sign||a<=0.01)return;const col=sign>0?C.plus
   ctx.beginPath();ctx.arc(x,y,r,0,6.283);ctx.stroke();ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(x-r*0.5,y);ctx.lineTo(x+r*0.5,y);
   if(sign>0){ctx.moveTo(x,y-r*0.5);ctx.lineTo(x,y+r*0.5)}ctx.stroke();ctx.globalAlpha=1}
 function drawLinie(){
-  const s=SLIDES[cur],g=S.g;if(!g)return;const q=linieGeo(),t=g.t,k=s.klappen?ease((t-0.5)/(g.tF-0.9)):1;
+  const s=SLIDES[cur],g=S.g;if(!g)return;const q=linieGeo(),t=g.t,k=s.klappen?ease((t-0.15)/(g.tF-0.55)):1;
   // Ausgangslage: das Dreieck wie auf der Karte
   const b=Math.min(W-130,360),h=Math.max(70,Math.min(b*1.05,H-96)),yT0=(H-h)/2-12,yB=yT0+h,gap=Math.max(30,b*0.16);
   const Lx=lerp(cx-b/2,q.st.denken,k),Rx=lerp(cx+b/2,q.st.gefuehl,k),yb=lerp(yB,q.y,k),ay=lerp(yT0,q.y,k);
@@ -327,16 +327,25 @@ function drawLinie(){
   else ladungIn(xf,q.yF,g.ch0,rc0,aF);
   // die Zeile unter dem Männchen: das Wort darüber, darunter was es fühlt, denkt oder sieht.
   // Mehrere Zeilen ohne Grübeln kommen nacheinander und bleiben stehen, jede unter ihrer Station (Denken links, Fühlen rechts).
-  const n=s.blasen.length,zeile=(bl,x,a)=>{if(a<=0.01)return;ctx.font='italic 15px '+C.serif;const hw=ctx.measureText(bl.text).width/2,bx=Math.max(hw+4,Math.min(W-hw-4,x));
+  const bls=s.blasen.filter(b=>b.tag!=='SAGEN'),n=bls.length,zeile=(bl,x,a)=>{if(a<=0.01)return;ctx.font='italic 15px '+C.serif;const hw=ctx.measureText(bl.text).width/2,bx=Math.max(hw+4,Math.min(W-hw-4,x));
     ctx.globalAlpha=a;label(bl.tag,bx,fy+22,9.5,C.muted,'center',1.5);ctx.globalAlpha=1;momentText(bl.text,bx,fy+38,a)};
+  // Was der Kollege sagt, steht bei ihm: unter seiner Figur, eine Zeile tiefer als Denken und Fühlen, in höchstens zwei Zeilen
+  const sagZeile=(bl,a)=>{if(a<=0.01||!K)return;ctx.font='italic 15px '+C.serif;const mw=Math.min(W*0.6,300),zl=[''];
+    bl.text.split(' ').forEach(w=>{const l=zl[zl.length-1],l2=l?l+' '+w:w;if(l&&ctx.measureText(l2).width>mw)zl.push(w);else zl[zl.length-1]=l2});
+    const bw=Math.max(...zl.map(l=>ctx.measureText(l).width)),bx=Math.max(bw/2+4,Math.min(W-bw/2-4,K.x));
+    ctx.globalAlpha=a;label(bl.tag,bx,fy+68,9.5,C.muted,'center',1.5);ctx.globalAlpha=1;zl.forEach((l,i)=>momentText(l,bx,fy+84+i*19,a))};
+  const sagBl=s.blasen.find(b=>b.tag==='SAGEN');
+  if(sagBl&&t>=g.tsag)sagZeile(sagBl,ease((t-g.tsag)/0.4));
+  else if(!sagBl&&g.sagt0&&s.kollege==='geht')sagZeile(g.sagt0,1-ease((t-g.tF-0.2)/LK_GEHT));   // er geht, sein Satz geht mit
+  else if(!sagBl&&g.sagt0&&g.kol0)sagZeile(g.sagt0,1);
   const ortVon=bl=>bl.tag==='DENKEN'?q.st.denken:bl.tag==='FÜHLEN'?q.st.gefuehl:x1;
   // die Zeile vom Schritt davor steht noch, bis die neue kommt
   if(g.bl0&&t<g.tb)zeile(g.bl0,ortVon(g.bl0),1-ease((t-g.tb+0.5)/0.4));
   if(n&&t>=g.tb){
     if(s.gruebeln){let i=0,a=ease((t-g.tb)/0.4);
       if(n>1&&!reduce){const u=(t-g.tb)/1.9,loc=(u%1)*1.9;i=Math.floor(u)%n;a=ease(loc/0.35)*(1-ease((loc-1.55)/0.3))}
-      zeile(s.blasen[i],x1,a)}
-    else s.blasen.forEach((bl,i)=>zeile(bl,n>1?ortVon(bl):x1,ease((t-g.tb-i*L_ZEILE)/0.4)))}
+      zeile(bls[i],x1,a)}
+    else bls.forEach((bl,i)=>zeile(bl,n>1?ortVon(bl):x1,ease((t-g.tb-i*L_ZEILE)/0.4)))}
 }
 
 /* Übergang von der beschrifteten Linie zur Zeitlinie (in drawSpeicher): die Platten ziehen sich um die Ladung zusammen,

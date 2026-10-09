@@ -53,18 +53,20 @@ const introK=s=>{const tA=s.dauer*0.25;return ease((S.intro-tA)/(s.dauer-0.4-tA)
 /* ---------- Linie: der Gang des Männchens ----------
    Wo es herkommt und was es in sich trägt, ergibt sich aus den Linien-Schritten davor. So stimmt jeder Schritt, auch nach einem Sprung. */
 // gr: wie groß die Ladung im Bauch ist (Anteil des Bauchs) · kol: der Kollege steht daneben (1 mit seinem Minus, 2 ohne) · bl: die letzte Zeile unter dem Männchen
-function linieVor(s){let ch=0,ort=null,story=false,gr=0.5,kol=0,bl=null;
+function linieVor(s){let ch=0,ort=null,story=false,gr=0.5,kol=0,bl=null,sagt=null;
   for(const x of SLIDES){if(x===s)break;if(x.scene!=='linie')continue;if(x.trifft){ch=x.trifft;gr=x.klein?0.3:0.5}if(x.wird){ch=x.wird;gr=0.5}ort=x.ort;if(x.geschichte)story=true;
     if(x.kollege==='kommt')kol=1;else if(x.kollege==='sagt')kol=2;else if(x.kollege==='geht')kol=0;
-    bl=x.blasen.length&&!x.gruebeln?x.blasen[0]:null}
-  return {ch,ort,story,gr,kol,bl}}
+    sagt=x.kollege==='geht'?null:x.blasen.find(b=>b.tag==='SAGEN')||sagt;
+    bl=x.blasen.length&&!x.gruebeln?x.blasen.find(b=>b.tag!=='SAGEN')||null:null}
+  return {ch,ort,story,gr,kol,bl,sagt}}
 const LK_KOMMT=1.6,LK_GEHT=1.3,L_FLUG=1.2,L_ZEILE=1.6;   // der Kollege kommt · er geht · eine Ladung ist unterwegs · Abstand zwischen zwei Zeilen
 function linieStart(s){const v=linieVor(s),tF=s.klappen?s.dauer:0,walk=v.ort&&v.ort!==s.ort?1.9:0,weg=s.kollege==='geht'&&v.kol?LK_GEHT+0.2:0,ta=tF+(v.ort?0.2:0.8)+weg+walk;
   // tF: Klappen fertig (danach Text und Lesepause) · ta: angekommen · tk: der Kollege kommt herein · tw: die Ladung fliegt los
   // tb: die Zeile unter dem Männchen erscheint · tc: der Satz unter der Bühne · td: Schritt erledigt. Nichts davon fällt zusammen.
-  const tk=ta+0.3,tw=s.kollege==='kommt'?tk+LK_KOMMT+0.6:ta+(v.kol?0.6:1);
-  const tb=s.trifft?tw+L_FLUG+0.4:ta+(s.wird?1.8:s.geschichte?1.2:0.3),n=s.blasen.length,tc=tb+(s.gruebeln?1.9*n+0.95:Math.max(0,n-1)*L_ZEILE+1.3);
-  S.g={t:reduce?1e3:0,from:v.ort||s.ort,ch0:v.ch,gr0:v.gr,kol0:v.kol,bl0:v.ort===s.ort?v.bl:null,neu:!v.ort,story0:v.story,tF,walk,weg,ta,tk,tw,tb,tc,td:tc+0.5,said:false,text:false}}
+  // tsag: der Kollege sagt seinen Satz, erst danach geht sein Minus zu dir
+  const hatSag=s.blasen.some(b=>b.tag==='SAGEN'),tsag=hatSag?ta+0.5:0,tk=ta+0.3,tw=(s.kollege==='kommt'?tk+LK_KOMMT+0.6:ta+(v.kol?0.6:1))+(hatSag?2.4:0);
+  const tb=s.trifft?tw+L_FLUG+0.4:ta+(s.wird?1.8:s.geschichte?1.2:0.3),n=s.blasen.filter(b=>b.tag!=='SAGEN').length,tc=tb+(s.gruebeln?1.9*n+0.95:Math.max(0,n-1)*L_ZEILE+1.3);
+  S.g={sagt0:v.sagt,tsag,t:reduce?1e3:0,from:v.ort||s.ort,ch0:v.ch,gr0:v.gr,kol0:v.kol,bl0:v.ort===s.ort?v.bl:null,neu:!v.ort,story0:v.story,tF,walk,weg,ta,tk,tw,tb,tc,td:tc+0.5,said:false,text:false}}
 
 function enterStep(s,prev){
   if(s.leer)resetAll();
@@ -162,6 +164,21 @@ function done(s){const st=stOf(s),eg=EIGEN[s.id];
   if(s.schrift.length||s.faden.length)return s.fertig?st.taps>=s.fertig:[...s.schrift,...s.faden].every(x=>st.played[x.key]);
   return true;
 }
+// Läuft in diesem Schritt noch etwas von selbst ab? Dann ist „Weiter“ nicht zu sehen. Wartet der Schritt auf ein Tippen, läuft nichts.
+// Hängt ein Ablauf, gibt es „Weiter“ nach 2 Minuten trotzdem.
+function laeuftRoh(s){
+  if(s.folgt&&S.folgeOk)return true;                                   // der nächste Schritt kommt von selbst
+  if(s.scene==='linie'&&S.g&&S.g.t<S.g.td)return true;
+  if((s.vonlinie||s.fold)&&S.intro<s.dauer)return true;
+  if(s.figur&&S.fig<s.dauer)return true;
+  if(S.ein&&!S.ein.said||S.zs&&!S.zs.said)return true;
+  if(S.ev.length)return true;
+  const P=[S.zw,S.fk,S.gb,S.si,S.dr,S.sk];if(P.some(x=>x&&(!x.fertig||x.laeuft)))return true;
+  if([S.fi,S.sp,S.ar].some(x=>x&&!x.fertig))return true;
+  if(S.sr&&S.sr.ue)return true;
+  if(S.vor&&S.vor.aktiv)return true;
+  return !idle()&&!holding()}
+const laeuft=s=>!reduce&&S.stepT<120&&laeuftRoh(s);
 // Schritt verlassen: was noch läuft oder fehlt, wird sofort gesetzt. So stimmen die folgenden Schritte immer.
 function finish(s){const st=stOf(s);
   // der Ring, wie er beim Verlassen stand: damit beginnt ein Schritt mit data-uebergang="ring"

@@ -97,7 +97,7 @@ let SEL=null,G=null;   // gewählter Teil der Karte und ihre Geometrie
 // lese = Sekunden Lesepause, bevor sich die Bühne bewegt
 // ev = was auf der Bühne als Nächstes dran ist, jeweils nach so vielen Sekunden (eins nach dem anderen)
 // steg = Verbindungen zwischen Ladungsträgern im Speicher
-const S={folgeT:0,folgeOk:false,steg:[],ev:[],p:[],m:[],c:[],e:[],q:[],h:{},g:null,lese:0,st:{},level:0,kick:0,frozen:false,freezeAt:0,intro:0,introLive:false,capId:null,knotL:0,knotR:0,aus:null,vor:null,du:{x:0,y:0,vx:0,vy:0,tint:0},vb:0,vbI:0,fotoP:0,fotoName:'',fotoSaid:true,geloest:false,losT:0};
+const S={stepT:0,folgeT:0,folgeOk:false,steg:[],ev:[],p:[],m:[],c:[],e:[],q:[],h:{},g:null,lese:0,st:{},level:0,kick:0,frozen:false,freezeAt:0,intro:0,introLive:false,capId:null,knotL:0,knotR:0,aus:null,vor:null,du:{x:0,y:0,vx:0,vy:0,tint:0},vb:0,vbI:0,fotoP:0,fotoName:'',fotoSaid:true,geloest:false,losT:0};
 const ptr={x:-999,y:-999};
 const stOf=s=>S.st[s.id]||(S.st[s.id]={played:{},taps:0,chosen:false});
 function resetAll(){S.hAlt=null;S.steg=[];S.ev=[];S.p=[];S.m=[];S.c=[];S.e=[];S.q=[];S.h={};S.st={};S.level=0;S.kick=0;S.frozen=false;S.intro=0;S.introLive=false;S.capId=null;S.fig=0;S.figSaid=false;S.fotoP=0}

@@ -1,10 +1,18 @@
 /* ================= Navigation ================= */
 let demoT=null,demoI=0;
 function stopDemo(){clearInterval(demoT);demoT=null}
+// Abbild eines Teils der Seite, das über seinem Platz stehen bleibt und ausblendet
+function geist(el){const r=el.getBoundingClientRect(),a=document.querySelector('.app').getBoundingClientRect(),g=el.cloneNode(true);
+  g.removeAttribute('id');g.querySelectorAll('[id]').forEach(x=>x.removeAttribute('id'));g.setAttribute('aria-hidden','true');g.classList.add('geist');
+  Object.assign(g.style,{position:'absolute',left:(r.left-a.left)+'px',top:(r.top-a.top)+'px',width:r.width+'px',height:r.height+'px',margin:'0',pointerEvents:'none',opacity:'1',transition:'opacity .7s ease'});
+  document.querySelector('.app').appendChild(g);requestAnimationFrame(()=>requestAnimationFrame(()=>{g.style.opacity='0'}));setTimeout(()=>g.remove(),900)}
 function go(i,force){
   i=Math.max(0,Math.min(SLIDES.length-1,i));if(started&&i===cur&&!force)return;
   stopDemo();timers.forEach(clearTimeout);timers=[];
   const prev=started?cur:-1;
+  // von der Karte in die Eröffnung: Text, Hinweis und Knöpfe der Karte blenden aus, das Dreieck klappt gleichzeitig zur Linie
+  if(started&&!reduce&&prev>=0&&prev!==i&&SLIDES[prev].scene==='dreieck'&&SLIDES[i].klappen)
+    [document.querySelector('.textwrap'),$('cap'),$('row')].forEach(geist);
   if(started)finish(SLIDES[cur]);started=true;
   cur=i;const s=SLIDES[i];layout();say('');SEL=null;enterStep(s,prev);cv.setAttribute('aria-label',T('buehne-'+s.scene));
   renderText();
@@ -17,7 +25,7 @@ function go(i,force){
   $('chap').textContent=s.chap==null?T('theorie'):KAPITEL[s.chap]+' · '+n+'/'+inChap.length;
   // bricht die Kopfzeile um, wird sie enger gesetzt: so bleibt die Bühne von Schritt zu Schritt gleich hoch
   const kopf=document.querySelector('.top');kopf.classList.remove('eng');if($('chap').offsetHeight>$('brand').offsetHeight*1.5)kopf.classList.add('eng');
-  S.folgeT=0;S.folgeOk=prev===i-1;   // data-folgt trägt nur weiter, wer vom Schritt davor kommt
+  S.stepT=0;S.folgeT=0;S.folgeOk=prev===i-1;   // data-folgt trägt nur weiter, wer vom Schritt davor kommt
   renderRow();renderChapters();syncNav();try{scrollTo(0,0)}catch(e){}
 }
 function renderText(){
@@ -77,7 +85,7 @@ function renderRow(){
     btn('reset-'+s.id,T('zuruecksetzen'),()=>{huellenListe(s).forEach(h=>h.threads=[]);st.taps=0;if(S.vor)S.vor.aktiv=false;say(satzVon(s,'danach'),true)},
       ()=>!huellenListe(s).some(h=>h.threads.length)).dataset.nodemo='1';
     btn('nochmal-'+s.id,T('nochmal'),()=>vorStart(s,true),()=>!!(S.vor&&S.vor.aktiv)).dataset.nodemo='1'}
-  if(s.nochmal)btn('nochmal-'+s.id,T('nochmal'),()=>go(cur,true),()=>!done(s),'act').dataset.nodemo='1';
+  if(s.nochmal)btn('nochmal-'+s.id,T('nochmal'),()=>go(cur,true),()=>!done(s),'act nochmal').dataset.nodemo='1';
 }
 // Ein Punkt für den Anfang, dann je einer pro Kapitel, das es auf der Seite gibt, in der Reihenfolge der Schritte.
 // So wandert der farbige Punkt beim Weitergehen immer nur nach rechts, und jeder Punkt führt irgendwohin.
@@ -94,6 +102,7 @@ function syncNav(){
   $('back').disabled=cur===0;
   $('next').textContent=last?T('kommtnoch'):s.weiter||T('weiter');$('next').disabled=last;
   $('next').classList.toggle('ready',!last&&done(s));
+  const lf=!last&&laeuft(s);$('next').classList.toggle('laeuft',lf);$('next').tabIndex=lf?-1:0;
   const btns=[...$('row').querySelectorAll('button')];
   btns.forEach(b=>{if(b._off)b.disabled=!!b._off()});
   $('auto').hidden=s.scene==='dreieck'||!btns.some(b=>!b.dataset.nodemo);

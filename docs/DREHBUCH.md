@@ -22,6 +22,9 @@ SCHRITTKETTE
 Die Reihenfolge der <section>-Blöcke ist die Schrittkette. „Weiter“ geht zum nächsten Block, „Zurück“ zum vorigen.
 Einen Schritt einschieben heißt: einen <section>-Block an der gewünschten Stelle einfügen.
 Der Zustand der Bühne (Ladungen, Ladungsträger, Pegel) bleibt von Schritt zu Schritt stehen.
+  „Weiter“ ist nicht zu sehen, solange im Schritt noch etwas von selbst abläuft (Bewegung, Sätze, fallende Ladungen) oder der nächste
+  Schritt von selbst kommt. Wartet der Schritt auf ein Tippen, ist „Weiter“ da. Hängt ein Ablauf, erscheint es nach 2 Minuten trotzdem.
+  „Nochmal ansehen“ erscheint erst, wenn der Schritt zu Ende ist.
   data-folgt am <section>: der nächste Schritt läuft von selbst an, 2 Sekunden nachdem dieser zu Ende ist (Bewegung durch, letzter Satz gelesen).
   Die Bühne bleibt dabei stehen, nichts wird neu aufgebaut. Das gilt nur, wenn man vom Schritt davor kommt (nicht nach einem Sprung
   über die Kapitelpunkte oder „Zurück“) und nicht mit ?still. „Weiter“ und „Zurück“ gehen jederzeit.
@@ -426,7 +429,7 @@ Was das Männchen in sich trägt (Plus oder Minus) und wo es steht, ergibt sich 
 
 am <section>:
   data-uebergang="klappen"   das Dreieck der Karte klappt zur Linie, die Platten fahren an die Enden (data-dauer = Sekunden).
-                             Der Text des Schritts erscheint erst danach.
+                             Gleichzeitig blenden Text, Hinweis und Knöpfe der Karte aus. Der Text des Schritts erscheint erst danach.
   data-ort         wohin das Männchen in diesem Schritt geht: denken   metaphorik   gefuehl
   data-trifft      eine Ladung kommt von außen und trifft das Männchen: +  oder  −
                    Steht der Kollege daneben, kommt sie aus seinem Bauch, von Männchen zu Männchen. Sonst kommt sie von rechts außen.
@@ -442,6 +445,8 @@ am <section>:
 im <section>:
   .kommt           was von außen kommt, steht kurz am rechten Rand (bei data-trifft)
   .blase           Zeile unter dem Männchen; data-wer ist das Wort darüber (fühlen, denken, Geschichte)
+                   data-wer="sagen": was der Kollege sagt. Die Zeile steht bei ihm (unter seiner Figur, eine Zeile tiefer, höchstens zwei Zeilen),
+                   kommt vor dem Minus, das er abgibt, und geht mit ihm, wenn er geht.
                    Mehrere Zeilen ohne data-gruebeln kommen nacheinander und bleiben stehen, jede unter ihrer Station
                    (denken links, fühlen rechts). Steht das Männchen noch an derselben Station wie im Schritt davor,
                    bleibt dessen Zeile stehen, bis die neue kommt.

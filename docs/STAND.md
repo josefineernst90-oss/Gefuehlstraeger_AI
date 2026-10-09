@@ -1,6 +1,8 @@
 # Stand
 
-Version 72, 9. Oktober 2026. 67 aktive Schritte, 13 ausgeschaltet.
+Version 73, 9. Oktober 2026. 67 aktive Schritte, 13 ausgeschaltet.
+
+Neu in Version 73: nach „Los geht’s“ blenden Text, Hinweis und Knöpfe der Karte aus, während das Dreieck gleichzeitig zur Linie klappt (Beginn nach 0,15 statt 0,5 Sekunden). Was der Kollege sagt, steht bei ihm (SAGEN, unter seiner Figur) und kommt vor seinem Minus; oben steht nur „Dann sagt er etwas.“, beim Denken nur noch „Ich?“. „Weiter“ und „Nochmal ansehen“ sind erst zu sehen, wenn nichts mehr abläuft. Urteil steht aus.
 
 Neu in Version 72: die Eröffnung läuft durch. Von `e1` bis `lz` startet jeder Schritt von selbst, sobald der davor zu Ende ist (`data-folgt`), und der Heimweg geht ohne Schnitt in den Übergang zur Zeitlinie über. Etwa 66 Sekunden ohne Tippen, `lw` hält an. Urteil steht aus. Als Probe für eine Seite, die sich wie eine einzige Bühne anfühlt; bei Gefallen auf weitere Kapitel ausweiten.
 
