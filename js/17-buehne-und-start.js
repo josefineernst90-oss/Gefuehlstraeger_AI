@@ -39,6 +39,7 @@ cv.addEventListener('pointerdown',()=>{
 });
 cv.addEventListener('pointerleave',()=>{ptr.x=ptr.y=-999});cv.addEventListener('pointerup',e=>{if(e.pointerType!=='mouse')ptr.x=ptr.y=-999});
 
+const FOLGE_PAUSE=2;   // Sekunden zwischen dem Ende eines Schritts und dem Anlaufen des nächsten (data-folgt)
 function step(dt){
   time+=dt;const amp=reduce?0.25:1,s=SLIDES[cur];
   // Der Speicher hat seinen festen Platz. Nur bei der Verwandlung zur Figur wandert und schrumpft er.
@@ -46,6 +47,8 @@ function step(dt){
   // von der Linie: der Bauch des Männchens wandert an den Platz des Speichers und wächst
   if(s.vonlinie&&!S.introLive){const k=introK(s),q=linieGeo();R=lerp(q.r,R0,k);cy=lerp(q.yF,cy0,k);sx=lerp(linieEndeX(q)-cx,0,k)}
   const liest=S.lese>0;if(liest)S.lese-=dt;
+  // data-folgt: ist der Schritt zu Ende und der letzte Satz gelesen, läuft der nächste von selbst an. Die Bühne bleibt stehen.
+  if(s.folgt&&S.folgeOk&&!reduce&&!liest&&cur<SLIDES.length-1){if(done(s)){S.folgeT+=dt;if(S.folgeT>=FOLGE_PAUSE){go(cur+1);return}}else S.folgeT=0}
   if(s.scene==='linie'&&S.g){const g=S.g;
     if(reduce){}
     else if(s.klappen&&!g.text){g.t+=dt;if(g.t>=g.tF){g.text=true;$('text').classList.remove('warte');S.lese=lesezeit()}}

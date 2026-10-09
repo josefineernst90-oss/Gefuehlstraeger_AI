@@ -22,6 +22,9 @@ SCHRITTKETTE
 Die Reihenfolge der <section>-Blöcke ist die Schrittkette. „Weiter“ geht zum nächsten Block, „Zurück“ zum vorigen.
 Einen Schritt einschieben heißt: einen <section>-Block an der gewünschten Stelle einfügen.
 Der Zustand der Bühne (Ladungen, Ladungsträger, Pegel) bleibt von Schritt zu Schritt stehen.
+  data-folgt am <section>: der nächste Schritt läuft von selbst an, 2 Sekunden nachdem dieser zu Ende ist (Bewegung durch, letzter Satz gelesen).
+  Die Bühne bleibt dabei stehen, nichts wird neu aufgebaut. Das gilt nur, wenn man vom Schritt davor kommt (nicht nach einem Sprung
+  über die Kapitelpunkte oder „Zurück“) und nicht mit ?still. „Weiter“ und „Zurück“ gehen jederzeit.
 Wird ein Schritt übersprungen, werden seine Ladungen trotzdem gesetzt, damit die folgenden Schritte stimmen.
 Das gilt für alles: nicht getippte Knöpfe gelten als einmal getippt, Adressen werden vergeben,
 bei einer Wahl gilt die erste Adresse. So steht am Ende immer dasselbe auf der Bühne.

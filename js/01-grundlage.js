@@ -69,7 +69,7 @@ const SLIDES=[...buch.querySelectorAll(':scope > section:not([data-aus])')].map(
     beispiele:[...sec.querySelectorAll(':scope > .beispiel')].map((p,i)=>({key:'bsp'+i,id:p.dataset.id,label:p.dataset.name||'',lad:p.dataset.ladung||'',n:+p.dataset.faeden||1,knopf:p.dataset.knopf||p.dataset.name||'',cap:p.textContent.trim()})),
     tage:[...sec.querySelectorAll(':scope > .tag')].map((p,i)=>({key:'tag'+i,nr:p.dataset.nr||'',sign:(p.dataset.ladung||'').includes('+')?1:-1,cap:p.textContent.trim()})),foto:'foto' in d,rahmen:d.rahmen||'',rahmenAnim:d.uebergang==='rahmen',loesen:d.uebergang==='weiter',
     adressen:[...sec.querySelectorAll(':scope > .adresse')].map((p,i)=>({key:'adr'+i,id:p.dataset.id,name:p.dataset.name,von:ids(p.dataset.von),cap:p.textContent.trim()})),
-    vonlinie:d.uebergang==='linie',dauer:+d.dauer||6,knopf:d.knopf,weiter:d.weiter,nochmal:'nochmal' in d,
+    vonlinie:d.uebergang==='linie',dauer:+d.dauer||6,knopf:d.knopf,weiter:d.weiter,nochmal:'nochmal' in d,folgt:'folgt' in d,
     auto:ids(d.auto),knoepfe:ids(d.knoepfe),folge:ids(d.folge),kette:'kette' in d,fertig:+d.fertig||0,
     wahl:[...sec.querySelectorAll('.wahl')].map(w=>({id:w.dataset.id,label:w.dataset.knopf,carrier:w.dataset.name,line:w.dataset.zeile,cap:w.textContent.trim()})),
     rueck:'rueck' in d,reihe:'reihe' in d,aussen:'aussen' in d,
@@ -97,7 +97,7 @@ let SEL=null,G=null;   // gewählter Teil der Karte und ihre Geometrie
 // lese = Sekunden Lesepause, bevor sich die Bühne bewegt
 // ev = was auf der Bühne als Nächstes dran ist, jeweils nach so vielen Sekunden (eins nach dem anderen)
 // steg = Verbindungen zwischen Ladungsträgern im Speicher
-const S={steg:[],ev:[],p:[],m:[],c:[],e:[],q:[],h:{},g:null,lese:0,st:{},level:0,kick:0,frozen:false,freezeAt:0,intro:0,introLive:false,capId:null,knotL:0,knotR:0,aus:null,vor:null,du:{x:0,y:0,vx:0,vy:0,tint:0},vb:0,vbI:0,fotoP:0,fotoName:'',fotoSaid:true,geloest:false,losT:0};
+const S={folgeT:0,folgeOk:false,steg:[],ev:[],p:[],m:[],c:[],e:[],q:[],h:{},g:null,lese:0,st:{},level:0,kick:0,frozen:false,freezeAt:0,intro:0,introLive:false,capId:null,knotL:0,knotR:0,aus:null,vor:null,du:{x:0,y:0,vx:0,vy:0,tint:0},vb:0,vbI:0,fotoP:0,fotoName:'',fotoSaid:true,geloest:false,losT:0};
 const ptr={x:-999,y:-999};
 const stOf=s=>S.st[s.id]||(S.st[s.id]={played:{},taps:0,chosen:false});
 function resetAll(){S.hAlt=null;S.steg=[];S.ev=[];S.p=[];S.m=[];S.c=[];S.e=[];S.q=[];S.h={};S.st={};S.level=0;S.kick=0;S.frozen=false;S.intro=0;S.introLive=false;S.capId=null;S.fig=0;S.figSaid=false;S.fotoP=0}

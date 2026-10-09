@@ -17,6 +17,7 @@ function go(i,force){
   $('chap').textContent=s.chap==null?T('theorie'):KAPITEL[s.chap]+' · '+n+'/'+inChap.length;
   // bricht die Kopfzeile um, wird sie enger gesetzt: so bleibt die Bühne von Schritt zu Schritt gleich hoch
   const kopf=document.querySelector('.top');kopf.classList.remove('eng');if($('chap').offsetHeight>$('brand').offsetHeight*1.5)kopf.classList.add('eng');
+  S.folgeT=0;S.folgeOk=prev===i-1;   // data-folgt trägt nur weiter, wer vom Schritt davor kommt
   renderRow();renderChapters();syncNav();try{scrollTo(0,0)}catch(e){}
 }
 function renderText(){

@@ -1,6 +1,8 @@
 # Stand
 
-Version 71, 5. Oktober 2026. 67 aktive Schritte, 13 ausgeschaltet.
+Version 72, 9. Oktober 2026. 67 aktive Schritte, 13 ausgeschaltet.
+
+Neu in Version 72: die Eröffnung läuft durch. Von `e1` bis `lz` startet jeder Schritt von selbst, sobald der davor zu Ende ist (`data-folgt`), und der Heimweg geht ohne Schnitt in den Übergang zur Zeitlinie über. Etwa 66 Sekunden ohne Tippen, `lw` hält an. Urteil steht aus. Als Probe für eine Seite, die sich wie eine einzige Bühne anfühlt; bei Gefallen auf weitere Kapitel ausweiten.
 
 ## Eröffnung (nach der Karte, vor dem Kapitel Ladung)
 
