@@ -435,6 +435,7 @@ am <section>:
   data-trifft      eine Ladung kommt von außen und trifft das Männchen: +  oder  −
                    Steht der Kollege daneben, kommt sie aus seinem Bauch, von Männchen zu Männchen. Sonst kommt sie von rechts außen.
   data-klein       mit data-trifft: die Ladung ist klein (die Stimmung, noch ohne Worte)
+  data-entlaedt    die Ladung aus dem Schritt davor wandert zuerst zurück nach rechts hinaus; erst dann kommt (mit data-kollege="kommt") der Kollege und trägt sie herein
   data-kollege     kommt   der Kollege kommt von rechts herein, ein Minus im Bauch, und bleibt neben dir stehen (rechts vom Gefühl).
                            Mit data-trifft geht danach eine Ladung von ihm zu dir, seine eigene behält er.
                    sagt    der Kollege steht schon da und gibt sein Minus mit data-trifft ganz an dich ab, sein Bauch ist danach leer

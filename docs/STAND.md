@@ -1,6 +1,8 @@
 # Stand
 
-Version 74, 9. Oktober 2026. 67 aktive Schritte, 13 ausgeschaltet.
+Version 75, 11. Oktober 2026. 70 aktive Schritte, 13 ausgeschaltet.
+
+Neu in Version 75: ein Einstieg vor dem Kollegen, vom Allgemeinen zum Besonderen. `in1` das Dreieck klappt zur Linie, das Männchen löst sich aus der Ecke Gefühl · `in2` etwas von außen trifft es (kleines Minus von rechts), „irgendwas stimmt nicht“ · `in3` es geht zum Denken, „Was war das?“ · `e1` (neu: `data-entlaedt`) das Männchen geht zurück zum Gefühl, die namenlose Ladung wandert nach rechts hinaus, der Kollege kommt und trägt sie herein. Alle Texte dort sind Seitentext. Urteil steht aus. Knackpunkt: im Schritt `in1` kommt das Männchen mit dem Klappen zugleich, der Satz erst danach.
 
 Neu in Version 74: der Text oben hat einen festen Bereich (so hoch wie der längste Text auf der jeweiligen Breite, am Computer vier bis fünf Zeilen, die Karte hat einen höheren), die Bühne darunter springt nicht mehr. Auch die Zeile unter der Bühne hat eine feste Höhe. Beim „Los geht’s“ schrumpft der Bereich sanft, der Knopf „Ausführlich“ im ausblendenden Abbild sah falsch aus (behoben), und das Männchen löst sich als Punkt aus der Ecke Gefühl, statt einzublenden. Urteil steht aus. Offen, von der Autorin angeregt: alle Zeichnungen wie mit dem Bleistift entstehen und wieder wegradieren lassen.
 
@@ -10,7 +12,7 @@ Neu in Version 72: die Eröffnung läuft durch. Von `e1` bis `lz` startet jeder 
 
 ## Eröffnung (nach der Karte, vor dem Kapitel Ladung)
 
-`e1` der Kollege kommt herein, ein Minus im Bauch, kein Wort; ein kleines Minus geht zu dir, „irgendwas stimmt nicht“ · `es` der Satz: er gibt sein Minus ganz ab, erst „unangenehm“ beim Fühlen, dann die Worte beim Denken · `e2` der Kollege geht, du grübelst auf dem Heimweg, kein Satz unter der Bühne · `e3` und `e4` ausgeschaltet (Film, „leichter“)
+`in1` bis `in3` allgemeiner Einstieg (siehe oben) · `e1` der Kollege kommt herein, ein Minus im Bauch, kein Wort; ein kleines Minus geht zu dir, „irgendwas stimmt nicht“ · `es` der Satz: er gibt sein Minus ganz ab, erst „unangenehm“ beim Fühlen, dann die Worte beim Denken · `e2` der Kollege geht, du grübelst auf dem Heimweg, kein Satz unter der Bühne · `e3` und `e4` ausgeschaltet (Film, „leichter“)
 
 Danach im Kapitel Ladung: `lz` die Linie zieht sich um ein Minus zusammen, der Übergang beginnt beim Denken · `lw` dieselbe Situation in der Zeit: erst die Stimmung beim Kollegen, dann sein Satz, zwei Minus fallen
 

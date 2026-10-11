@@ -323,7 +323,9 @@ function drawLinie(){
   const rc0=r*g.gr0,rc=r*(s.klein?0.3:0.5);
   if(s.trifft){const u=uF;
     if(s.kommt){const a=ease((nach-0.1)/0.4)*(1-ease((nach-2)/0.5));if(a>0.01){ctx.globalAlpha=a;ctx.font='italic 15px '+C.serif;ctx.fillStyle=C.ink;ctx.textAlign='right';ctx.fillText(s.kommt,W-4,q.y+48);ctx.globalAlpha=1}}
-    if(u<1)ladungIn(xf,q.yF,g.ch0,rc0,aF);
+    // data-entlaedt: die Ladung vom Schritt davor wandert zurück nach rechts hinaus. Von dort kommt gleich der Kollege, er trägt sie herein.
+    if(g.ent){const oe=ease((nach-0.2)/L_FLUG);if(oe<1)ladungIn(lerp(xf,W+12,oe),lerp(q.yF,q.y+40,oe),g.ch0,rc0*lerp(1,1.5,oe),aF)}
+    else if(u<1)ladungIn(xf,q.yF,g.ch0,rc0,aF);
     if(u>0&&u<1){if(K)ladungIn(lerp(K.x,xf,u),lerp(K.y,q.yF,u)-Math.sin(Math.PI*u)*14,s.trifft,lerp(K.r*0.55,rc,u),1);
       else ladungIn(lerp(W+12,xf,u),lerp(q.y+40,q.yF,u),s.trifft,rc*lerp(1.5,1,u),1)}
     if(u>=1)ladungIn(xf,q.yF,s.trifft,rc,1)}

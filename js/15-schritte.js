@@ -64,9 +64,9 @@ function linieStart(s){const v=linieVor(s),tF=s.klappen?s.dauer:0,walk=v.ort&&v.
   // tF: Klappen fertig (danach Text und Lesepause) · ta: angekommen · tk: der Kollege kommt herein · tw: die Ladung fliegt los
   // tb: die Zeile unter dem Männchen erscheint · tc: der Satz unter der Bühne · td: Schritt erledigt. Nichts davon fällt zusammen.
   // tsag: der Kollege sagt seinen Satz, erst danach geht sein Minus zu dir
-  const hatSag=s.blasen.some(b=>b.tag==='SAGEN'),tsag=hatSag?ta+0.5:0,tk=ta+0.3,tw=(s.kollege==='kommt'?tk+LK_KOMMT+0.6:ta+(v.kol?0.6:1))+(hatSag?2.4:0);
+  const hatSag=s.blasen.some(b=>b.tag==='SAGEN'),tsag=hatSag?ta+0.5:0,ent=s.entlaedt&&v.ch?L_FLUG+0.5:0,tk=ta+ent+0.3,tw=(s.kollege==='kommt'?tk+LK_KOMMT+0.6:ta+(v.kol?0.6:1))+(hatSag?2.4:0);
   const tb=s.trifft?tw+L_FLUG+0.4:ta+(s.wird?1.8:s.geschichte?1.2:0.3),n=s.blasen.filter(b=>b.tag!=='SAGEN').length,tc=tb+(s.gruebeln?1.9*n+0.95:Math.max(0,n-1)*L_ZEILE+1.3);
-  S.g={sagt0:v.sagt,tsag,t:reduce?1e3:0,from:v.ort||s.ort,ch0:v.ch,gr0:v.gr,kol0:v.kol,bl0:v.ort===s.ort?v.bl:null,neu:!v.ort,story0:v.story,tF,walk,weg,ta,tk,tw,tb,tc,td:tc+0.5,said:false,text:false}}
+  S.g={ent,sagt0:v.sagt,tsag,t:reduce?1e3:0,from:v.ort||s.ort,ch0:v.ch,gr0:v.gr,kol0:v.kol,bl0:v.ort===s.ort?v.bl:null,neu:!v.ort,story0:v.story,tF,walk,weg,ta,tk,tw,tb,tc,td:tc+0.5,said:false,text:false}}
 
 function enterStep(s,prev){
   if(s.leer)resetAll();
