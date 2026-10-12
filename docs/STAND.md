@@ -1,6 +1,8 @@
 # Stand
 
-Version 75, 11. Oktober 2026. 70 aktive Schritte, 13 ausgeschaltet.
+Version 76, 12. Oktober 2026. 70 aktive Schritte, 13 ausgeschaltet.
+
+Neu in Version 76: der Knopf „Nochmal ansehen“ ist ausgeschaltet (Zeile in `js/16-navigation.js` auskommentiert); Zurück und Weiter ersetzen ihn. Der Knopf „nochmal“ der Faden-Vorführung im Ring der Bindung bleibt.
 
 Neu in Version 75: ein Einstieg vor dem Kollegen, vom Allgemeinen zum Besonderen. `in1` das Dreieck klappt zur Linie, das Männchen löst sich aus der Ecke Gefühl · `in2` etwas von außen trifft es (kleines Minus von rechts), „irgendwas stimmt nicht“ · `in3` es geht zum Denken, „Was war das?“ · `e1` (neu: `data-entlaedt`) das Männchen geht zurück zum Gefühl, die namenlose Ladung wandert nach rechts hinaus, der Kollege kommt und trägt sie herein. Alle Texte dort sind Seitentext. Urteil steht aus. Knackpunkt: im Schritt `in1` kommt das Männchen mit dem Klappen zugleich, der Satz erst danach.
 

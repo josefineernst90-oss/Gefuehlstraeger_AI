@@ -100,7 +100,8 @@ function renderRow(){
     btn('reset-'+s.id,T('zuruecksetzen'),()=>{huellenListe(s).forEach(h=>h.threads=[]);st.taps=0;if(S.vor)S.vor.aktiv=false;say(satzVon(s,'danach'),true)},
       ()=>!huellenListe(s).some(h=>h.threads.length)).dataset.nodemo='1';
     btn('nochmal-'+s.id,T('nochmal'),()=>vorStart(s,true),()=>!!(S.vor&&S.vor.aktiv)).dataset.nodemo='1'}
-  if(s.nochmal)btn('nochmal-'+s.id,T('nochmal'),()=>go(cur,true),()=>!done(s),'act nochmal').dataset.nodemo='1';
+  // „Nochmal ansehen“ ist ausgeschaltet (Version 76): Zurück und Weiter ersetzen es. Wieder einschalten: die Zeile unten ohne // lassen.
+  // if(s.nochmal)btn('nochmal-'+s.id,T('nochmal'),()=>go(cur,true),()=>!done(s),'act nochmal').dataset.nodemo='1';
 }
 // Ein Punkt für den Anfang, dann je einer pro Kapitel, das es auf der Seite gibt, in der Reihenfolge der Schritte.
 // So wandert der farbige Punkt beim Weitergehen immer nur nach rechts, und jeder Punkt führt irgendwohin.
